@@ -18,3 +18,7 @@ html {
 table {
 	width: 100% !important;
 }
+
+.card, .custom-switch{
+	transition: 1s ease;
+}

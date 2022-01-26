@@ -79,6 +79,9 @@ $route = [
 	'management/visitor' => 'ManagementController/visitor',
 	'management/departement' => 'ManagementController/departement',
 	'management/dt_dept' => 'ManagementController/dt_dept',
+	'management/dt_employee' => 'ManagementController/dt_employee',
+	'management/dt_internal' => 'ManagementController/dt_internal',
+	'management/dt_visitor' => 'ManagementController/dt_visitor',
 
 	'schedule' => 'ScheduleController',
 	'schedule/employee' => 'ScheduleController/employee',
@@ -86,10 +89,10 @@ $route = [
 
 	'setup' => 'SetupController',
 	'setup/gate' => 'SetupController/gate',
-	'setup/dt_gate' => 'SetupController/dt_gate',
 	'setup/card' => 'SetupController/card',
-	'setup/dt_card' => 'SetupController/dt_card',
 	'setup/duration' => 'SetupController/duration',
-	'setup/dt_duration' => 'SetupController/dt_duration',
 	'setup/menu' => 'SetupController/menu',
+	'setup/dt_gate' => 'SetupController/dt_gate',
+	'setup/dt_card' => 'SetupController/dt_card',
+	'setup/dt_duration' => 'SetupController/dt_duration',
 ];

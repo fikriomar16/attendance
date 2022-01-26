@@ -1,3 +1,4 @@
+				<?= (ENVIRONMENT === 'development') ?  '<div class="text-center text-primary font-weight-bold">Page Rendered in {elapsed_time} seconds.</div>' : '' ?>
 			</div>
 		</div>	
 	</div>
@@ -18,6 +19,15 @@
 	<?php endif ?>
 	<?php if ($p=='late'): ?>
 		<script src="<?= base_url('assets/js/late.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='management/employee'): ?>
+		<script src="<?= base_url('assets/js/management/employee.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='management/internal'): ?>
+		<script src="<?= base_url('assets/js/management/internal.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='management/visitor'): ?>
+		<script src="<?= base_url('assets/js/management/visitor.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='management/departement'): ?>
 		<script src="<?= base_url('assets/js/management/departement.js') ?>"></script>
