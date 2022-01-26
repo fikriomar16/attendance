@@ -33,7 +33,7 @@
 					<div class="row justify-content-center my-2">
 						<div class="col">
 							<div class="table-responsive px-1">
-								<table width="100%" class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('management/dt_dept') ?>">
+								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('management/dt_dept') ?>">
 									<thead class="thead-light">
 										<tr>
 											<th width="5%">

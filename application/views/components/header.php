@@ -11,5 +11,5 @@
 	<link rel="icon" href="<?= base_url('assets/img/undraw_posting_photo.svg') ?>">
 	<title><?= $title ?? '' ?></title>
 </head>
-<body id="page-top">
+<body id="page-top" data-home="<?= base_url() ?>">
 	<div id="wrapper">

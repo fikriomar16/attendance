@@ -42,7 +42,7 @@
 					<div class="row justify-content-center my-2">
 						<div class="col">
 							<div class="table-responsive">
-								<table width="100%" class="table table-striped table-hover align-middle shadow-sm" id="dataTable">
+								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable">
 									<thead class="thead-light">
 										<tr>
 											<th width="10%">No</th>

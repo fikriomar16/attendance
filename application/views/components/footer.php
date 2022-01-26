@@ -20,6 +20,12 @@
 	<?php if ($p=='late'): ?>
 		<script src="<?= base_url('assets/js/late.js') ?>"></script>
 	<?php endif ?>
+	<?php if ($p=='schedule/employee'): ?>
+		<script src="<?= base_url('assets/js/schedule/employee.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='schedule/internal'): ?>
+		<script src="<?= base_url('assets/js/schedule/internal.js') ?>"></script>
+	<?php endif ?>
 	<?php if ($p=='management/employee'): ?>
 		<script src="<?= base_url('assets/js/management/employee.js') ?>"></script>
 	<?php endif ?>

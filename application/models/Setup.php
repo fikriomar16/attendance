@@ -60,7 +60,7 @@ class Setup extends CI_Model {
 	{
 		return $this->db->get_where('sys_gates',[
 			'id' => $id
-		])->row();
+		])->get()->row();
 	}
 
 	public function _get_datatable_duration()
@@ -120,7 +120,7 @@ class Setup extends CI_Model {
 	{
 		return $this->db->get_where('sys_duration',[
 			'id' => $id
-		])->row();
+		])->get()->row();
 	}
 
 	public function _get_datatable_card()
@@ -180,7 +180,7 @@ class Setup extends CI_Model {
 	{
 		return $this->db->get_where('sys_cards',[
 			'id' => $id
-		])->row();
+		])->get()->row();
 	}
 
 }

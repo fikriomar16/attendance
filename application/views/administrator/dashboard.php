@@ -67,7 +67,7 @@
 				</div>
 				<div class="card-body p-3">
 					<div class="table-responsive">
-						<table width="100%" class="table table-striped table-hover align-middle" id="dataTable">
+						<table class="table table-striped table-hover align-middle" id="dataTable">
 							<thead class="thead-light">
 								<tr>
 									<th width="20%">Scan Date</th>
