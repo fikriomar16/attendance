@@ -12,9 +12,12 @@ html {
 	scroll-behavior: smooth;
 }
 .btn-rounded {
-    border-radius: 1.563rem;
-    padding: 0.375rem 1rem;
+	border-radius: 1.563rem;
+	padding: 0.375rem 1rem;
 }
 table {
 	width: 100% !important;
+}
+.form-control-user {
+	font-size: 1.2rem !important;
 }

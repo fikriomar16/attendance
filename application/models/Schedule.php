@@ -69,7 +69,17 @@ class Schedule extends CI_Model {
 		$role = 'employee';
 		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
 			$join.'.slug' => $role,
-			'id' => $id
+			$table.'.id' => $id
+		])->get()->row();
+	}
+	public function get_by_nik_employee($nik)
+	{
+		$table = 'sys_users';
+		$join = 'sys_roles';
+		$role = 'employee';
+		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
+			$join.'.slug' => $role,
+			$table.'.nik' => $nik
 		])->get()->row();
 	}
 
@@ -139,7 +149,17 @@ class Schedule extends CI_Model {
 		$role = 'internal';
 		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
 			$join.'.slug' => $role,
-			'id' => $id
+			$table.'.id' => $id
+		])->get()->row();
+	}
+	public function get_by_nik_internal($nik)
+	{
+		$table = 'sys_users';
+		$join = 'sys_roles';
+		$role = 'internal';
+		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
+			$join.'.slug' => $role,
+			$table.'.pid' => $nik
 		])->get()->row();
 	}
 
@@ -217,7 +237,7 @@ class Schedule extends CI_Model {
 		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
 			'tanggal' => $this->session->userdata('employee_sch')['date'],
 			$join.'.slug' => $role,
-			$table.'.nik' => $nik
+			$table.'.pid' => $nik
 		])->get()->row();
 	}
 	// get random data for initiating datatable for schedule
@@ -228,7 +248,7 @@ class Schedule extends CI_Model {
 		$role = 'employee';
 		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
 			$join.'.slug' => $role
-		])->order_by('nik','asc')->limit(1)->get()->row();
+		])->order_by('nik','desc')->limit(1)->get()->row();
 	}
 
 	public function _get_datatable_internal_sch()
@@ -297,7 +317,18 @@ class Schedule extends CI_Model {
 			'nik' => $this->session->userdata('internal_sch')['nik']
 		])->count_all_results();
 	}
-	public function get_by_id_internal_sch($nik)
+	public function get_by_id_internal_sch($id)
+	{
+		$table = 'sys_sch_users';
+		$join = 'sys_roles';
+		$role = 'internal';
+		return $this->db->from($table)->join($join,$table.'.role_id = '.$join.'.id', 'left')->where([
+			'tanggal' => $this->session->userdata('internal_sch')['date'],
+			$join.'.slug' => $role,
+			$table.'.id' => $id
+		])->get()->row();
+	}
+	public function get_by_nik_internal_sch($nik)
 	{
 		$table = 'sys_sch_users';
 		$join = 'sys_roles';

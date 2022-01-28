@@ -47,10 +47,12 @@ app.controller('schEmp',($scope,$http) => {
 	$scope.getsch = (nik) => {
 		angular.element('.card-schedule').removeClass('d-none');
 		$scope.schId = nik;
+		$scope.getNIK = nik;
 		$http.get(angular.element('.card-schedule').data('source')+$scope.schId).then((res) => {
 			$scope.getSchName = res.data.getSchName;
 			$scope.getSchDate= res.data.getSchDate;
 			table_sch.DataTable().ajax.reload();
+			angular.element('.scroll-to-top').click();
 		});
 	}
 	$scope.getToday = () => {

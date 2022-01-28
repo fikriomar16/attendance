@@ -72,6 +72,13 @@ $route = [
 	'attendance/employee' => 'AttendanceController/employee',
 	'attendance/internal' => 'AttendanceController/internal',
 	'attendance/visitor' => 'AttendanceController/visitor',
+	'attendance/dt_employee' => 'AttendanceController/dt_employee',
+	'attendance/dt_internal' => 'AttendanceController/dt_internal',
+	'attendance/dt_visitor' => 'AttendanceController/dt_visitor',
+	'attendance/sch_employee' => 'AttendanceController/sch_employee',
+	'attendance/sch_internal' => 'AttendanceController/sch_internal',
+	'attendance/sch_visitor' => 'AttendanceController/sch_visitor',
+	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',
 
 	'management' => 'ManagementController',
 	'management/employee' => 'ManagementController/employee',

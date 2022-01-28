@@ -11,7 +11,16 @@
 	<script src="<?= base_url('assets/vendor/bootstrap/js/bootstrap.bundle.min.js') ?>"></script>
 	<script src="<?= base_url('assets/js/angular.min.js') ?>"></script>
 	<script src="<?= base_url('assets/js/sb-admin-2.min.js') ?>"></script>
-
+	<!-- Additional -->
+	<script src="<?= base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
+	<script src="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
+	<script src="<?= base_url('assets/js/bootstrap-select.min.js') ?>"></script>
+	<script type="text/javascript">
+		$(document).ready(() => {
+			$('select').selectpicker();
+		});
+	</script>
+	<script src="<?= base_url('assets/vendor/flatpickr/dist/flatpickr.min.js') ?>"></script>
 	<!-- Functional -->
 	<?php $p = uri_string(); ?>
 	<?php if ($p=='dashboard'||$p==''): ?>
@@ -25,6 +34,15 @@
 	<?php endif ?>
 	<?php if ($p=='schedule/internal'): ?>
 		<script src="<?= base_url('assets/js/schedule/internal.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='attendance/employee'): ?>
+		<script src="<?= base_url('assets/js/attendance/employee.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='attendance/internal'): ?>
+		<script src="<?= base_url('assets/js/attendance/internal.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='attendance/visitor'): ?>
+		<script src="<?= base_url('assets/js/attendance/visitor.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='management/employee'): ?>
 		<script src="<?= base_url('assets/js/management/employee.js') ?>"></script>
@@ -50,9 +68,5 @@
 	<?php if ($p=='setup/menu'): ?>
 		<script src="<?= base_url('assets/js/setup/menu.js') ?>"></script>
 	<?php endif ?>
-
-	<!-- Additional -->
-	<script src="<?= base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
-	<script src="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
 </body>
 </html>

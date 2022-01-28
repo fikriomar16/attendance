@@ -102,8 +102,20 @@ class ScheduleController extends CI_Controller {
 			'date' => date("Y-m-d")
 		]);
 		echo json_encode([
-			'getSchName' => $this->schedule->get_by_id_employee_sch($nik)->nama,
+			'getSchName' => $this->schedule->get_by_nik_employee($nik)->nama,
 			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('employee_sch')['date'])),
+			'schId' => $nik
+		]);
+	}
+	public function getresume_int($nik)
+	{
+		$this->session->set_userdata('internal_sch',[
+			'nik' => $nik,
+			'date' => date("Y-m-d")
+		]);
+		echo json_encode([
+			'getSchName' => $this->schedule->get_by_nik_internal($nik)->nama,
+			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('internal_sch')['date'])),
 			'schId' => $nik
 		]);
 	}
@@ -211,7 +223,7 @@ class ScheduleController extends CI_Controller {
 			$row[] = $int->nama;
 			$row[] = $int->pid;
 			$row[] = $int->name;
-			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$int->id.'" onclick="angular.element(this).scope().getsch('.$int->id.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
+			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$int->nik.'" onclick="angular.element(this).scope().getsch('.$int->nik.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
 
 			$data[] = $row;
 		}

@@ -2,10 +2,10 @@
 	<div class="row justify-content-center">
 		<div class="col">
 			<div class="card border-0 shadow mb-4 rounded card-schedule d-none" data-source="<?= base_url('getresume_emp') ?>/">
-				<div class="card-header border-0">
+				<div class="card-header border-0 shadow-sm">
 					<div class="row justify-content-between">
 						<div class="col-auto">
-							<span class="text-primary font-weight-bold px-3">Nama : {{getSchName}}</span>
+							<span class="text-primary font-weight-bold px-3">Nama : {{getSchName}} / NIK : {{getNIK}}</span>
 						</div>
 						<div class="col-auto">
 							<span class="text-primary font-weight-bold px-3">Tanggal : {{getSchDate}}</span>
@@ -14,7 +14,7 @@
 				</div>
 				<div class="card-body p-3">
 					<input type="hidden" ng-model="schId">
-					<div class="row justify-content-between my-1 px-1">
+					<div class="row justify-content-center my-1 px-1">
 						<div class="col-auto my-1">
 							<button type="button" class="btn btn-primary btn-sm" ng-click="getYesterday()"><i class="fas fa-fw fa-chevron-left"></i> Hari Sebelum</button>
 						</div>
@@ -24,7 +24,7 @@
 							</button>
 						</div>
 						<div class="col-auto my-1">
-							<button type="button" class="btn btn-primary btn-sm" ng-click="getTomorrow()"><i class="fas fa-fw fa-chevron-right"></i> Hari Sesudah</button>
+							<button type="button" class="btn btn-primary btn-sm" ng-click="getTomorrow()">Hari Sesudah <i class="fas fa-fw fa-chevron-right"></i></button>
 						</div>
 					</div>
 					<div class="row justify-content-center my-2">
@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<div class="card-footer border-0">
-					<button type="button" class="btn btn-danger btn-sm" ng-click="closeSch()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
+					<button type="button" class="btn btn-danger btn-sm btn-rounded shadow-sm" ng-click="closeSch()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
 				</div>
 			</div>
 		</div>
