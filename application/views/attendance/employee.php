@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-app="attEmployee" ng-controller="attEmployee">
 	<div class="row justify-content-between">
 		<div class="col">
-			<div class="card border-0 shadow rounded mt-1 mb-5">
+			<div class="card border-0 shadow rounded mt-1 mb-5 card-show d-none">
 				<div class="card-header">
 					<div class="row justify-content-between">
 						<div class="col-auto">
@@ -41,7 +41,7 @@
 							</ul>
 							<div class="tab-content" id="pills-tabContent">
 								<div class="tab-pane fade show active" id="att_summary" role="tabpanel" aria-labelledby="pills-home-tab">
-									<div class="row justify-content-center card-summary" data-source="<?= base_url('attsummary_emp/') ?>">
+									<div class="row justify-content-center card-summary">
 										<div class="col-xl-9">
 											<div class="row justify-content-center mx-1 my-3">
 												<div class="col">
@@ -61,6 +61,7 @@
 															<th>Last Scan</th>
 															<th>Late Duration</th>
 															<th>Out Duration</th>
+															<th>In Duration</th>
 														</tr>
 													</thead>
 													<tbody></tbody>
@@ -70,7 +71,7 @@
 									</div>
 								</div>
 								<div class="tab-pane fade" id="att_detail" role="tabpanel" aria-labelledby="pills-profile-tab">
-									<div class="row justify-content-center mx-1 card-detail" data-source="<?= base_url('attdetail_emp/') ?>">
+									<div class="row justify-content-center mx-1 card-detail">
 										<div class="col">
 											<div class="table-responsive px-1">
 												<table class="table table-striped table-hover align-middle shadow-sm" id="detRecapTable" data-source="<?= base_url('attendance/att_det_recap_emp') ?>">
@@ -85,6 +86,7 @@
 															<th>Last Scan</th>
 															<th>Late Duration</th>
 															<th>Out Duration</th>
+															<th>In Duration</th>
 														</tr>
 													</thead>
 													<tbody></tbody>
@@ -107,7 +109,7 @@
 											<div class="row justify-content-center">
 												<div class="col">
 													<div class="table-responsive px-1">
-														<table class="table table-striped table-hover align-middle shadow-sm" id="detRecapTable" data-source="<?= base_url('attendance/att_hist_scan_emp') ?>">
+														<table class="table table-striped table-hover align-middle shadow-sm" id="detHistoryTable" data-source="<?= base_url('attendance/att_hist_scan_emp') ?>">
 															<thead class="thead-light">
 																<tr>
 																	<th width="5%">#</th>
@@ -124,8 +126,10 @@
 											</div>
 										</div>
 										<div class="col-lg-4 p-2">
-											<div class="my-2 col-8">
-												<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Alt Img" class="img-fluid">
+											<div class="my-2 row justify-content-center">
+												<div class="col-lg-8">
+													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Alt Img" class="img-fluid">
+												</div>
 											</div>
 										</div>
 									</div>
@@ -185,7 +189,7 @@
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<select class="form-control border-0 col-3 bg-light" name="shift_filter" id="shift_filter" data-style="btn-light font-weight-bold">
+								<select class="form-control border-0 col-3 bg-light" name="shift_filter" id="shift_filter" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
 									<option value="">All Shift</option>
 									<option value="1">Shift 1</option>
 									<option value="2">Shift 2</option>

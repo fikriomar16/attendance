@@ -78,7 +78,20 @@ $route = [
 	'attendance/sch_employee' => 'AttendanceController/sch_employee',
 	'attendance/sch_internal' => 'AttendanceController/sch_internal',
 	'attendance/sch_visitor' => 'AttendanceController/sch_visitor',
+	// set Date
+	'attendance/att_yesterday_emp' => 'AttendanceController/att_yesterday_emp',
+	'attendance/att_today_emp' => 'AttendanceController/att_today_emp',
+	'attendance/att_tomorrow_emp' => 'AttendanceController/att_tomorrow_emp',
+	'attendance/att_yesterday_emp_detail' => 'AttendanceController/att_yesterday_emp_detail',
+	'attendance/att_today_emp_detail' => 'AttendanceController/att_today_emp_detail',
+	'attendance/att_tomorrow_emp_detail' => 'AttendanceController/att_tomorrow_emp_detail',
+
+	'attendance/set_shift/(:any)' => 'AttendanceController/set_shift/$1',
 	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',
+	// dataTable
+	'attendance/att_sum_emp' => 'AttendanceController/att_sum_emp',
+	'attendance/att_det_recap_emp' => 'AttendanceController/att_det_recap_emp',
+	'attendance/att_hist_scan_emp' => 'AttendanceController/att_hist_scan_emp',
 
 	'management' => 'ManagementController',
 	'management/employee' => 'ManagementController/employee',

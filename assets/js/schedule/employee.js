@@ -1,7 +1,7 @@
 const base = angular.element('body').data('home');
 const table = angular.element('#dataTable');
-const table_sch = angular.element('#schTable');
 const source = table.data('source');
+const table_sch = angular.element('#schTable');
 const source_sch = table_sch.data('source');
 const app = angular.module('schEmp', []);
 app.controller('schEmp',($scope,$http) => {
