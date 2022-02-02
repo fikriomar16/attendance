@@ -56,45 +56,6 @@ class ScheduleController extends CI_Controller {
 			'date' => strftime('%A, %d %B %Y', strtotime($tdy))
 		]);
 	}
-	public function get_yesterday_int()
-	{
-		$get_ytd = new DateTime($this->session->userdata('internal_sch')['date']);
-		$ytd = $get_ytd->modify('-1 day')->format('Y-m-d');
-		if ($ytd) {
-			$this->session->set_userdata('internal_sch',[
-				'date' => $ytd,
-				'nik' => $this->session->userdata('internal_sch')['nik']
-			]);
-		}
-		echo json_encode([
-			'date' => strftime('%A, %d %B %Y', strtotime($ytd))
-		]);
-	}
-	public function get_tomorrow_int()
-	{
-		$get_tmr = new DateTime($this->session->userdata('internal_sch')['date']);
-		$tmr = $get_tmr->modify('+1 day')->format('Y-m-d');
-		if ($tmr) {
-			$this->session->set_userdata('internal_sch',[
-				'date' => $tmr,
-				'nik' => $this->session->userdata('internal_sch')['nik']
-			]);
-		}
-		echo json_encode([
-			'date' => strftime('%A, %d %B %Y', strtotime($tmr))
-		]);
-	}
-	public function get_today_int()
-	{
-		$tdy = date("Y-m-d");
-		$this->session->set_userdata('internal_sch',[
-			'date' => $tdy,
-			'nik' => $this->session->userdata('internal_sch')['nik']
-		]);
-		echo json_encode([
-			'date' => strftime('%A, %d %B %Y', strtotime($tdy))
-		]);
-	}
 	public function getresume_emp($nik)
 	{
 		$this->session->set_userdata('employee_sch',[
@@ -104,18 +65,6 @@ class ScheduleController extends CI_Controller {
 		echo json_encode([
 			'getSchName' => $this->schedule->get_by_nik_employee($nik)->nama,
 			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('employee_sch')['date'])),
-			'schId' => $nik
-		]);
-	}
-	public function getresume_int($nik)
-	{
-		$this->session->set_userdata('internal_sch',[
-			'nik' => $nik,
-			'date' => date("Y-m-d")
-		]);
-		echo json_encode([
-			'getSchName' => $this->schedule->get_by_nik_internal($nik)->nama,
-			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('internal_sch')['date'])),
 			'schId' => $nik
 		]);
 	}
@@ -187,77 +136,6 @@ class ScheduleController extends CI_Controller {
 			"draw" => $_POST['draw'],
 			"recordsTotal" => $this->schedule->count_all_employee_sch(),
 			"recordsFiltered" => $this->schedule->count_filtered_employee_sch(),
-			"data" => $data,
-		];
-		echo json_encode($output);
-	}
-
-	public function internal()
-	{
-		if (!$this->session->userdata('user')) {
-			redirect('login');
-		}
-		$this->session->set_userdata('internal_sch',[
-			'nik' => $this->schedule->set_emp_sch_rndm()->nik,
-			'date' => date("Y-m-d")
-		]);
-		$data = [
-			'title' => 'Internal Schedule',
-			'nav_title' => 'Internal Schedule Manager'
-		];
-		$this->load->view('components/header', $data);
-		$this->load->view('components/sidebar', $data);
-		$this->load->view('components/topbar', $data);
-		$this->load->view('schedule/internal', $data);
-		$this->load->view('components/footer', $data);
-	}
-	public function dt_internal()
-	{
-		$list = $this->schedule->datatable_internal();
-		$data = [];
-		$no = $_POST['start'];
-		foreach ($list as $int) {
-			$no++;
-			$row = [];
-			$row[] = $no;
-			$row[] = $int->nama;
-			$row[] = $int->pid;
-			$row[] = $int->name;
-			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$int->nik.'" onclick="angular.element(this).scope().getsch('.$int->nik.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
-
-			$data[] = $row;
-		}
-		$output = [
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->schedule->count_all_internal(),
-			"recordsFiltered" => $this->schedule->count_filtered_internal(),
-			"data" => $data,
-		];
-		echo json_encode($output);
-	}
-	public function sch_internal()
-	{
-		$list = $this->schedule->datatable_internal_sch();
-		$data = [];
-		$no = $_POST['start'];
-		foreach ($list as $int) {
-			$no++;
-			$row = [];
-			$row[] = strftime('%A', strtotime($int->tanggal));
-			$row[] = $int->tanggal;
-			$row[] = $int->masuk;
-			$row[] = $int->pulang;
-			$row[] = '<div class="btn-group btn-group-sm shadow-sm border-0" role="group">
-			<button type="button" class="btn btn-primary btn-edit" data-id="'.$int->nik.'" onclick="angular.element(this).scope().edit('.$int->nik.')"><i class="fas fa-fw fa-pen"></i></button>
-			<button type="button" class="btn btn-danger btn-delete" data-id="'.$int->nik.'" onclick="angular.element(this).scope().delete('.$int->nik.')"><i class="fas fa-fw fa-trash"></i></button>
-			</div>';
-
-			$data[] = $row;
-		}
-		$output = [
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->schedule->count_all_internal_sch(),
-			"recordsFiltered" => $this->schedule->count_filtered_internal_sch(),
 			"data" => $data,
 		];
 		echo json_encode($output);

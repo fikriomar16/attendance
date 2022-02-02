@@ -34,45 +34,10 @@
 			<span>Employee</span>
 		</a>
 	</li>
-	<li class="nav-item <?= ($p=='attendance/internal')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('attendance/internal') ?>">
-			<i class="fas fa-fw fa-id-card"></i>
-			<span>Internal</span>
-		</a>
-	</li>
 	<li class="nav-item <?= ($p=='attendance/visitor')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('attendance/visitor') ?>">
 			<i class="far fa-fw fa-credit-card"></i>
 			<span>Visitor</span>
-		</a>
-	</li>
-	<hr class="sidebar-divider">
-	<!-- User Management -->
-	<div class="sidebar-heading">
-		User Management
-	</div>
-	<li class="nav-item <?= ($p=='management/employee')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('management/employee') ?>">
-			<i class="fas fa-fw fa-user"></i>
-			<span>Employee</span>
-		</a>
-	</li>
-	<li class="nav-item <?= ($p=='management/internal')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('management/internal') ?>">
-			<i class="fas fa-fw fa-id-card"></i>
-			<span>Internal</span>
-		</a>
-	</li>
-	<li class="nav-item <?= ($p=='management/visitor')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('management/visitor') ?>">
-			<i class="fas fa-fw fa-users"></i>
-			<span>Visitor</span>
-		</a>
-	</li>
-	<li class="nav-item <?= ($p=='management/departement')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('management/departement') ?>">
-			<i class="fas fa-fw fa-building"></i>
-			<span>Departement</span>
 		</a>
 	</li>
 	<hr class="sidebar-divider">
@@ -86,29 +51,11 @@
 			<span>Employee</span>
 		</a>
 	</li>
-	<li class="nav-item <?= ($p=='schedule/internal')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('schedule/internal') ?>">
-			<i class="fas fa-fw fa-id-card"></i>
-			<span>Internal</span>
-		</a>
-	</li>
 	<hr class="sidebar-divider">
 	<!-- Setup -->
 	<div class="sidebar-heading">
 		Setup
 	</div>
-	<li class="nav-item <?= ($p=='setup/gate')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('setup/gate') ?>">
-			<i class="fas fa-fw fa-door-open"></i>
-			<span>Gate</span>
-		</a>
-	</li>
-	<li class="nav-item <?= ($p=='setup/card')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('setup/card') ?>">
-			<i class="fas fa-fw fa-credit-card"></i>
-			<span>Card</span>
-		</a>
-	</li>
 	<li class="nav-item <?= ($p=='setup/duration')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('setup/duration') ?>">
 			<i class="fas fa-fw fa-stopwatch"></i>

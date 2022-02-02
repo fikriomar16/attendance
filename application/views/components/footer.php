@@ -24,46 +24,22 @@
 	<!-- Functional -->
 	<?php $p = uri_string(); ?>
 	<?php if ($p=='dashboard'||$p==''): ?>
-		<script src="<?= base_url('assets/js/dashboard.js') ?>"></script>
+		<script src="<?= base_url('assets/js/administrator/dashboard.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='late'): ?>
-		<script src="<?= base_url('assets/js/late.js') ?>"></script>
+		<script src="<?= base_url('assets/js/administrator/late.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='schedule/employee'): ?>
 		<script src="<?= base_url('assets/js/schedule/employee.js') ?>"></script>
 	<?php endif ?>
-	<?php if ($p=='schedule/internal'): ?>
-		<script src="<?= base_url('assets/js/schedule/internal.js') ?>"></script>
-	<?php endif ?>
 	<?php if ($p=='attendance/employee'): ?>
 		<script src="<?= base_url('assets/js/attendance/employee.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='attendance/internal'): ?>
-		<script src="<?= base_url('assets/js/attendance/internal.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='attendance/visitor'): ?>
 		<script src="<?= base_url('assets/js/attendance/visitor.js') ?>"></script>
 	<?php endif ?>
-	<?php if ($p=='management/employee'): ?>
-		<script src="<?= base_url('assets/js/management/employee.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='management/internal'): ?>
-		<script src="<?= base_url('assets/js/management/internal.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='management/visitor'): ?>
-		<script src="<?= base_url('assets/js/management/visitor.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='management/departement'): ?>
-		<script src="<?= base_url('assets/js/management/departement.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='setup/gate'): ?>
-		<script src="<?= base_url('assets/js/setup/gate.js') ?>"></script>
-	<?php endif ?>
 	<?php if ($p=='setup/duration'): ?>
 		<script src="<?= base_url('assets/js/setup/duration.js') ?>"></script>
-	<?php endif ?>
-	<?php if ($p=='setup/card'): ?>
-		<script src="<?= base_url('assets/js/setup/card.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='setup/menu'): ?>
 		<script src="<?= base_url('assets/js/setup/menu.js') ?>"></script>

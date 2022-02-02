@@ -58,6 +58,21 @@ app.controller('attEmployee',($scope,$http) => {
 			"orderable": false
 		}]
 	});
+	// tableDetHistory.DataTable({
+	// 	"sDom" : 'tipr',
+	// 	"processing": true,
+	// 	"serverSide": true,
+	// 	"responsive": true,
+	// 	"order": [],
+	// 	"ajax": {
+	// 		"url": sourceDetHistory,
+	// 		"type": "POST"
+	// 	},
+	// 	"columnDefs": [{ 
+	// 		"targets": [],
+	// 		"orderable": false
+	// 	}]
+	// });
 	$scope.getShift = () => {
 		// table.DataTable().column(4).search($scope.shiftList).draw();
 		if ($scope.shiftList == '') {
@@ -89,6 +104,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 		angular.element('.card-show').removeClass('d-none');
 	}
@@ -98,6 +114,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 	$scope.getAttToday = () => {
@@ -106,6 +123,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 	$scope.getAttTomorrow = () => {
@@ -114,6 +132,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 	$scope.getYesterday = () => {
@@ -124,6 +143,7 @@ app.controller('attEmployee',($scope,$http) => {
 			table.DataTable().ajax.reload();
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 	$scope.getToday = () => {
@@ -134,6 +154,7 @@ app.controller('attEmployee',($scope,$http) => {
 			table.DataTable().ajax.reload();
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 	$scope.getTomorrow = () => {
@@ -144,6 +165,7 @@ app.controller('attEmployee',($scope,$http) => {
 			table.DataTable().ajax.reload();
 			table_sum.DataTable().ajax.reload();
 			tableDetRecap.DataTable().ajax.reload();
+			// tableDetHistory.DataTable().ajax.reload();
 		});
 	}
 });

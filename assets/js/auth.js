@@ -25,3 +25,31 @@ app.controller('loginController',($scope,$http) => {
 		});
 	}
 });
+app.directive('toPassword',() => {
+	return {
+		restrict: 'A',
+		link: ($scope,elem,attrs) => {
+			elem.bind('keydown', (e) => {
+				let code = e.keyCode || e.which;
+				if (code === 13) {
+					e.preventDefault();
+					angular.element('#password').focus();
+				}
+			});
+		}
+	}
+});
+app.directive('toLogin',() => {
+	return {
+		restrict: 'A',
+		link: ($scope,elem,attrs) => {
+			elem.bind('keydown', (e) => {
+				let code = e.keyCode || e.which;
+				if (code === 13) {
+					e.preventDefault();
+					angular.element('.btn-user').click();
+				}
+			});
+		}
+	}
+});

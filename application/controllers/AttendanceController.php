@@ -48,7 +48,7 @@ class AttendanceController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $no;
-			$row[] = '<span class="badge badge-pill badge-success">Scan</span>';
+			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
 			$row[] = $emp->nama;
 			$row[] = $emp->pid;
 			$row[] = $emp->shift;
@@ -166,7 +166,7 @@ class AttendanceController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $emp->date;
-			$row[] = '<span class="badge badge-pill badge-success">Scan</span>';
+			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
 			$row[] = $emp->shift;
 			$row[] = $emp->in_scan;
 			$row[] = $emp->out_scan;
@@ -215,22 +215,7 @@ class AttendanceController extends CI_Controller {
 	}
 	public function att_hist_scan_emp()
 	{
-		// code...
-	}
-
-	public function internal()
-	{
-		if (!$this->session->userdata('user')) {
-			redirect('login');
-		}
-		$data = [
-			'title' => 'Internal Attendance'
-		];
-		$this->load->view('components/header', $data);
-		$this->load->view('components/sidebar', $data);
-		$this->load->view('components/topbar', $data);
-		$this->load->view('attendance/internal', $data);
-		$this->load->view('components/footer', $data);
+		$list = $this->attendance->dt_history_emp();
 	}
 
 	public function Visitor()

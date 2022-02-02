@@ -119,7 +119,7 @@
 																	<th width="10%">In / Out</th>
 																</tr>
 															</thead>
-															<tbody></tbody>
+															<tbody id="tblHistory"></tbody>
 														</table>
 													</div>
 												</div>

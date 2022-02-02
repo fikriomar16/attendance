@@ -28,11 +28,11 @@
 						<form method="post" class="user" action="<?= base_url('auth') ?>" id="loginForm" name="loginForm">
 							<div class="form-group">
 								<label class="font-weight-bold">Username</label>
-								<input type="text" class="form-control form-control-user text-center" id="username" name="username" ng-model="username" autofocus>
+								<input type="text" class="form-control form-control-user text-center" id="username" name="username" ng-model="username" to-password autofocus>
 							</div>
 							<div class="form-group">
 								<label class="font-weight-bold">Password</label>
-								<input type="password" class="form-control form-control-user text-center" id="password" name="password" ng-model="password">
+								<input type="password" class="form-control form-control-user text-center" id="password" name="password" ng-model="password" to-login>
 							</div>
 							<button type="button" class="btn btn-primary btn-user btn-block shadow-lg" ng-click="auth()">
 								<p class="h5 font-weight-bold">Login</p>
