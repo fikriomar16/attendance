@@ -63,7 +63,7 @@ class ScheduleController extends CI_Controller {
 			'date' => date("Y-m-d")
 		]);
 		echo json_encode([
-			'getSchName' => $this->schedule->get_by_nik_employee($nik)->nama,
+			'getSchName' => $this->schedule->get_by_nik_employee($nik)->name ?? '',
 			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('employee_sch')['date'])),
 			'schId' => $nik
 		]);
@@ -97,10 +97,10 @@ class ScheduleController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $no;
-			$row[] = $emp->nama;
-			$row[] = $emp->pid;
+			$row[] = $emp->name_spell;
+			$row[] = $emp->pin;
 			$row[] = $emp->name;
-			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->nik.'" onclick="angular.element(this).scope().getsch('.$emp->nik.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
+			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().getsch('.$emp->pin.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
 
 			$data[] = $row;
 		}

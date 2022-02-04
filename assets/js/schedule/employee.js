@@ -30,7 +30,7 @@ app.controller('schEmp',($scope,$http) => {
 		table.DataTable().ajax.reload();
 	}
 	table_sch.DataTable({
-		"sDom" : 'tipr',
+		"sDom" : 'tr',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,

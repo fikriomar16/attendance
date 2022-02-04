@@ -5,12 +5,12 @@ class Schedule extends CI_Model {
 
 	public function _get_datatable_employee()
 	{
-		$table = 'sys_users';
-		$join2 = 'sys_departements';
-		$order = ['pid' => 'asc'];
-		$column_order = [null,'nama','pid',$join2.'.id'];
-		$column_search = ['nama','CAST(pid as varchar)',$join2.'.name'];
-		$this->db->from($table)->join($join2,$table.'.departement_id = '.$join2.'.id', 'left');
+		$table = 'pers_person';
+		$join2 = 'auth_department';
+		$order = ['pin' => 'asc'];
+		$column_order = [null,$table.'.name',$table.'.pin',$join2.'.code'];
+		$column_search = [$table.'.name',$table.'.name_spell',$table.'.pin',$join2.'.name'];
+		$this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left');
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -55,21 +55,21 @@ class Schedule extends CI_Model {
 	}
 	public function count_all_employee()
 	{
-		$table = 'sys_users';
+		$table = 'pers_person';
 		return $this->db->from($table)->count_all_results();
 	}
 	public function get_by_id_employee($id)
 	{
-		$table = 'sys_users';
+		$table = 'pers_person';
 		return $this->db->from($table)->where([
 			$table.'.id' => $id
 		])->get()->row();
 	}
-	public function get_by_nik_employee($nik)
+	public function get_by_nik_employee($pin)
 	{
-		$table = 'sys_users';
+		$table = 'pers_person';
 		return $this->db->from($table)->where([
-			$table.'.nik' => $nik
+			$table.'.pin' => $pin
 		])->get()->row();
 	}
 

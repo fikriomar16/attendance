@@ -28,16 +28,22 @@ class TestingController extends CI_Controller {
 		echo json_encode($this->testing->reset_table('acc_transaction'),JSON_PRETTY_PRINT);
 	}
 
-	public function tr_tier2()
+	public function tr_tier2a()
 	{
 		header('Content-Type: application/json');
-		echo json_encode($this->testing->reset_table('filter_transaction'),JSON_PRETTY_PRINT);
+		echo json_encode($this->testing->reset_table('acc_transaction_2a'),JSON_PRETTY_PRINT);
+	}
+
+	public function tr_tier2c()
+	{
+		header('Content-Type: application/json');
+		echo json_encode($this->testing->reset_table('acc_transaction_2c'),JSON_PRETTY_PRINT);
 	}
 
 	public function tr_tier3()
 	{
 		header('Content-Type: application/json');
-		echo json_encode($this->testing->reset_table('final_transaction'),JSON_PRETTY_PRINT);
+		echo json_encode($this->testing->reset_table('acc_transaction_3a'),JSON_PRETTY_PRINT);
 	}
 
 	public function tr_all_tier()

@@ -10,21 +10,21 @@ class Attendance extends CI_Model {
 	}
 	public function get_by_nik_employee($nik)
 	{
-		$table = 'sys_users';
+		$table = 'pers_person';
 		return $this->db->from($table)->where([
-			$table.'.nik' => $nik
+			$table.'.pin' => $nik
 		])->get()->row();
 	}
 
 	public function _get_datatable_employee()
 	{
-		$table = 'sys_users';
-		$join2 = 'sys_departements';
-		$join3 = 'final_transaction';
-		$order = ['pid' => 'asc'];
-		$column_order = [null,null,'nama','pid','shift',$join2.'.id'];
-		$column_search = ['nama','CAST(pid as varchar)','CAST(shift as varchar)',$join2.'.name'];
-		$this->db->from($table)->join($join2,$table.'.departement_id = '.$join2.'.id', 'left')->join($join3,$table.'.id = '.$join3.'.user_id')->where([
+		$table = 'pers_person';
+		$join2 = 'auth_department';
+		$join3 = 'acc_transaction_3a';
+		$order = [$table.'.pin' => 'asc'];
+		$column_order = [null,null,'name_spell','pin','shift',$join2.'.code'];
+		$column_search = ['name_spell','pin','shift',$join2.'.name'];
+		$this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
 			$join3.'.date' => $this->session->userdata('att_emp_date')
 		]);
 		if ($this->session->userdata('att_emp_shift')) {
@@ -74,17 +74,17 @@ class Attendance extends CI_Model {
 	}
 	public function count_all_employee()
 	{
-		$table = 'sys_users';
-		$join2 = 'sys_departements';
-		$join3 = 'final_transaction';
-		return $this->db->from($table)->join($join2,$table.'.departement_id = '.$join2.'.id', 'left')->join($join3,$table.'.id = '.$join3.'.user_id')->where([
+		$table = 'pers_person';
+		$join2 = 'auth_department';
+		$join3 = 'acc_transaction_3a';
+		return $this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
 			$join3.'.date' => $this->session->userdata('att_emp_date')
 		])->count_all_results();
 	}
 
 	public function _get_dt_detail_emp()
 	{
-		$table = 'final_transaction';
+		$table = 'acc_transaction_3a';
 		$order = ['pin' => 'desc'];
 		$column_order = ['date','shift','masuk','pulang','in_scan','out_scan','late_duration','out_duration','in_duration'];
 		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)','CAST(out_duration as varchar)','CAST(in_duration as varchar)'];
@@ -136,7 +136,7 @@ class Attendance extends CI_Model {
 	}
 	public function count_all_detail_emp()
 	{
-		$table = 'final_transaction';
+		$table = 'acc_transaction_3a';
 		return $this->db->from($table)->where([
 			'date' => $this->session->userdata('att_emp_date_search'),
 			'pin' => $this->session->userdata('att_emp_nik')
@@ -145,6 +145,14 @@ class Attendance extends CI_Model {
 
 	public function _get_dt_history_emp()
 	{
+		$table = 'acc_transaction_2a';
+		$order = [$table.'.event_time' => 'desc'];
+		$column_order = [null,'event_time','dev_alias','shift','dev_alias'];
+		$column_search = ['CAST(event_time as varchar)','dev_alias','shift'];
+		$this->db->from($table)->where([
+			'date' => $this->session->userdata('att_emp_date_search'),
+			'pin' => $this->session->userdata('att_emp_nik')
+		]);
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -189,6 +197,11 @@ class Attendance extends CI_Model {
 	}
 	public function count_all_history_emp()
 	{
+		$table = 'acc_transaction_2a';
+		return $this->db->from($table)->where([
+			'date' => $this->session->userdata('att_emp_date_search'),
+			'pin' => $this->session->userdata('att_emp_nik')
+		])->count_all_results();
 	}
 
 }

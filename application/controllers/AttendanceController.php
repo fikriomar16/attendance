@@ -49,11 +49,11 @@ class AttendanceController extends CI_Controller {
 			$row = [];
 			$row[] = $no;
 			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
-			$row[] = $emp->nama;
-			$row[] = $emp->pid;
+			$row[] = $emp->name_spell;
+			$row[] = $emp->pin;
 			$row[] = $emp->shift;
 			$row[] = $emp->name;
-			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$emp->pid.'" onclick="angular.element(this).scope().show('.$emp->pid.')"><i class="fas fa-fw fa-list-alt"></i></button>';
+			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().show('.$emp->pin.')"><i class="fas fa-fw fa-list-alt"></i></button>';
 
 			$data[] = $row;
 		}
@@ -153,7 +153,7 @@ class AttendanceController extends CI_Controller {
 		]);
 		echo json_encode([
 			'getNIK' => $this->session->userdata('att_emp_nik'),
-			'getName' => $this->attendance->get_by_nik_employee($nik)->nama,
+			'getName' => $this->attendance->get_by_nik_employee($nik)->name,
 			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('att_emp_date_search')))
 		]);
 	}
@@ -216,6 +216,31 @@ class AttendanceController extends CI_Controller {
 	public function att_hist_scan_emp()
 	{
 		$list = $this->attendance->dt_history_emp();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($list as $emp) {
+			if (explode("-",$emp->dev_alias)[0] == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$emp->dev_alias)[0].'</span>';
+			} else if (explode("-",$emp->dev_alias)[0] == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$emp->dev_alias)[0].'</span>';
+			}
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = $emp->event_time;
+			$row[] = $emp->dev_alias;
+			$row[] = $emp->shift;
+			$row[] = $io;
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_history_emp(),
+			"recordsFiltered" => $this->attendance->count_filtered_history_emp(),
+			"data" => $data,
+		];
+		echo json_encode($output);
 	}
 
 	public function Visitor()

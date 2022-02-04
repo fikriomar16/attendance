@@ -29,7 +29,7 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	table_sum.DataTable({
-		"sDom" : 'tipr',
+		"sDom" : 'tir',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -44,7 +44,7 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	tableDetRecap.DataTable({
-		"sDom" : 'tipr',
+		"sDom" : 'tir',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -54,25 +54,25 @@ app.controller('attEmployee',($scope,$http) => {
 			"type": "POST"
 		},
 		"columnDefs": [{ 
-			"targets": [],
+			"targets": [0],
 			"orderable": false
 		}]
 	});
-	// tableDetHistory.DataTable({
-	// 	"sDom" : 'tipr',
-	// 	"processing": true,
-	// 	"serverSide": true,
-	// 	"responsive": true,
-	// 	"order": [],
-	// 	"ajax": {
-	// 		"url": sourceDetHistory,
-	// 		"type": "POST"
-	// 	},
-	// 	"columnDefs": [{ 
-	// 		"targets": [],
-	// 		"orderable": false
-	// 	}]
-	// });
+	tableDetHistory.DataTable({
+		"sDom" : 'tir',
+		"processing": true,
+		"serverSide": true,
+		"responsive": true,
+		"order": [],
+		"ajax": {
+			"url": sourceDetHistory,
+			"type": "POST"
+		},
+		"columnDefs": [{ 
+			"targets": [0],
+			"orderable": false
+		}]
+	});
 	$scope.getShift = () => {
 		// table.DataTable().column(4).search($scope.shiftList).draw();
 		if ($scope.shiftList == '') {
@@ -94,6 +94,12 @@ app.controller('attEmployee',($scope,$http) => {
 	$scope.closeShow = () => {
 		angular.element('.card-show').addClass('d-none');
 	}
+	$scope.refreshDetail = () => {
+		// reload tab
+		table_sum.DataTable().ajax.reload();
+		tableDetRecap.DataTable().ajax.reload();
+		tableDetHistory.DataTable().ajax.reload();
+	}
 	$scope.show = (nik) => {
 		$scope.attId = nik;
 		$scope.getNIK = nik;
@@ -101,38 +107,26 @@ app.controller('attEmployee',($scope,$http) => {
 			angular.element('.scroll-to-top').click();
 			$scope.getName = res.data.getName;
 			$scope.getSearchDate = res.data.getSearchDate;
-			// reload tab
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			angular.element('.card-show').removeClass('d-none');
+			$scope.refreshDetail();
 		});
-		angular.element('.card-show').removeClass('d-none');
 	}
 	$scope.getAttYesterday = () => {
 		$http.get(base+'attendance/att_yesterday_emp_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
-			// reload tab
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 	$scope.getAttToday = () => {
 		$http.get(base+'attendance/att_today_emp_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
-			// reload tab
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 	$scope.getAttTomorrow = () => {
 		$http.get(base+'attendance/att_tomorrow_emp_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
-			// reload tab
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 	$scope.getYesterday = () => {
@@ -141,9 +135,7 @@ app.controller('attEmployee',($scope,$http) => {
 			$scope.getSearchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 	$scope.getToday = () => {
@@ -152,9 +144,7 @@ app.controller('attEmployee',($scope,$http) => {
 			$scope.getSearchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 	$scope.getTomorrow = () => {
@@ -163,9 +153,7 @@ app.controller('attEmployee',($scope,$http) => {
 			$scope.getSearchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
-			table_sum.DataTable().ajax.reload();
-			tableDetRecap.DataTable().ajax.reload();
-			// tableDetHistory.DataTable().ajax.reload();
+			$scope.refreshDetail();
 		});
 	}
 });
