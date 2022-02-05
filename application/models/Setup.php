@@ -6,10 +6,13 @@ class Setup extends CI_Model {
 	public function _get_datatable_duration()
 	{
 		$table = 'sys_duration';
-		$order = ['departement_id' => 'asc'];
-		$column_order = [null,'departement_id','late_allowed','out_allowed'];
-		$column_search = ['sys_departements.name','CAST(late_allowed as varchar)','CAST(out_allowed as varchar)'];
-		$this->db->from($table)->join('sys_departements', 'sys_duration.departement_id = sys_departements.id', 'left');
+		$table2 = 'auth_department';
+		$order = ['auth_dept_id' => 'asc'];
+		$column_order = [null,'auth_dept_id','late_allowed','out_allowed'];
+		$column_search = [$table2.'.name','CAST(late_allowed as varchar)','CAST(out_allowed as varchar)'];
+		$this->db->select(
+			"$table.id,$table2.id as dept_id,$table.auth_dept_id,$table.late_allowed,$table.out_allowed,$table2.name,$table2.code"
+		)->from($table)->join($table2, $table.'.auth_dept_id = '.$table2.'.id', 'left');
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -54,13 +57,45 @@ class Setup extends CI_Model {
 	}
 	public function count_all_duration()
 	{
-		return $this->db->from('sys_duration')->join('sys_departements', 'sys_duration.departement_id = sys_departements.id', 'left')->count_all_results();
+		$table = 'sys_duration';
+		$table2 = 'auth_department';
+		return $this->db->from($table)->join($table2, $table.'.auth_dept_id = '.$table2.'.id', 'left')->count_all_results();
 	}
 	public function get_by_id_duration($id)
 	{
 		return $this->db->get_where('sys_duration',[
 			'id' => $id
-		])->get()->row();
+		])->row();
+	}
+	public function checkDept()
+	{
+		$table = 'auth_department';
+		$current = 'sys_duration';
+		return $this->db->select("$table.id,code,name")->from($table)->where(
+			"id NOT IN (select auth_dept_id from $current)",NULL,FALSE
+		)->get()->result();
+	}
+	public function checkDeptExcept($id)
+	{
+		$table = 'auth_department';
+		$current = 'sys_duration';
+		return $this->db->select("$table.id,code,name")->from($table)->where(
+			"id NOT IN (select auth_dept_id from $current where id != $id)",NULL,FALSE
+		)->get()->result();
+	}
+
+	public function create_duration($data)
+	{
+		$this->db->insert('sys_duration',$data);
+		return $this->db->insert_id();
+	}
+	public function update_duration($id,$data)
+	{
+		return $this->db->where('id',$id)->update('sys_duration',$data);
+	}
+	public function delete_duration($id)
+	{
+		return $this->db->where('id', $id)->delete('sys_duration');
 	}
 
 }

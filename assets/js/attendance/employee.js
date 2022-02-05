@@ -12,6 +12,7 @@ const app = angular.module('attEmployee', []);
 app.controller('attEmployee',($scope,$http) => {
 	$http.get(base+'attendance').then((res) => {
 		$scope.getAttDate = res.data.date;
+		angular.element('.get-date').removeClass('d-none');
 	});
 	table.DataTable({
 		"sDom" : 'tipr',
@@ -44,7 +45,7 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	tableDetRecap.DataTable({
-		"sDom" : 'tir',
+		"sDom" : 'tr',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -80,7 +81,6 @@ app.controller('attEmployee',($scope,$http) => {
 		} else {
 			shift = $scope.shiftList;
 		}
-		console.log(shift);
 		$http.get(base+'attendance/set_shift/'+shift).then((res) => {
 			table.DataTable().ajax.reload();
 		});

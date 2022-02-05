@@ -104,6 +104,11 @@ $route = [
 
 	'setup' => 'SetupController',
 	'setup/duration' => 'SetupController/duration',
+	'setup/deptList' => 'SetupController/deptList',
+	'setup/deptListExcept/(:any)' => 'SetupController/deptListExcept/$1',
+	'get_by_id_duration/(:any)' => 'SetupController/get_by_id_duration/$1',
+	'saveDuration' => 'SetupController/saveDuration',
+	'deleteDuration/(:any)' => 'SetupController/deleteDuration/$1',
 	'setup/menu' => 'SetupController/menu',
 	'setup/dt_duration' => 'SetupController/dt_duration',
 ];

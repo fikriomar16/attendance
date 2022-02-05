@@ -57,6 +57,73 @@ class SetupController extends CI_Controller {
 		];
 		echo json_encode($output);
 	}
+	public function deptList()
+	{
+		$list = $this->setup->checkDept();
+		echo json_encode($list,JSON_PRETTY_PRINT);
+	}
+	public function deptListExcept($id)
+	{
+		$list = $this->setup->checkDeptExcept($id);
+		echo json_encode($list,JSON_PRETTY_PRINT);
+	}
+	public function get_by_id_duration($id)
+	{
+		$data = $this->setup->get_by_id_duration($id);
+		echo json_encode($data,JSON_PRETTY_PRINT);
+	}
+	public function saveDuration()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		// echo json_encode($form,JSON_PRETTY_PRINT);
+		if (empty($form->auth_dept_id) || empty($form->late_allowed) || empty($form->out_allowed)) {
+			echo json_encode([
+				'error' => 'Seluruh Data Wajib Diisi'
+			],JSON_PRETTY_PRINT);
+		} else {
+			$insert = [
+				'auth_dept_id' => $form->auth_dept_id,
+				'late_allowed' => date('H:i:s',strtotime($form->late_allowed)),
+				'out_allowed' => date('H:i:s',strtotime($form->out_allowed))
+			];
+			if (empty($form->id)) {
+				$add = $this->setup->create_duration($insert);
+				if ($add) {
+					echo json_encode([
+						'success' => 'Data Berhasil Ditambahkan'
+					],JSON_PRETTY_PRINT);
+				} else {
+					echo json_encode([
+						'error' => 'Terjadi Kesalahan'
+					],JSON_PRETTY_PRINT);
+				}
+			} else {
+				$edit = $this->setup->update_duration($form->id,$insert);
+				if ($edit) {
+					echo json_encode([
+						'success' => 'Data Berhasil Diperbarui'
+					],JSON_PRETTY_PRINT);
+				} else {
+					echo json_encode([
+						'error' => 'Terjadi Kesalahan'
+					],JSON_PRETTY_PRINT);
+				}
+			}
+		}
+	}
+	public function deleteDuration($id)
+	{
+		$delete = $this->setup->delete_duration($id);
+		if ($delete) {
+			echo json_encode([
+				'success' => 'Data Berhasil Dihapus'
+			],JSON_PRETTY_PRINT);
+		} else {
+			echo json_encode([
+				'error' => 'Terjadi Kesalahan'
+			],JSON_PRETTY_PRINT);
+		}
+	}
 
 	public function menu()
 	{

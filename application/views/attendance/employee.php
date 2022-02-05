@@ -147,7 +147,7 @@
 	<div class="row justify-content-between mt-1 mb-3">
 		<div class="col-auto"></div>
 		<div class="col-auto">
-			<span class="font-weight-bold h6">{{getAttDate}}</span>
+			<span class="font-weight-bold h6 get-date d-none">{{getAttDate}}</span>
 		</div>
 		<div class="col-auto">
 			<button class="btn btn-sm btn-primary shadow-sm" ng-click="getToday()">
@@ -189,7 +189,7 @@
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<select class="form-control border-0 col-3 bg-light" name="shift_filter" id="shift_filter" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
+								<select class="form-control border-0 col-3 bg-light selectpicker" name="shift_filter" id="shift_filter" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
 									<option value="">All Shift</option>
 									<option value="1">Shift 1</option>
 									<option value="2">Shift 2</option>

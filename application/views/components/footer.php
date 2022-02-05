@@ -15,12 +15,10 @@
 	<script src="<?= base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
 	<script src="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
 	<script src="<?= base_url('assets/js/bootstrap-select.min.js') ?>"></script>
-	<script type="text/javascript">
-		$(document).ready(() => {
-			$('select').selectpicker();
-		});
-	</script>
 	<script src="<?= base_url('assets/vendor/flatpickr/dist/flatpickr.min.js') ?>"></script>
+	<script src="<?= base_url('assets/vendor/flatpickr/dist/l10n/id.js') ?>"></script>
+	<script src="<?= base_url('assets/vendor/sweetalert2/dist/sweetalert2.min.js') ?>"></script>
+	<script src="<?= base_url('assets/js/notif.js') ?>"></script>
 	<!-- Functional -->
 	<?php $p = uri_string(); ?>
 	<?php if ($p=='dashboard'||$p==''): ?>

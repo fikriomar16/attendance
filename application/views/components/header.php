@@ -10,6 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/fontawesome-free/css/all.min.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/flatpickr.min.css') ?>">
+	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/sweetalert2/themes/material-ui/material-ui.min.css') ?>">
 	<link rel="icon" href="<?= base_url('assets/img/undraw_posting_photo.svg') ?>">
 	<title><?= $title ?? '' ?></title>
 </head>
