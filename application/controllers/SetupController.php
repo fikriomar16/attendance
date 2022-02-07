@@ -7,6 +7,8 @@ class SetupController extends CI_Controller {
 	{
 		parent::__construct();
 		date_default_timezone_set('Asia/Jakarta');
+		$locale = 'id_ID.utf8';
+		setlocale(LC_ALL, $locale);
 		$this->load->model('Setup','setup');
 	}
 

@@ -115,4 +115,7 @@ $route = [
 	'deleteDuration/(:any)' => 'SetupController/deleteDuration/$1',
 	'setup/menu' => 'SetupController/menu',
 	'setup/dt_duration' => 'SetupController/dt_duration',
+
+	'scanlog' => 'ScanlogController',
+	'scanlog/dt_scanlog' => 'ScanlogController/dt_scanlog',
 ];

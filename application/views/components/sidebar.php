@@ -62,10 +62,15 @@
 			<span>Duration</span>
 		</a>
 	</li>
-	<li class="nav-item <?= ($p=='setup/menu')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('setup/menu') ?>">
-			<i class="fas fa-fw fa-list"></i>
-			<span>Menu</span>
+	<hr class="sidebar-divider">
+	<!-- Log Data-->
+	<div class="sidebar-heading">
+		Log Data
+	</div>
+	<li class="nav-item <?= ($p=='scanlog')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('scanlog') ?>">
+			<i class="fas fa-fw fa-align-left"></i>
+			<span>Scan Log</span>
 		</a>
 	</li>
 	<!-- Divider -->

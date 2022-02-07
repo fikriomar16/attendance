@@ -55,7 +55,7 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-xl-9">
-			<div class="card border-0 shadow mb-4 rounded">
+			<div class="card border-0 shadow-sm mb-4 rounded">
 				<div class="card-header border-0">
 					<div class="row justify-content-between">
 						<div class="col-auto">
