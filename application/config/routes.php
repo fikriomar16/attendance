@@ -101,6 +101,10 @@ $route = [
 	'sch_emp_tmr' => 'ScheduleController/get_tomorrow_emp',
 	'sch_emp_tdy' => 'ScheduleController/get_today_emp',
 	'getresume_emp/(:any)' => 'ScheduleController/getresume_emp/$1',
+	'schedule/empList' => 'ScheduleController/empList',
+	'get_by_id_employee_sch/(:any)' => 'ScheduleController/get_by_id_employee_sch/$1',
+	'saveSchedule' => 'ScheduleController/saveSchedule',
+	'deleteSchedule/(:any)' => 'ScheduleController/deleteSchedule/$1',
 
 	'setup' => 'SetupController',
 	'setup/duration' => 'SetupController/duration',

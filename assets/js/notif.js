@@ -24,7 +24,8 @@ const errorPopUp = (msg) => {
 const errorNotif = (msg) => {
 	Swal.fire({
 		icon: 'error',
-		title: msg,
+		title: 'Peringatan!!',
+		text: msg,
 		showConfirmButton: false,
 		timer: 2000
 	})

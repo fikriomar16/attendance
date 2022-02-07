@@ -1,10 +1,12 @@
 <div class="container-fluid" ng-app="setDur" ng-controller="setDur">
 	<div class="row justify-content-center">
 		<div class="col-xl-6">
-			<div class="alert alert-primary alert-loading text-center font-weight-bold d-none" role="alert"><i class="fas fa-fw fa-spinner"></i> Sedang Memuat Data</div>
+			<div class="alert alert-primary alert-loading text-center font-weight-bold d-none" role="alert">
+				<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div> Sedang Memuat Data
+			</div>
 			<div class="card border-0 shadow mb-4 rounded card-new d-none">
 				<div class="card-header border-0">
-					<span class="text-primary font-weight-bold px-3">Add New Duration</span>
+					<span class="text-primary font-weight-bold px-3">{{getTitle}}</span>
 				</div>
 				<div class="card-body p-3">
 					<div class="row justify-content-center my-1">

@@ -75,7 +75,6 @@ class SetupController extends CI_Controller {
 	public function saveDuration()
 	{
 		$form = json_decode(file_get_contents("php://input"));
-		// echo json_encode($form,JSON_PRETTY_PRINT);
 		if (empty($form->auth_dept_id) || empty($form->late_allowed) || empty($form->out_allowed)) {
 			echo json_encode([
 				'error' => 'Seluruh Data Wajib Diisi'

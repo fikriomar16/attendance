@@ -126,8 +126,8 @@ class ScheduleController extends CI_Controller {
 			$row[] = $emp->masuk;
 			$row[] = $emp->pulang;
 			$row[] = '<div class="btn-group btn-group-sm shadow-sm border-0" role="group">
-			<button type="button" class="btn btn-primary btn-edit" data-id="'.$emp->nik.'" onclick="angular.element(this).scope().edit('.$emp->nik.')"><i class="fas fa-fw fa-pen"></i></button>
-			<button type="button" class="btn btn-danger btn-delete" data-id="'.$emp->nik.'" onclick="angular.element(this).scope().delete('.$emp->nik.')"><i class="fas fa-fw fa-trash"></i></button>
+			<button type="button" class="btn btn-primary btn-edit" data-id="'.$emp->id.'" onclick="angular.element(this).scope().edit('.$emp->id.')"><i class="fas fa-fw fa-pen"></i></button>
+			<button type="button" class="btn btn-danger btn-delete" data-id="'.$emp->id.'" onclick="angular.element(this).scope().delete('.$emp->id.')"><i class="fas fa-fw fa-trash"></i></button>
 			</div>';
 
 			$data[] = $row;
@@ -139,6 +139,75 @@ class ScheduleController extends CI_Controller {
 			"data" => $data,
 		];
 		echo json_encode($output);
+	}
+	public function empList()
+	{
+		$list = $this->schedule->checkEmp();
+		echo json_encode($list,JSON_PRETTY_PRINT);
+	}
+
+	public function get_by_id_employee_sch($id)
+	{
+		$data = $this->schedule->get_by_id_employee_sch($id);
+		echo json_encode($data,JSON_PRETTY_PRINT);
+	}
+	public function saveSchedule()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		if (empty($form->nik) || empty($form->shift) || empty($form->masuk) || empty($form->pulang)) {
+			echo json_encode([
+				'error' => 'Seluruh Data Wajib Diisi'
+			],JSON_PRETTY_PRINT);
+		} else {
+			if (empty($form->id)) {
+				$add = $this->schedule->create_schedule([
+					'nik' => $form->nik,
+					'nama' => $this->schedule->get_by_nik_employee($form->nik)->name,
+					'shift' => $form->shift,
+					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
+					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
+					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
+				]);
+				if ($add) {
+					echo json_encode([
+						'success' => 'Data Berhasil Ditambahkan'
+					],JSON_PRETTY_PRINT);
+				} else {
+					echo json_encode([
+						'error' => 'Terjadi Kesalahan'
+					],JSON_PRETTY_PRINT);
+				}
+			} else {
+				$edit = $this->schedule->update_schedule($form->id,[
+					'shift' => $form->shift,
+					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
+					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
+					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
+				]);
+				if ($edit) {
+					echo json_encode([
+						'success' => 'Data Berhasil Diperbarui'
+					],JSON_PRETTY_PRINT);
+				} else {
+					echo json_encode([
+						'error' => 'Terjadi Kesalahan'
+					],JSON_PRETTY_PRINT);
+				}
+			}
+		}
+	}
+	public function deleteSchedule($id)
+	{
+		$delete = $this->schedule->delete_schedule($id);
+		if ($delete) {
+			echo json_encode([
+				'success' => 'Data Berhasil Dihapus'
+			],JSON_PRETTY_PRINT);
+		} else {
+			echo json_encode([
+				'error' => 'Terjadi Kesalahan'
+			],JSON_PRETTY_PRINT);
+		}
 	}
 
 }

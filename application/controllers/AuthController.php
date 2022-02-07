@@ -13,7 +13,7 @@ class AuthController extends CI_Controller {
 	public function index()
 	{
 		if ($this->session->userdata('user')) {
-			redirect('/');
+			redirect('/dashboard');
 		}
 		$data = [
 			'title' => 'Log In'

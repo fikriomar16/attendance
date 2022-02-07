@@ -23,8 +23,8 @@ class Attendance extends CI_Model {
 		$join3 = 'acc_transaction_3a';
 		$order = [$table.'.pin' => 'asc'];
 		$column_order = [null,null,'name_spell','pin','shift',$join2.'.code'];
-		$column_search = ['name_spell','pin','shift',$join2.'.name'];
-		$this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
+		$column_search = [$table.'.name','pin','shift',$join2.'.name'];
+		$this->db->select("$table.name,$join2.name as dept_name,$table.name_spell,$table.pin,$join3.shift,$join2.code,$join2.id as dept_id")->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
 			$join3.'.date' => $this->session->userdata('att_emp_date')
 		]);
 		if ($this->session->userdata('att_emp_shift')) {

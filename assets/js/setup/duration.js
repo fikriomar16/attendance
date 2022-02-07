@@ -4,7 +4,6 @@ const source = table.data('source');
 const url = angular.element('#durationForm').attr('action');
 const app = angular.module('setDur', []);
 let config = {
-	locale: "id",
 	enableTime: true,
 	enableSeconds: true,
 	noCalendar: true,
@@ -17,19 +16,26 @@ let config = {
 	altInput: true
 };
 app.controller('setDur',($scope,$http) => {
+	const fp = flatpickr('.input-time',config);
+	fp[0];
 	$scope.checkDept = () => {
 		$http.get(base+'setup/deptList').then((res) => {
 			$scope.depts = res.data;
 		});
 	}
+	$scope.checkDept();
 	$scope.newDuration = () => {
+		angular.element('#durationForm')[0].reset();$scope.id_dur = '';
 		$scope.checkDept();
+		$scope.getTitle = 'Add New Duration';
 		angular.element('.card-new').removeClass('d-none');
 		angular.element('.notif-edit').addClass('d-none');
+		fp[0].clear();
+		flatpickr('.input-time',config);
 	}
 	$scope.closeAdd = () => {
 		angular.element('.card-new').addClass('d-none');
-		angular.element('#durationForm')[0].reset();
+		angular.element('#durationForm')[0].reset();$scope.id_dur = '';
 	}
 	$scope.saveDuration = () => {
 		$http({
@@ -55,19 +61,22 @@ app.controller('setDur',($scope,$http) => {
 		};
 	}
 	$scope.edit = (id) => {
-		angular.element('.notif-edit').removeClass('d-none');
+		fp[0].destroy();
+		$scope.getTitle = 'Edit Duration';
 		$scope.id_dur = id;
+		angular.element('.notif-edit').removeClass('d-none');
 		angular.element('.alert-loading').removeClass('d-none');
 		$http.get(base+'setup/deptListExcept/'+id).then((res) => {
 			angular.element('.alert-loading').addClass('d-none');
 			angular.element('.card-new').removeClass('d-none');
 			$scope.depts = res.data;
 			$http.get(base+'get_by_id_duration/'+id).then((result) => {
+				$scope.auth_dept_id = result.data.auth_dept_id;
 				$scope.late_allowed = result.data.late_allowed;
 				$scope.out_allowed = result.data.out_allowed;
 				document.getElementById('late_allowed').value = result.data.late_allowed;
 				document.getElementById('out_allowed').value = result.data.out_allowed;
-				$scope.auth_dept_id = result.data.auth_dept_id;
+				flatpickr('.input-time',config);
 			});
 		});
 	}
@@ -92,7 +101,7 @@ app.controller('setDur',($scope,$http) => {
 					}
 				});
 			}
-		})
+		});
 	}
 	table.DataTable({
 		"sDom" : 'tipr',
@@ -115,5 +124,4 @@ app.controller('setDur',($scope,$http) => {
 	$scope.reloadTable = () => {
 		table.DataTable().ajax.reload();
 	}
-	const flatpickr = angular.element('.input-time').flatpickr(config);
 });

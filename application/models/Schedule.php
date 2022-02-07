@@ -133,12 +133,12 @@ class Schedule extends CI_Model {
 			'nik' => $this->session->userdata('employee_sch')['nik']
 		])->count_all_results();
 	}
-	public function get_by_id_employee_sch($nik)
+	public function get_by_id_employee_sch($id)
 	{
 		$table = 'sys_sch_users';
 		return $this->db->from($table)->where([
 			'tanggal' => $this->session->userdata('employee_sch')['date'],
-			$table.'.pid' => $nik
+			$table.'.id' => $id
 		])->get()->row();
 	}
 	// get random data for initiating datatable for schedule
@@ -146,6 +146,25 @@ class Schedule extends CI_Model {
 	{
 		$table = 'sys_sch_users';
 		return $this->db->from($table)->order_by('nik','desc')->limit(1)->get()->row();
+	}
+
+	public function checkEmp()
+	{
+		return $this->db->get('pers_person')->result();
+	}
+
+	public function create_schedule($data)
+	{
+		$this->db->insert('sys_sch_users',$data);
+		return $this->db->insert_id();
+	}
+	public function update_schedule($id,$data)
+	{
+		return $this->db->where('id',$id)->update('sys_sch_users',$data);
+	}
+	public function delete_schedule($id)
+	{
+		return $this->db->where('id', $id)->delete('sys_sch_users');
 	}
 
 }
