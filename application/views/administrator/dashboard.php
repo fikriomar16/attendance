@@ -6,7 +6,7 @@
 					<div class="row no-gutters align-items-center">
 						<div class="col mr-2">
 							<div class="text-xs font-weight-bold text-success text-uppercase mb-1"> Kehadiran Karyawan Hari Ini</div>
-							<div class="h5 mb-0 font-weight-bold text-gray-800">0 </div>
+							<div class="h5 mb-0 font-weight-bold text-gray-800 show-count d-none">{{countEmployee}}</div>
 						</div>
 						<div class="col-auto">
 							<i class="fas fa-fingerprint fa-2x text-success"></i>
@@ -24,7 +24,7 @@
 							<div class="text-xs font-weight-bold text-info text-uppercase mb-1"> Kehadiran Pengunjung Hari Ini </div>
 							<div class="row no-gutters align-items-center">
 								<div class="col-auto">
-									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">0</div>
+									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800 show-count d-none">{{countVisitor}}</div>
 								</div>
 							</div>
 						</div>
@@ -45,15 +45,15 @@
 							<p class="text-primary font-weight-bold h6">Data Scan Terakhir pada Hari Ini</p>
 						</div>
 						<div class="col-auto">
-							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="getDashboard()">
+							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
 						</div>
 					</div>
 				</div>
 				<div class="card-body p-3">
-					<div class="table-responsive">
-						<table class="table table-striped table-hover align-middle" id="dataTable">
+					<div class="table-responsive mx-1">
+						<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('dt_dashboard') ?>">
 							<thead class="thead-light">
 								<tr>
 									<th width="20%">Scan Date</th>

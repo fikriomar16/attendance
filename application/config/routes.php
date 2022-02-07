@@ -66,6 +66,8 @@ $route = [
 	'logout' => 'AuthController/logout',
 
 	'dashboard' => 'AdminController',
+	'dt_dashboard' => 'AdminController/dt_dashboard',
+	'countEmpVis' => 'AdminController/countEmpVis',
 	'late' => 'AdminController/late_page',
 
 	'attendance' => 'AttendanceController',

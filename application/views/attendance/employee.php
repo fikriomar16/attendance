@@ -211,7 +211,7 @@
 											<th>NIK</th>
 											<th>Shift</th>
 											<th>Departement</th>
-											<th width="7%">Action</th>
+											<th width="10%">Action</th>
 										</tr>
 									</thead>
 									<tbody></tbody>

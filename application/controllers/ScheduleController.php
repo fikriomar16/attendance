@@ -100,7 +100,7 @@ class ScheduleController extends CI_Controller {
 			$row[] = $emp->name_spell;
 			$row[] = $emp->pin;
 			$row[] = $emp->name;
-			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().getsch('.$emp->pin.')"><i class="fas fa-fw fa-calendar-alt"></i></button>';
+			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().getsch('.$emp->pin.')"><i class="fas fa-fw fa-calendar-alt"></i> Schedule</button>';
 
 			$data[] = $row;
 		}

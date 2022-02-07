@@ -53,7 +53,7 @@ class AttendanceController extends CI_Controller {
 			$row[] = $emp->pin;
 			$row[] = $emp->shift;
 			$row[] = $emp->dept_name;
-			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().show('.$emp->pin.')"><i class="fas fa-fw fa-list-alt"></i></button>';
+			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().show('.$emp->pin.')"><i class="fas fa-fw fa-list-alt"></i> Detail</button>';
 
 			$data[] = $row;
 		}

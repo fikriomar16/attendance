@@ -7,6 +7,8 @@ class AdminController extends CI_Controller {
 	{
 		parent::__construct();
 		date_default_timezone_set('Asia/Jakarta');
+		$locale = 'id_ID.utf8';
+		setlocale(LC_ALL, $locale);
 		$this->load->model('Admin','admin');
 	}
 
@@ -23,6 +25,45 @@ class AdminController extends CI_Controller {
 		$this->load->view('components/topbar', $data);
 		$this->load->view('administrator/dashboard', $data);
 		$this->load->view('components/footer', $data);
+	}
+	public function dt_dashboard()
+	{
+		$lists = $this->admin->datatable_dashboard();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			if ($list->shift == NULL) {
+				$type = '<span class="badge badge-pill badge-info">Visitor</span>';
+			} else {
+				$type = '<span class="badge badge-pill badge-success">Employee</span>';
+			}
+			if (explode("-",$list->dev_alias)[0] == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			}
+			$row = [];
+			$row[] = $list->event_time;
+			$row[] = $list->name;
+			$row[] = $type;
+			$row[] = $io;
+
+			$data[] = $row;
+		}
+		$output = [
+			'draw' => $_POST['draw'],
+			'recordsTotal' => $this->admin->count_all_dashboard(),
+			'recordsFiltered' => $this->admin->count_filtered_dashboard(),
+			'data' => $data,
+		];
+		echo json_encode($output);
+	}
+	public function countEmpVis()
+	{
+		echo json_encode([
+			"countEmployee" => $this->admin->countEmpToday() ?? 0,
+			"countVisitor" => $this->admin->countVisToday()->count_id ?? 0
+		],JSON_PRETTY_PRINT);
 	}
 
 	public function late_page()
