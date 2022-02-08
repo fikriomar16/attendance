@@ -130,8 +130,9 @@ IF (select split_part(new.dev_alias, '-', 1))='IN' THEN
 			END IF;
 		END IF;
 	END IF;
+END IF;
 /* cek scan out */
-ELSE
+IF (select split_part(new.dev_alias, '-', 1))='OUT' THEN
 	RAISE NOTICE 'SCAN OUT';
 	/* cek jadwal aktif */
 	IF exists (select masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN

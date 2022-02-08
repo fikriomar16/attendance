@@ -2,7 +2,7 @@
 	<div class="row justify-content-between pt-1 pb-3">
 		<div class="col-auto"></div>
 		<div class="col-auto">
-			<span class="font-weight-bold h6">{{getdate}}</span>
+			<span class="font-weight-bold h6">{{getDate}}</span>
 		</div>
 		<div class="col-auto">
 			<button class="btn btn-sm btn-primary shadow-sm" ng-click="getToday()">
@@ -16,9 +16,18 @@
 	</div>
 	<div class="row justify-content-center py-1">
 		<div class="col">
-			<div class="card border-0 shadow mb-4 rounded">
+			<div class="card border-0 border-bottom-info shadow mb-4 rounded card-visitor">
 				<div class="card-header">
-					<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
+					<div class="row justify-content-between">
+						<div class="col-auto">
+							<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
+						</div>
+						<div class="col-auto">
+							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
+								<i class="fas fa-fw fa-sync"></i> Reload
+							</button>
+						</div>
+					</div>
 				</div>
 				<div class="card-body p-3">
 					<div class="row justify-content-between my-1">
@@ -35,7 +44,7 @@
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<input type="text" class="form-control" id="searchInTable" placeholder="Cari Data...">
+								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data..." ng-keyup="search()" ng-model="searchInTable">
 							</div>
 						</div>
 					</div>
@@ -45,7 +54,7 @@
 								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable">
 									<thead class="thead-light">
 										<tr>
-											<th width="10%">No</th>
+											<th width="7%">No</th>
 											<th>Status</th>
 											<th>Personnel</th>
 											<th>First Scan</th>

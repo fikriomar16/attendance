@@ -4,14 +4,13 @@
 			<div class="alert alert-primary alert-loading text-center font-weight-bold d-none" role="alert">
 				<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div> Sedang Memuat Data
 			</div>
-			<div class="card border-0 shadow mb-4 rounded card-new d-none">
+			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-new d-none">
 				<div class="card-header border-0 shadow-sm">
 					<span class="text-primary font-weight-bold px-3">{{getTitle}}</span>
 				</div>
 				<div class="card-body p-3">
 					<form action="<?= base_url('saveSchedule') ?>" id="scheduleForm" name="scheduleForm">
 						<div class="row justify-content-center">
-							<!-- <input type="hidden" name="id_sch" id="id_sch" ng-model="id_sch"> -->
 							<div class="col-md-9 select-emp">
 								<div class="form-group form-label-group">
 									<label for="nik" class="small">Pilih Karyawan</label>
@@ -53,10 +52,10 @@
 				<div class="card-footer border-0 shadow-sm">
 					<div class="row justify-content-between">
 						<div class="col-auto">
-							<button type="button" class="btn btn-primary btn-rounded shadow-sm" ng-click="saveSchedule()"><i class="fas fa-fw fa-save"></i> Simpan Data</button>
+							<button type="button" class="bt btn-sm btn-primary btn-rounded shadow-sm" ng-click="saveSchedule()"><i class="fas fa-fw fa-save"></i> Simpan Data</button>
 						</div>
 						<div class="col-auto">
-							<button type="button" class="btn btn-danger btn-rounded shadow-sm" ng-click="closeAdd()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
+							<button type="button" class="btn btn-sm btn-danger btn-rounded shadow-sm" ng-click="closeAdd()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
 						</div>
 					</div>
 				</div>
@@ -65,7 +64,7 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col">
-			<div class="card border-0 shadow mb-4 rounded card-schedule d-none" data-source="<?= base_url('getresume_emp') ?>/">
+			<div class="card border-0 border-left-primary shadow mb-4 rounded card-schedule d-none" data-source="<?= base_url('getresume_emp') ?>/">
 				<div class="card-header border-0 shadow-sm">
 					<div class="row justify-content-between">
 						<div class="col-auto">
@@ -119,7 +118,7 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col">
-			<div class="card border-0 shadow mb-4 rounded">
+			<div class="card border-0 border-bottom-primary shadow mb-4 rounded">
 				<div class="card-header border-0">
 					<div class="row justify-content-between">
 						<div class="col-auto">

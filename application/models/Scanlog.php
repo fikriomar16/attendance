@@ -50,7 +50,7 @@ class Scanlog extends CI_Model {
 	public function count_filtered_scanlog()
 	{
 		$this->_get_dt_scanlog();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_scanlog()
 	{

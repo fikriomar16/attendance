@@ -70,7 +70,7 @@ class Attendance extends CI_Model {
 	public function count_filtered_employee()
 	{
 		$this->_get_datatable_employee();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_employee()
 	{
@@ -132,7 +132,7 @@ class Attendance extends CI_Model {
 	public function count_filtered_detail_emp()
 	{
 		$this->_get_dt_detail_emp();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_detail_emp()
 	{
@@ -193,7 +193,7 @@ class Attendance extends CI_Model {
 	public function count_filtered_history_emp()
 	{
 		$this->_get_dt_history_emp();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_history_emp()
 	{

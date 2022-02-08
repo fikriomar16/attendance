@@ -4,6 +4,7 @@ const source = table.data('source');
 const app = angular.module('ScanLog', []);
 app.controller('ScanLog',($scope,$http) => {
 	table.DataTable({
+		"pageLength": 50,
 		"processing": true,
 		"serverSide": true,
 		"order": [],

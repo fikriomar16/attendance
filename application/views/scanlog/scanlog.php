@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-app="ScanLog" ng-controller="ScanLog">
 	<div class="row justify-content-center">
 		<div class="col">
-			<div class="card border-0 shadow-sm mb-4 rounded">
+			<div class="card border-0 border-bottom-primary shadow-sm mb-4 rounded">
 				<div class="card-header border-0">
 					<div class="row justify-content-between">
 						<div class="col-auto">

@@ -25,7 +25,11 @@ app.controller('setDur',($scope,$http) => {
 	}
 	$scope.checkDept();
 	$scope.newDuration = () => {
-		angular.element('#durationForm')[0].reset();$scope.id_dur = '';
+		angular.element('#durationForm')[0].reset();
+		$scope.id_dur = '';
+		$scope.auth_dept_id = '';
+		$scope.late_allowed = '';
+		$scope.out_allowed = '';
 		$scope.checkDept();
 		$scope.getTitle = 'Add New Duration';
 		angular.element('.card-new').removeClass('d-none');
@@ -66,6 +70,7 @@ app.controller('setDur',($scope,$http) => {
 		$scope.id_dur = id;
 		angular.element('.notif-edit').removeClass('d-none');
 		angular.element('.alert-loading').removeClass('d-none');
+		angular.element('.scroll-to-top').click();
 		$http.get(base+'setup/deptListExcept/'+id).then((res) => {
 			angular.element('.alert-loading').addClass('d-none');
 			angular.element('.card-new').removeClass('d-none');

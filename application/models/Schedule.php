@@ -51,7 +51,7 @@ class Schedule extends CI_Model {
 	public function count_filtered_employee()
 	{
 		$this->_get_datatable_employee();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_employee()
 	{
@@ -123,7 +123,7 @@ class Schedule extends CI_Model {
 	public function count_filtered_employee_sch()
 	{
 		$this->_get_datatable_employee_sch();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_employee_sch()
 	{

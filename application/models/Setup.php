@@ -53,7 +53,7 @@ class Setup extends CI_Model {
 	public function count_filtered_duration()
 	{
 		$this->_get_datatable_duration();
-		return $this->db->get()->num_rows();
+		return $this->db->count_all_results();
 	}
 	public function count_all_duration()
 	{

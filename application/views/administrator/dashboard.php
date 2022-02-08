@@ -38,11 +38,11 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-xl-9 col-lg col-md">
-			<div class="card border-0 shadow mb-4 rounded">
+			<div class="card border-0 border-bottom-success shadow mb-4 rounded">
 				<div class="card-header border-0 shadow-sm h-100 px-4">
 					<div class="row justify-content-between my-0 pt-2">
 						<div class="col-auto">
-							<p class="text-primary font-weight-bold h6">Data Scan Terakhir pada Hari Ini</p>
+							<p class="text-primary font-weight-bold h6">Data Scan Karyawan pada Hari Ini</p>
 						</div>
 						<div class="col-auto">
 							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
@@ -54,6 +54,35 @@
 				<div class="card-body p-3">
 					<div class="table-responsive mx-1">
 						<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('dt_dashboard') ?>">
+							<thead class="thead-light">
+								<tr>
+									<th width="20%">Scan Date</th>
+									<th>User</th>
+									<th width="15%">User Type</th>
+									<th width="10%">In / Out</th>
+								</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<div class="card border-0 border-bottom-info shadow mb-4 rounded">
+				<div class="card-header border-0 shadow-sm h-100 px-4">
+					<div class="row justify-content-between my-0 pt-2">
+						<div class="col-auto">
+							<p class="text-primary font-weight-bold h6">Data Scan Visitor pada Hari Ini</p>
+						</div>
+						<div class="col-auto">
+							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable2()">
+								<i class="fas fa-fw fa-sync"></i> Reload
+							</button>
+						</div>
+					</div>
+				</div>
+				<div class="card-body p-3">
+					<div class="table-responsive mx-1">
+						<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable2" data-source="<?= base_url('dt_dashboard2') ?>">
 							<thead class="thead-light">
 								<tr>
 									<th width="20%">Scan Date</th>

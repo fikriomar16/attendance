@@ -67,6 +67,7 @@ $route = [
 
 	'dashboard' => 'AdminController',
 	'dt_dashboard' => 'AdminController/dt_dashboard',
+	'dt_dashboard2' => 'AdminController/dt_dashboard2',
 	'countEmpVis' => 'AdminController/countEmpVis',
 	'late' => 'AdminController/late_page',
 
