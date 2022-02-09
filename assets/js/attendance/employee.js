@@ -71,7 +71,7 @@ app.controller('attEmployee',($scope,$http) => {
 			"type": "POST"
 		},
 		"columnDefs": [{ 
-			"targets": [0],
+			"targets": [0,-1],
 			"orderable": false
 		}]
 	});

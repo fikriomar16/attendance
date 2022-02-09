@@ -22,7 +22,7 @@ class Attendance extends CI_Model {
 		$join2 = 'auth_department';
 		$join3 = 'acc_transaction_3a';
 		$order = [$table.'.pin' => 'asc'];
-		$column_order = [null,null,'name_spell','pin','shift',$join2.'.code'];
+		$column_order = [null,null,$table.'.name','pin','shift',$join2.'.code'];
 		$column_search = [$table.'.name','pin','shift',$join2.'.name'];
 		$this->db->select("$table.name,$join2.name as dept_name,$table.name_spell,$table.pin,$join3.shift,$join2.code,$join2.id as dept_id")->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
 			$join3.'.date' => $this->session->userdata('att_emp_date')
@@ -202,6 +202,97 @@ class Attendance extends CI_Model {
 			'date' => $this->session->userdata('att_emp_date_search'),
 			'pin' => $this->session->userdata('att_emp_nik')
 		])->count_all_results();
+	}
+
+	public function dataReportAttEmp()
+	{
+		// $table = 'acc_transaction_3a';
+		// $table2 = 'auth_department';
+		// $table3 = 'pers_person';
+		// return $this->db->select([$table.'.pin', $table.'.name', $table2.'.name as dept_name, shift, in_scan, out_scan, late_duration, out_duration, in_duration'])->from([$table,$table2,$table3])->where([
+		// 	$table3.'.pin' => $table.'.pin',
+		// 	$table3.'.auth_dept_id' => $table2.'.id',
+		// 	$table.'.date' => $this->session->userdata('att_emp_date')
+		// ])->get()->result();
+		return $this->db->query("select acc_transaction_3a.pin, acc_transaction_3a.name, auth_department.name as dept_name, shift, in_scan, out_scan, late_duration, out_duration, in_duration from acc_transaction_3a,auth_department,pers_person  where pers_person.pin = acc_transaction_3a.pin and pers_person.auth_dept_id = auth_department.id and acc_transaction_3a.date = '".date('Y-m-d')."'")->result();
+	}
+
+	public function get_by_pin_visitor($pin)
+	{
+		$table = 'pers_person';
+		return $this->db->get_where($table,[
+			'pin' => $pin
+		])->row();
+	}
+	public function getRndmVis()
+	{
+		$table = 'pers_person';
+		return $this->db->from($table)->order_by('pin','desc')->limit(1)->get()->row();
+	}
+	public function _get_datatable_visitor()
+	{
+		$table = 'acc_transaction_3c';
+		$order = ['pin' => 'desc'];
+		$column_order = ['pin',NULL,'name','first_scan','last_scan'];
+		$column_search = ['pin','name','first_scan','last_scan'];
+		$this->db->from($table)->where([
+			'CAST(first_scan as date) =' => $this->session->userdata('att_vis_date')
+		]);
+		$i = 0;
+		foreach ($column_search as $item) // loop column
+		{
+			if($_POST['search']['value']) // if datatable send POST for search
+			{
+				if($i===0) // first loop
+				{
+					$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+					$this->db->like($item, $_POST['search']['value']);
+				}
+				else
+				{
+					$this->db->or_like($item, $_POST['search']['value']);
+				}
+				if(count($column_search) - 1 == $i) //last loop
+				{
+					$this->db->group_end(); //close bracket
+				}
+			}
+			$i++;
+		}
+		if(isset($_POST['order'])) // here order processing
+		{
+			$this->db->order_by($column_order[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+		}
+		else if(isset($order))
+		{
+			$this->db->order_by(key($order), $order[key($order)]);
+		}
+	}
+	public function datatable_visitor()
+	{
+		$this->_get_datatable_visitor();
+		if($_POST['length'] != -1)
+			$this->db->limit($_POST['length'], $_POST['start']);
+		return $this->db->get()->result();
+	}
+	public function count_filtered_visitor()
+	{
+		$this->_get_datatable_visitor();
+		return $this->db->count_all_results();
+	}
+	public function count_all_visitor()
+	{
+		$table = 'acc_transaction_3c';
+		return $this->db->from($table)->where([
+			'CAST(first_scan as date) =' => $this->session->userdata('att_vis_date')
+		])->count_all_results();
+	}
+	public function get_vis_att_by_id($id)
+	{
+		$table = 'acc_transaction_3c';
+		return $this->db->get_where($table,[
+			'id' => $id
+		])->row();
 	}
 
 }

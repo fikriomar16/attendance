@@ -98,6 +98,8 @@ app.controller('schEmp',($scope,$http) => {
 	}
 	$scope.newSchedule = () => {
 		angular.element('#scheduleForm')[0].reset();
+		document.getElementById('shift').value = '';
+		document.getElementById('nik').value = '';
 		$scope.id_sch = '';
 		$scope.nik = '';
 		$scope.masuk = '';

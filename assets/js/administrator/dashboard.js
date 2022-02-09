@@ -18,7 +18,7 @@ app.controller('dashboardController',($scope,$http) => {
 			"type": "POST"
 		},
 		"columnDefs": [{ 
-			"targets": [],
+			"targets": [2],
 			"orderable": false
 		}]
 	});

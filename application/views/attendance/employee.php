@@ -160,7 +160,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row justify-content-center py-1">
+	<div class="row justify-content-center my-1">
 		<div class="col">
 			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-attendance" data-source="<?= base_url('attresume_emp/') ?>">
 				<div class="card-header">
@@ -179,7 +179,7 @@
 					<div class="row justify-content-between my-1 px-1">
 						<div class="col-auto my-1">
 							<div class="btn-group" role="group">
-								<button type="button" class="btn btn-primary"><i class="fas fa-fw fa-print"></i></button>
+								<button type="button" class="btn btn-primary"><i class="fas fa-fw fa-print"></i> Print</button>
 								<button type="button" class="btn btn-success"><i class="fas fa-fw fa-file-csv"></i> Export CSV</button>
 							</div>
 						</div>

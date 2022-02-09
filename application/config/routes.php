@@ -75,10 +75,7 @@ $route = [
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',
 	'attendance/visitor' => 'AttendanceController/visitor',
-	'attendance/dt_employee' => 'AttendanceController/dt_employee',
-	'attendance/dt_visitor' => 'AttendanceController/dt_visitor',
 	'attendance/sch_employee' => 'AttendanceController/sch_employee',
-	'attendance/sch_visitor' => 'AttendanceController/sch_visitor',
 	// set Date
 	'attendance/att_yesterday_emp' => 'AttendanceController/att_yesterday_emp',
 	'attendance/att_today_emp' => 'AttendanceController/att_today_emp',
@@ -89,10 +86,15 @@ $route = [
 
 	'attendance/set_shift/(:any)' => 'AttendanceController/set_shift/$1',
 	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',
+	'attresume_vis/(:any)' => 'AttendanceController/attresume_vis/$1',
 	// dataTable
+	'attendance/dt_employee' => 'AttendanceController/dt_employee',
+	'attendance/dt_visitor' => 'AttendanceController/dt_visitor',
 	'attendance/att_sum_emp' => 'AttendanceController/att_sum_emp',
 	'attendance/att_det_recap_emp' => 'AttendanceController/att_det_recap_emp',
 	'attendance/att_hist_scan_emp' => 'AttendanceController/att_hist_scan_emp',
+	// report
+	'printAttendanceEmp' => 'AttendanceController/printAttendanceEmp',
 
 	'schedule' => 'ScheduleController',
 	'schedule/employee' => 'ScheduleController/employee',

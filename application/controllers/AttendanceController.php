@@ -27,7 +27,7 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_emp_date' => date("Y-m-d"),
 			'att_emp_date_search' => date("Y-m-d"),
-			'att_emp_nik' => $this->attendance->getRndmSch('employee')->nik
+			'att_emp_nik' => $this->attendance->getRndmSch()->nik
 		]);
 		$this->session->unset_userdata('att_emp_shift');
 		$path_port = '8098';
@@ -78,7 +78,6 @@ class AttendanceController extends CI_Controller {
 		echo json_encode([
 			'shift' => $shift
 		]);
-		
 	}
 	public function att_yesterday_emp()
 	{
@@ -251,11 +250,34 @@ class AttendanceController extends CI_Controller {
 		echo json_encode($output);
 	}
 
-	public function Visitor()
+	public function printAttendanceEmp()
+	{
+		if ($this->session->userdata('att_emp_shift')) {
+			$shift = '_Shift_'.$this->session->userdata('att_emp_shift');
+		} else {
+			$shift = '';
+		}
+		$data = [
+			"title" => "Laporan Kehadiran Karyawan",
+			"lists" => $this->attendance->dataReportAttEmp(),
+			"shift" => $this->session->userdata('att_emp_shift') ?? 'All',
+			"date" => $this->session->userdata('att_emp_date')
+		];
+		$this->load->view('report/reportAttEmp', $data);
+	}
+
+	public function visitor()
 	{
 		if (!$this->session->userdata('user')) {
 			redirect('login');
 		}
+		$this->session->set_userdata([
+			'att_vis_date' => date("Y-m-d"),
+			'att_vis_date_search' => date("Y-m-d"),
+			'att_vis_pin' => $this->attendance->getRndmVis()->pin,
+			'att_vis_first_scan' => date("Y-m-d H:i:s"),
+			'att_vis_scan_6hour' => date("Y-m-d H:i:s", strtotime('+6 hours'))
+		]);
 		$data = [
 			'title' => 'Visitor Tracer'
 		];
@@ -264,6 +286,46 @@ class AttendanceController extends CI_Controller {
 		$this->load->view('components/topbar', $data);
 		$this->load->view('attendance/visitor', $data);
 		$this->load->view('components/footer', $data);
+	}
+	public function dt_visitor()
+	{
+		$lists = $this->attendance->datatable_visitor();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = '<span class="badge badge-pill badge-info">Card Scan</span>';
+			$row[] = $list->name;
+			$row[] = $list->first_scan;
+			$row[] = $list->last_scan;
+			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$list->id.'" onclick="angular.element(this).scope().show('.$list->id.')"><i class="fas fa-fw fa-list-alt"></i> Detail</button>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_visitor(),
+			"recordsFiltered" => $this->attendance->count_filtered_visitor(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function attresume_vis($id)
+	{
+		$data = $this->attendance->get_vis_att_by_id($id);
+		$this->session->set_userdata([
+			'att_vis_pin' => $data->pin,
+			'att_vis_date_search' => date("Y-m-d",strtotime($data->first_scan)),
+			'att_vis_first_scan' => $data->first_scan,
+			'att_vis_scan_6hour' => date("Y-m-d H:i:s", strtotime($data->first_scan.'+6 hours'))
+		]);
+		echo json_encode([
+			'getName' => $data->name,
+			'getPIN' => $data->pin,
+			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($data->first_scan))
+		],JSON_PRETTY_PRINT);
 	}
 
 }
