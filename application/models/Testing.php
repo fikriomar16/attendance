@@ -15,7 +15,8 @@ class Testing extends CI_Model {
 			// 'tier1' => $this->db->select('*')->from('acc_transaction')->get()->result(),
 			'tier_2a' => $this->db->select('*')->from('acc_transaction_2a')->get()->result(),
 			'tier_2c' => $this->db->select('*')->from('acc_transaction_2c')->get()->result(),
-			'tier_3a' => $this->db->select('*')->from('acc_transaction_3a')->get()->result()
+			'tier_3a' => $this->db->select('*')->from('acc_transaction_3a')->get()->result(),
+			'tier_3a' => $this->db->select('*')->from('acc_transaction_3c')->get()->result()
 		];
 	}
 
@@ -30,6 +31,7 @@ class Testing extends CI_Model {
 		$this->db->truncate('acc_transaction_2a');
 		$this->db->truncate('acc_transaction_2c');
 		$this->db->truncate('acc_transaction_3a');
+		$this->db->truncate('acc_transaction_3c');
 		return [
 			'msg' => 'All Tables Truncated'
 		];

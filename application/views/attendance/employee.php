@@ -117,6 +117,7 @@
 																	<th>Gate</th>
 																	<th>Shift</th>
 																	<th width="10%">In / Out</th>
+																	<th width="10%">Photo</th>
 																</tr>
 															</thead>
 															<tbody id="tblHistory"></tbody>
@@ -128,7 +129,7 @@
 										<div class="col-lg-4 p-2">
 											<div class="my-2 row justify-content-center">
 												<div class="col-lg-8">
-													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Alt Img" class="img-fluid">
+													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Employee" class="img-fluid emp-photo" id="emp-photo">
 												</div>
 											</div>
 										</div>

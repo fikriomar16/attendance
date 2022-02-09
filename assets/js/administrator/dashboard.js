@@ -1,8 +1,6 @@
 const base = angular.element('body').data('home');
 const table = angular.element('#dataTable');
 const source = table.data('source');
-const table2 = angular.element('#dataTable2');
-const source2 = table2.data('source');
 const refreshPerSec = 1;
 const app = angular.module('dashboardApp', []);
 app.controller('dashboardController',($scope,$http) => {
@@ -24,29 +22,11 @@ app.controller('dashboardController',($scope,$http) => {
 			"orderable": false
 		}]
 	});
-	table2.DataTable({
-		"sDom":"tir",
-		"pageLength": 50,
-		"processing": true,
-		"serverSide": true,
-		"order": [],
-		"ajax": {
-			"url": source2,
-			"type": "POST"
-		},
-		"columnDefs": [{ 
-			"targets": [],
-			"orderable": false
-		}]
-	});
 	$scope.search = () => {
 		table.DataTable().search($scope.searchInTable).draw();
 	}
 	$scope.reloadTable = () => {
 		table.DataTable().ajax.reload();
-	}
-	$scope.reloadTable2 = () => {
-		table2.DataTable().ajax.reload();
 	}
 	$scope.getCount = () => {
 		$http.get(base+'countEmpVis').then((res) => {

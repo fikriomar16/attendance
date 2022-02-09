@@ -30,8 +30,11 @@ class AttendanceController extends CI_Controller {
 			'att_emp_nik' => $this->attendance->getRndmSch('employee')->nik
 		]);
 		$this->session->unset_userdata('att_emp_shift');
+		$path_port = '8098';
 		$data = [
-			'title' => 'Employee Attendance'
+			'title' => 'Employee Attendance',
+			'path_local' => "http://localhost:$path_port",
+			'path_url' => "http://10.126.25.150:$path_port"
 		];
 		$this->load->view('components/header', $data);
 		$this->load->view('components/sidebar', $data);
@@ -215,6 +218,10 @@ class AttendanceController extends CI_Controller {
 	}
 	public function att_hist_scan_emp()
 	{
+		$path_port = '8098';
+		$local = 'localhost';
+		$url = '10.126.25.150';
+		$path = "http://$url:$path_port";
 		$list = $this->attendance->dt_history_emp();
 		$data = [];
 		$no = $_POST['start'];
@@ -231,6 +238,7 @@ class AttendanceController extends CI_Controller {
 			$row[] = $emp->dev_alias;
 			$row[] = $emp->shift;
 			$row[] = $io;
+			$row[] = '<button type="button" class="btn btn-success btn-sm btn-photo" data-path="'.$path.$emp->vid_linkage_handle.'" onclick="angular.element(this).scope().showPhoto(\''.$path.$emp->vid_linkage_handle.'\')"><i class="fas fa-fw fa-image"></i> Photo</button>';
 
 			$data[] = $row;
 		}

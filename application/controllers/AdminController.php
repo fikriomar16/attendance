@@ -97,6 +97,40 @@ class AdminController extends CI_Controller {
 		];
 		echo json_encode($output);
 	}
+	public function merged_db()
+	{
+		$list1 = $this->admin->datatable_dashboard();
+		$list2 = $this->admin->datatable_dashboard2();
+		$lists = array_merge($list1,$list2);
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			if (empty($list->shift)) {
+				$type = '<span class="badge badge-pill badge-info">Visitor</span>';
+			} else {
+				$type = '<span class="badge badge-pill badge-success">Employee</span>';
+			}
+			if (explode("-",$list->dev_alias)[0] == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			}
+			$row = [];
+			$row[] = $list->event_time;
+			$row[] = $list->name;
+			$row[] = $type;
+			$row[] = $io;
+
+			$data[] = $row;
+		}
+		$output = [
+			'draw' => $_POST['draw'],
+			'recordsTotal' => $this->admin->count_all_dashboard() + $this->admin->count_all_dashboard2(),
+			'recordsFiltered' => $this->admin->count_filtered_dashboard() + $this->admin->count_filtered_dashboard2(),
+			'data' => $data,
+		];
+		echo json_encode($output);
+	}
 
 	public function late_page()
 	{

@@ -110,6 +110,7 @@ app.controller('setDur',($scope,$http) => {
 	}
 	table.DataTable({
 		"sDom" : 'tipr',
+		"pageLength":15,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,

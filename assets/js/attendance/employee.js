@@ -46,6 +46,7 @@ app.controller('attEmployee',($scope,$http) => {
 	});
 	tableDetRecap.DataTable({
 		"sDom" : 'tr',
+		"bSort" : false,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -75,7 +76,6 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	$scope.getShift = () => {
-		// table.DataTable().column(4).search($scope.shiftList).draw();
 		if ($scope.shiftList == '') {
 			shift = '0';
 		} else {
@@ -155,5 +155,8 @@ app.controller('attEmployee',($scope,$http) => {
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
 		});
+	}
+	$scope.showPhoto = (url) => {
+		angular.element('.emp-photo').attr('src',url);
 	}
 });

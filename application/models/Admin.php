@@ -65,7 +65,7 @@ class Admin extends CI_Model {
 	public function countEmpToday()
 	{
 		return $this->db->get_where('acc_transaction_3a',[
-			"CAST(event_time as date) =" => date('Y-m-d')
+			"CAST(in_scan as date) =" => date('Y-m-d')
 		])->num_rows();
 	}
 	public function countVisToday()
@@ -79,8 +79,8 @@ class Admin extends CI_Model {
 	{
 		$table = 'acc_transaction_2c';
 		$order = ["event_time" => 'desc'];
-		$column_order = ['event_time','name','shift','dev_alias'];
-		$column_search = ['event_time','name','shift','dev_alias'];
+		$column_order = ['event_time','name',NULL,'dev_alias'];
+		$column_search = ['event_time','name',NULL,'dev_alias'];
 		$this->db->from($table)->where([
 			"CAST(event_time as date) =" => date('Y-m-d')
 		])->limit(50);

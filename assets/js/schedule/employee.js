@@ -53,6 +53,7 @@ app.controller('schEmp',($scope,$http) => {
 	}
 	table_sch.DataTable({
 		"sDom" : 'tr',
+		"bSort" : false,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -194,5 +195,21 @@ app.controller('schEmp',($scope,$http) => {
 				});
 			}
 		});
+	}
+	$scope.csvButton = () => {
+		Swal.fire({
+			title: 'Apakah anda sudah memiliki template untuk import?',
+			icon: 'info',
+			showDenyButton: true,
+			showCancelButton: true,
+			confirmButtonText: 'Ya, Sudah',
+			denyButtonText: `Belum Punya`,
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire('Sudah', 'Then Import', 'success')
+			} else if (result.isDenied) {
+				Swal.fire('Belum', 'Then Export Template', 'info')
+			}
+		})
 	}
 });

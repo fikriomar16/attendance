@@ -136,7 +136,7 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New</button>
-								<button type="button" class="btn btn-success"><i class="fas fa-fw fa-upload"></i> Import CSV</button>
+								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import CSV</button>
 							</div>
 						</div>
 						<div class="col-xl-4 col-md-6 my-1">
