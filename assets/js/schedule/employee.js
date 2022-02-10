@@ -209,9 +209,10 @@ app.controller('schEmp',($scope,$http) => {
 			denyButtonText: `Belum Punya`,
 		}).then((result) => {
 			if (result.isConfirmed) {
-				Swal.fire('Sudah', 'Then Import', 'success')
+				infoPopUp('Sedang Mengimport Data');
 			} else if (result.isDenied) {
-				Swal.fire('Belum', 'Then Export Template', 'info')
+				infoPopUp('Sedang Mengunduh Template');
+				location.href = base+'exportSchTemplate';
 			}
 		})
 	}

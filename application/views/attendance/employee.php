@@ -150,9 +150,9 @@
 			<div class="form-group form-label-group">
 				<div class="input-group">
 					<div class="input-group-prepend">
-						<div class="input-group-text border-0 shadow-sm bg-primary text-white "><i class="fas fa-fw fa-calendar-alt"></i>&nbsp; Search </div>
+						<div class="input-group-text border-0 shadow-sm bg-white text-material-blue"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Search </div>
 					</div>
-					<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center bg-primary text-white selectDate border-0 shadow-sm col-5">
+					<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center bg-material-blue text-white selectDate border-0 shadow-sm col-5">
 				</div>
 			</div>
 		</div>
@@ -189,7 +189,7 @@
 						<div class="col-auto my-1">
 							<div class="btn-group" role="group">
 								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceEmp') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
-								<button type="button" class="btn btn-success"><i class="fas fa-fw fa-file-csv"></i> Export CSV</button>
+								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_emp') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
 							</div>
 						</div>
 						<div class="col-xl-6 col-md-9 my-1">

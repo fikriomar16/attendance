@@ -15,6 +15,12 @@ const successPopUp = (msg) => {
 		title: msg
 	})
 }
+const infoPopUp = (msg) => {
+	Toast.fire({
+		icon: 'info',
+		title: msg
+	})
+}
 const errorPopUp = (msg) => {
 	Toast.fire({
 		icon: 'error',

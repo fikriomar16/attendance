@@ -210,6 +210,20 @@ class ScheduleController extends CI_Controller {
 		}
 	}
 
+	public function exportSchTemplate()
+	{
+		$title = 'Template_Import_Jadwal';
+		header("Content-type: application/csv");
+		header("Content-Disposition: attachment; filename=".$title.".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		$handle = fopen('php://output', 'w');
+		$head = ['NIK','Nama','Shift','Tanggal','Waktu Masuk','Waktu Pulang'];
+		fputcsv($handle, $head);
+		fclose($handle);
+		exit;
+	}
+
 }
 
 /* End of file ScheduleController.php */

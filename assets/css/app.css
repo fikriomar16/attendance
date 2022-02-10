@@ -25,10 +25,16 @@ table {
 	font-size: 1.2rem !important;
 }
 .shadow-sm {
-	-webkit-box-shadow: 0 .125rem .6rem 0 rgba(58,59,69,.2) !important;
-	-moz-box-shadow: 0 .125rem .6rem 0 rgba(58,59,69,.2) !important;
+	-moz-box-shadow: 0 0.125rem 0.25rem 0 rgba(58, 59, 69, 0.2) !important;
+	-webkit-box-shadow: 0 0 .125rem .6rem 0 rgba(58,59,69,.2) !important;
 }
 .shadow {
+	-moz-box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15) !important;
 	-webkit-box-shadow: 0 0.15rem 12rem 0 rgba(58, 59, 69, 0.15) !important;
-	-moz-box-shadow: 0 0.15rem 12rem 0 rgba(58, 59, 69, 0.15) !important;
+}
+.bg-material-blue {
+	background-color: #42A5F5 !important;
+}
+.text-material-blue {
+	color: #42A5F5 !important;
 }

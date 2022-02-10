@@ -215,7 +215,10 @@ class Attendance extends CI_Model {
 	}
 	public function dataReportAttVis()
 	{
-		return $this->db->query("select * from acc_transaction_3c where CAST(first_scan as date) = '".$this->session->userdata('att_vis_date')."' order by first_scan desc")->result();
+		$table = 'acc_transaction_3c';
+		return $this->db->get_where($table,[
+			'CAST(first_scan as date) =' => $this->session->userdata('att_vis_date')
+		])->result();
 	}
 
 	public function get_by_pin_visitor($pin)

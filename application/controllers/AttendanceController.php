@@ -287,7 +287,7 @@ class AttendanceController extends CI_Controller {
 		// setting paper
 		$paper = 'A4';
         //orientasi paper potrait / landscape
-		$orientation = "portrait";
+		$orientation = "potrait";
 		$page = $this->load->view('report/reportAttEmp', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
@@ -299,13 +299,70 @@ class AttendanceController extends CI_Controller {
 			"date" => $this->session->userdata('att_vis_date')
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kedatangan-Pengunjung'.$this->session->userdata('att_vis_date');
+		$file_pdf = 'Laporan-Kedatangan-Pengunjung_'.$this->session->userdata('att_vis_date');
 		// setting paper
 		$paper = 'A4';
         //orientasi paper potrait / landscape
 		$orientation = "portrait";
 		$page = $this->load->view('report/reportAttVis', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+	public function exportCSV_emp()
+	{
+		if ($this->session->userdata('att_emp_shift')) {
+			$shift = '_Shift_'.$this->session->userdata('att_emp_shift');
+		} else {
+			$shift = '';
+		}
+		$title = 'Laporan-Kehadiran-Karyawan_'.$this->session->userdata('att_emp_date').$shift;
+		header("Content-type: application/csv");
+		header("Content-Disposition: attachment; filename=".$title.".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		$handle = fopen('php://output', 'w');
+		$header = ['No','NIK','Name','Department','Shift','First Scan','Last Scan','Late Duration','Out Duration','In Duration'];
+		$lists = $this->attendance->dataReportAttEmp();
+		$no = 0;
+		fputcsv($handle, $header);
+		foreach ($lists as $list) {
+			$collect = [];
+			$collect[] = ++$no;
+			$collect[] = $list->pin;
+			$collect[] = $list->name;
+			$collect[] = $list->dept_name;
+			$collect[] = $list->shift;
+			$collect[] = $list->in_scan;
+			$collect[] = $list->out_scan;
+			$collect[] = $list->late_duration;
+			$collect[] = $list->out_duration;
+			$collect[] = $list->in_duration;
+			fputcsv($handle, $collect);
+		}
+		fclose($handle);
+		exit;
+	}
+	public function exportCSV_vis()
+	{
+		$title = 'Laporan-Kedatangan-Pengunjung_'.$this->session->userdata('att_vis_date');
+		header("Content-type: application/csv");
+		header("Content-Disposition: attachment; filename=".$title.".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		$handle = fopen('php://output', 'w');
+		$lists = $this->attendance->dataReportAttVis();
+		$no = 0;
+		$header = ['No','Name','First Scan', 'Last Scan'];
+		fputcsv($handle, $header);
+		foreach ($lists as $list) {
+			$collect = [];
+			$collect[] = ++$no;
+			$collect[] = $list->name;
+			$collect[] = $list->first_scan;
+			$collect[] = $list->last_scan;
+			fputcsv($handle, $collect);
+		}
+		fclose($handle);
+		exit;
 	}
 
 	public function visitor()

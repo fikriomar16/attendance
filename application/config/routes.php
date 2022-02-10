@@ -103,6 +103,9 @@ $route = [
 	// report
 	'printAttendanceEmp' => 'AttendanceController/printAttendanceEmp',
 	'printAttendanceVis' => 'AttendanceController/printAttendanceVis',
+	// export CSV
+	'exportCSV_emp' => 'AttendanceController/exportCSV_emp',
+	'exportCSV_vis' => 'AttendanceController/exportCSV_vis',
 
 	'schedule' => 'ScheduleController',
 	'schedule/employee' => 'ScheduleController/employee',
@@ -119,6 +122,7 @@ $route = [
 	'get_by_id_employee_sch/(:any)' => 'ScheduleController/get_by_id_employee_sch/$1',
 	'saveSchedule' => 'ScheduleController/saveSchedule',
 	'deleteSchedule/(:any)' => 'ScheduleController/deleteSchedule/$1',
+	'exportSchTemplate' => 'ScheduleController/exportSchTemplate',
 
 	'setup' => 'SetupController',
 	'setup/duration' => 'SetupController/duration',

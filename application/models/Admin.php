@@ -70,8 +70,8 @@ class Admin extends CI_Model {
 	}
 	public function countVisToday()
 	{
-		return $this->db->select('count(id) as count_id')->from('acc_transaction_2c')->where([
-			"CAST(event_time as date) =" => date('Y-m-d')
+		return $this->db->select('count(id) as count_id')->from('acc_transaction_3c')->where([
+			"CAST(first_scan as date) =" => date('Y-m-d')
 		])->group_by('id')->get()->row();
 	}
 
