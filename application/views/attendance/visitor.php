@@ -150,7 +150,7 @@
 					<div class="row justify-content-between my-1">
 						<div class="col-auto my-1">
 							<div class="btn-group" role="group">
-								<button type="button" class="btn btn-primary"><i class="fas fa-fw fa-print"></i> Print</button>
+								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceVis') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 								<button type="button" class="btn btn-success"><i class="fas fa-fw fa-file-csv"></i> Export CSV</button>
 							</div>
 						</div>

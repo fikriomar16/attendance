@@ -263,7 +263,30 @@ class AttendanceController extends CI_Controller {
 			"shift" => $this->session->userdata('att_emp_shift') ?? 'All',
 			"date" => $this->session->userdata('att_emp_date')
 		];
-		$this->load->view('report/reportAttEmp', $data);
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Kehadiran-Karyawan_'.$this->session->userdata('att_emp_date').$shift;
+		// setting paper
+		$paper = 'A4';
+        //orientasi paper potrait / landscape
+		$orientation = "portrait";
+		$page = $this->load->view('report/reportAttEmp', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+	public function printAttendanceVis()
+	{
+		$data = [
+			"title" => "Laporan Kedatangan Pengunjung",
+			"lists" => $this->attendance->dataReportAttVis(),
+			"date" => $this->session->userdata('att_vis_date')
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Kedatangan-Pengunjung'.$this->session->userdata('att_vis_date');
+		// setting paper
+		$paper = 'A4';
+        //orientasi paper potrait / landscape
+		$orientation = "portrait";
+		$page = $this->load->view('report/reportAttVis', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
 
 	public function visitor()
@@ -326,6 +349,75 @@ class AttendanceController extends CI_Controller {
 			'getPIN' => $data->pin,
 			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($data->first_scan))
 		],JSON_PRETTY_PRINT);
+	}
+	public function att_yesterday_vis()
+	{
+		$get_date = new DateTime($this->session->userdata('att_vis_date'));
+		$date = $get_date->modify('-1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_vis_date' => $date
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_today_vis()
+	{
+		$date = date("Y-m-d");
+		$this->session->set_userdata([
+			'att_vis_date' => $date
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
+		]);
+	}
+	public function att_tomorrow_vis()
+	{
+		$get_date = new DateTime($this->session->userdata('att_vis_date'));
+		$date = $get_date->modify('+1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_vis_date' => $date
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_hist_scan_vis()
+	{
+		$path_port = '8098';
+		$local = 'localhost';
+		$url = '10.126.25.150';
+		$path = "http://$url:$path_port";
+		$lists = $this->attendance->dt_history_vis();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			if (explode("-",$list->dev_alias)[0] == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			}
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = $list->event_time;
+			$row[] = $list->dev_alias;
+			$row[] = $io;
+			$row[] = '<button type="button" class="btn btn-success btn-sm btn-photo" data-path="'.$path.$list->vid_linkage_handle.'" onclick="angular.element(this).scope().showPhoto(\''.$path.$list->vid_linkage_handle.'\')"><i class="fas fa-fw fa-image"></i> Photo</button>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_history_vis(),
+			"recordsFiltered" => $this->attendance->count_filtered_history_vis(),
+			"data" => $data,
+		];
+		echo json_encode($output);
 	}
 
 }

@@ -76,13 +76,17 @@ $route = [
 	'attendance/employee' => 'AttendanceController/employee',
 	'attendance/visitor' => 'AttendanceController/visitor',
 	'attendance/sch_employee' => 'AttendanceController/sch_employee',
-	// set Date
+	// set Date emp
 	'attendance/att_yesterday_emp' => 'AttendanceController/att_yesterday_emp',
 	'attendance/att_today_emp' => 'AttendanceController/att_today_emp',
 	'attendance/att_tomorrow_emp' => 'AttendanceController/att_tomorrow_emp',
 	'attendance/att_yesterday_emp_detail' => 'AttendanceController/att_yesterday_emp_detail',
 	'attendance/att_today_emp_detail' => 'AttendanceController/att_today_emp_detail',
 	'attendance/att_tomorrow_emp_detail' => 'AttendanceController/att_tomorrow_emp_detail',
+	// set Date vis
+	'attendance/att_yesterday_vis' => 'AttendanceController/att_yesterday_vis',
+	'attendance/att_today_vis' => 'AttendanceController/att_today_vis',
+	'attendance/att_tomorrow_vis' => 'AttendanceController/att_tomorrow_vis',
 
 	'attendance/set_shift/(:any)' => 'AttendanceController/set_shift/$1',
 	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',
@@ -93,8 +97,10 @@ $route = [
 	'attendance/att_sum_emp' => 'AttendanceController/att_sum_emp',
 	'attendance/att_det_recap_emp' => 'AttendanceController/att_det_recap_emp',
 	'attendance/att_hist_scan_emp' => 'AttendanceController/att_hist_scan_emp',
+	'attendance/att_hist_scan_vis' => 'AttendanceController/att_hist_scan_vis',
 	// report
 	'printAttendanceEmp' => 'AttendanceController/printAttendanceEmp',
+	'printAttendanceVis' => 'AttendanceController/printAttendanceVis',
 
 	'schedule' => 'ScheduleController',
 	'schedule/employee' => 'ScheduleController/employee',

@@ -16,7 +16,7 @@
 	<div class="container-fluid p-0 m-0">
 		<div class="row justify-content-center">
 			<div class="col">
-				<h4 class="text-dark font-weight-bold text-center">Laporan Kehadiran Karyawan</h3>
+				<h4 class="text-dark font-weight-bold text-center">Laporan Kedatangan Pengunjung</h3>
 			</div>
 		</div>
 		<div class="row justify-content-center">
@@ -24,9 +24,6 @@
 				<div class="row justify-content-between">
 					<div class="col-auto">
 						<p><span class="font-weight-bold text-dark">Date : </span><?= $date ?></p>
-					</div>
-					<div class="col-auto">
-						<p><span class="font-weight-bold text-dark">Shift : </span><?= $shift ?></p>
 					</div>
 				</div>
 			</div>
@@ -38,15 +35,9 @@
 						<thead class="thead-light">
 							<tr>
 								<th width="5%">No</th>
-								<th>NIK</th>
 								<th>Name</th>
-								<th>Departement</th>
-								<th>Shift</th>
 								<th>First Scan</th>
 								<th>Last Scan</th>
-								<th>Late Duration</th>
-								<th>Out Duration</th>
-								<th>In Duration</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -55,15 +46,9 @@
 								<?php $no++; ?>
 								<tr>
 									<td><?= $no; ?></td>
-									<td><?= $list->pin; ?></td>
 									<td><?= $list->name; ?></td>
-									<td><?= $list->dept_name; ?></td>
-									<td><?= $list->shift; ?></td>
-									<td><?= $list->in_scan; ?></td>
-									<td><?= $list->out_scan; ?></td>
-									<td><?= $list->late_duration; ?></td>
-									<td><?= $list->out_duration; ?></td>
-									<td><?= $list->in_duration; ?></td>
+									<td><?= $list->first_scan; ?></td>
+									<td><?= $list->last_scan; ?></td>
 								</tr>
 							<?php endforeach ?>
 						</tbody>

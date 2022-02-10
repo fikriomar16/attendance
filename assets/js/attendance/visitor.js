@@ -1,6 +1,8 @@
 const base = angular.element('body').data('home');
 const table = angular.element('#dataTable');
 const source = table.data('source');
+const tableDetHistory = angular.element('#detHistoryTable');
+const sourceDetHistory = tableDetHistory.data('source');
 const app = angular.module('visTrace', []);
 app.controller('visTrace',($scope,$http) => {
 	$http.get(base+'attendance').then((res) => {
@@ -23,6 +25,21 @@ app.controller('visTrace',($scope,$http) => {
 			"orderable": false
 		}]
 	});
+	tableDetHistory.DataTable({
+		"sDom" : 'tir',
+		"processing": true,
+		"serverSide": true,
+		"responsive": true,
+		"order": [],
+		"ajax": {
+			"url": sourceDetHistory,
+			"type": "POST"
+		},
+		"columnDefs": [{ 
+			"targets": [0,-1],
+			"orderable": false
+		}]
+	});
 	$scope.search = () => {
 		table.DataTable().search($scope.searchInTable).draw();
 	}
@@ -33,7 +50,7 @@ app.controller('visTrace',($scope,$http) => {
 		angular.element('.card-show').addClass('d-none');
 	}
 	$scope.refreshDetail = () => {
-		// reload tab
+		tableDetHistory.DataTable().ajax.reload();
 	}
 	$scope.show = (id) => {
 		$scope.attId = id;
@@ -44,7 +61,24 @@ app.controller('visTrace',($scope,$http) => {
 			angular.element('.card-show').removeClass('d-none');
 			angular.element('.scroll-to-top').click();
 			$scope.refreshDetail();
-			console.log(res.data);
+		});
+	}
+	$scope.getYesterday = () => {
+		$http.get(base+'attendance/att_yesterday_vis').then((res) => {
+			table.DataTable().ajax.reload();
+			$scope.getDate = res.data.date;
+		});
+	}
+	$scope.getToday = () => {
+		$http.get(base+'attendance/att_today_vis').then((res) => {
+			table.DataTable().ajax.reload();
+			$scope.getDate = res.data.date;
+		});
+	}
+	$scope.getTomorrow = () => {
+		$http.get(base+'attendance/att_tomorrow_vis').then((res) => {
+			table.DataTable().ajax.reload();
+			$scope.getDate = res.data.date;
 		});
 	}
 });
