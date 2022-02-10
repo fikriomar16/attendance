@@ -7,9 +7,15 @@ const tableDetRecap = angular.element('#detRecapTable');
 const sourceDetRecap = tableDetRecap.data('source');
 const tableDetHistory = angular.element('#detHistoryTable');
 const sourceDetHistory = tableDetHistory.data('source');
-var shift;
+let shift;
+let config = {
+	enableTime: false,
+	dateFormat: "Y-m-d",
+};
 const app = angular.module('attEmployee', []);
 app.controller('attEmployee',($scope,$http) => {
+	const fp = flatpickr('.selectDate',config);
+	fp[0];
 	$http.get(base+'attendance').then((res) => {
 		$scope.getAttDate = res.data.date;
 		angular.element('.get-date').removeClass('d-none');
@@ -75,6 +81,15 @@ app.controller('attEmployee',($scope,$http) => {
 			"orderable": false
 		}]
 	});
+	$scope.select_date = () => {
+		$http.get(base+'att_getDate_emp/'+$scope.selectDate).then((res) => {
+			$scope.getAttDate = res.data.date;
+			$scope.getSearchDate = res.data.date;
+			// reload tab
+			table.DataTable().ajax.reload();
+			$scope.refreshDetail();
+		});
+	}
 	$scope.getShift = () => {
 		if ($scope.shiftList == '') {
 			shift = '0';
@@ -133,6 +148,7 @@ app.controller('attEmployee',($scope,$http) => {
 		$http.get(base+'attendance/att_yesterday_emp').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
+			$scope.searchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
@@ -142,6 +158,7 @@ app.controller('attEmployee',($scope,$http) => {
 		$http.get(base+'attendance/att_today_emp').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
+			$scope.searchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
@@ -151,6 +168,7 @@ app.controller('attEmployee',($scope,$http) => {
 		$http.get(base+'attendance/att_tomorrow_emp').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
+			$scope.searchDate = res.data.date;
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();

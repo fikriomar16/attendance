@@ -146,8 +146,17 @@
 		</div>
 	</div>
 	<div class="row justify-content-between mt-1 mb-3">
-		<div class="col-auto"></div>
 		<div class="col-auto">
+			<div class="form-group form-label-group">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<div class="input-group-text border-0 shadow-sm bg-primary text-white "><i class="fas fa-fw fa-calendar-alt"></i>&nbsp; Search </div>
+					</div>
+					<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center bg-primary text-white selectDate border-0 shadow-sm col-5">
+				</div>
+			</div>
+		</div>
+		<div class="col-3">
 			<span class="font-weight-bold h6 get-date d-none">{{getAttDate}}</span>
 		</div>
 		<div class="col-auto">

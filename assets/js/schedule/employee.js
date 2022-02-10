@@ -8,6 +8,7 @@ const app = angular.module('schEmp', []);
 const today = new Date();
 const minDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 const maxDate = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+(today.getDate()+6);
+const defMonth = today.getMonth()+1;
 let config = {
 	enableTime: true,
 	enableSeconds: true,

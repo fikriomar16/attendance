@@ -8,7 +8,7 @@ class Scanlog extends CI_Model {
 		$table = 'acc_transaction';
 		$order = ['event_time' => 'desc'];
 		$column_order = ['dept_name','dev_alias','event_time','name','pin','verify_mode_name'];
-		$column_search = ['dept_name','dev_alias','event_time','name','pin','verify_mode_name'];
+		$column_search = ['dept_name','dev_alias','CAST(event_time as varchar)','name','pin','verify_mode_name'];
 		$this->db->from($table);
 		$i = 0;
 		foreach ($column_search as $item) // loop column

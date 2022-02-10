@@ -3,8 +3,14 @@ const table = angular.element('#dataTable');
 const source = table.data('source');
 const tableDetHistory = angular.element('#detHistoryTable');
 const sourceDetHistory = tableDetHistory.data('source');
+let config = {
+	enableTime: false,
+	dateFormat: "Y-m-d",
+};
 const app = angular.module('visTrace', []);
 app.controller('visTrace',($scope,$http) => {
+	const fp = flatpickr('.selectDate',config);
+	fp[0];
 	$http.get(base+'attendance').then((res) => {
 		$scope.getDate = res.data.date;
 		$scope.getSearchDate = res.data.date;
@@ -77,6 +83,12 @@ app.controller('visTrace',($scope,$http) => {
 	}
 	$scope.getTomorrow = () => {
 		$http.get(base+'attendance/att_tomorrow_vis').then((res) => {
+			table.DataTable().ajax.reload();
+			$scope.getDate = res.data.date;
+		});
+	}
+	$scope.select_date = () => {
+		$http.get(base+'att_getDate_vis/'+$scope.selectDate).then((res) => {
 			table.DataTable().ajax.reload();
 			$scope.getDate = res.data.date;
 		});

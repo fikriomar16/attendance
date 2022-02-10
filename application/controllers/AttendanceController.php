@@ -159,6 +159,25 @@ class AttendanceController extends CI_Controller {
 			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('att_emp_date_search')))
 		]);
 	}
+	public function att_getDate_emp($date)
+	{
+		$this->session->set_userdata([
+			'att_emp_date' => $date,
+			'att_emp_date_search' => $date,
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime($date))
+		]);
+	}
+	public function att_getDate_vis($date)
+	{
+		$this->session->set_userdata([
+			'att_vis_date' => $date
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime($date))
+		]);
+	}
 	public function att_sum_emp()
 	{
 		$list = $this->attendance->dt_detail_emp();
