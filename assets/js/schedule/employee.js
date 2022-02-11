@@ -206,14 +206,38 @@ app.controller('schEmp',($scope,$http) => {
 			showDenyButton: true,
 			showCancelButton: true,
 			confirmButtonText: 'Ya, Sudah',
-			denyButtonText: `Belum Punya`,
+			denyButtonText: 'Belum Punya',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				infoPopUp('Sedang Mengimport Data');
+				angular.element('.import_sch').click();
 			} else if (result.isDenied) {
-				infoPopUp('Sedang Mengunduh Template');
+				infoPopUp('Mengunduh Template....');
 				location.href = base+'exportSchTemplate';
 			}
 		})
+	}
+	$scope.doImportCSV = (files) => {
+		infoPopUp('Mengimport Data....');
+		var fd = new FormData();
+		fd.append("import_sch", files[0]);
+		$http.post(angular.element('#importForm').attr('action'),fd,{
+			withCredentials: true,
+			headers: {'Content-Type': 'multipart/form-data' },
+			headers: {'Content-Type': undefined },
+			transformRequest: angular.identity
+		}).then((res) => {
+			if (res.data.error) {
+				errorPopUp(res.data.error);
+			}
+			if (res.data.success) {
+				successPopUp(res.data.success);
+				console.table(res.data.result);
+				console.table(res.data.collect);
+			}
+		}),(err) => {
+			console.log(err);
+		};
+		angular.element('#importForm')[0].reset();
+		document.getElementById("import_sch").value = "";
 	}
 });

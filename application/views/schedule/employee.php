@@ -48,6 +48,9 @@
 							</div>
 						</div>
 					</form>
+					<form action="<?= base_url('importSchCSV') ?>" id="importForm" name="importForm" class="d-none importForm">
+						<input type="file" name="import_sch" id="import_sch" class="import_sch" accept=".csv" onchange="angular.element(this).scope().doImportCSV(this.files)">
+					</form>
 				</div>
 				<div class="card-footer border-0 shadow-sm">
 					<div class="row justify-content-between">
@@ -136,7 +139,7 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New</button>
-								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import CSV</button>
+								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import from CSV</button>
 							</div>
 						</div>
 						<div class="col-xl-4 col-md-6 my-1">

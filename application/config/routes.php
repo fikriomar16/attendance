@@ -123,6 +123,7 @@ $route = [
 	'saveSchedule' => 'ScheduleController/saveSchedule',
 	'deleteSchedule/(:any)' => 'ScheduleController/deleteSchedule/$1',
 	'exportSchTemplate' => 'ScheduleController/exportSchTemplate',
+	'importSchCSV' => 'ScheduleController/importSchCSV',
 
 	'setup' => 'SetupController',
 	'setup/duration' => 'SetupController/duration',

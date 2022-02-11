@@ -183,6 +183,8 @@ class ScheduleController extends CI_Controller {
 					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
 					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
+					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.'-30 minutes')),
+					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.'+360 minutes')),
 				]);
 				if ($edit) {
 					echo json_encode([
@@ -218,10 +220,79 @@ class ScheduleController extends CI_Controller {
 		header("Pragma: no-cache");
 		header("Expires: 0");
 		$handle = fopen('php://output', 'w');
-		$head = ['NIK','Nama','Shift','Tanggal','Waktu Masuk','Waktu Pulang'];
+		$head = ['NIK','Nama','Shift','Tanggal','Tanggal Masuk','Jam Masuk','Tanggal Pulang','Jam Pulang'];
 		fputcsv($handle, $head);
 		fclose($handle);
 		exit;
+	}
+
+	public function importSchCSV()
+	{
+		$path = './assets/import/';
+		$config['upload_path'] = $path;
+		$config['allowed_types'] = 'csv|xls|xlsx';
+		$config['max_size']  = '13312';
+		$config['overwrite'] = true;
+		$config['file_name'] = 'importschedule';
+		
+		$this->load->library('upload', $config);
+		
+		if ( ! $this->upload->do_upload('import_sch')){
+			echo json_encode([
+				'error' => $this->upload->display_errors()
+			]);
+		}
+		else {
+			$data = [
+				'upload_data' => $this->upload->data()
+			];
+			$filename = $data['upload_data']['file_name'];
+			$extension = $data['upload_data']['file_ext'];
+			if ($extension == '.csv') {
+				// make sure its csv file
+				$handle = fopen($path.$filename, "r");
+				$head = ['NIK','Nama','Shift','Tanggal','Tanggal Masuk','Jam Masuk','Tanggal Pulang','Jam Pulang'];
+				$i = 0;
+				$result = [];
+				$collects = [];
+				$strep = "/";
+				while (($row = fgetcsv($handle, 13312, ",")) != FALSE) {
+					$row[3] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[3])));
+					$row[4] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[4])));
+					$row[5] = date('H:i:s',strtotime($row[5]));
+					$row[6] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[6])));
+					$row[7] = date('H:i:s',strtotime($row[7]));
+					$result[] = $row;
+					$collect = [];
+					$collect = [
+						'nik' => $row[0],
+						'nama' => $row[1],
+						'shift' => $row[2],
+						'tanggal' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[3]))),
+						'masuk' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[4]))).' '.date('H:i:s',strtotime($row[5])),
+						'pulang' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[6]))).' '.date('H:i:s',strtotime($row[7]))
+					];
+					$collects[] = $collect;
+				}
+				unset($result[0]);
+				unset($collects[0]);
+				fclose($handle);
+
+				unlink($path.$filename);
+				echo json_encode([
+					'success' => 'Berhasil Mengimport CSV',
+					'result' => $result,
+					'collect' => $collects
+				]);
+			}
+			if ($extension == '.xls' || $extension == '.xlsx') {
+				// make sure its xls or xlsx file
+				unlink($path.$filename);
+				echo json_encode([
+					'success' => 'Berhasil Mengimport Excel File'
+				]);
+			}
+		}
 	}
 
 }

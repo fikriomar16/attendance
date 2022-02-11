@@ -6,6 +6,9 @@ begin
 IF (new.nama) is null THEN
 	new.nama = (select name from pers_person where pin=new.nik order by pin asc limit 1);
 END IF;
+IF (new.tanggal) is null THEN
+	new.tanggal = (select CAST(new.masuk as date));
+END IF;
 IF (new.late_allowed) is null THEN
 	new.late_allowed = (select late_allowed from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
 END IF;
