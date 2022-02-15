@@ -171,7 +171,9 @@ class AttendanceController extends CI_Controller {
 	{
 		$this->session->set_userdata([
 			'att_emp_date_search' => $this->session->userdata('att_emp_date'),
-			'att_emp_nik' => $nik
+			'att_emp_nik' => $nik,
+			'recap_month' => ltrim(date('m',strtotime($this->session->userdata('att_emp_date_search'))),'0'),
+			'recap_year' => ltrim(date('Y',strtotime($this->session->userdata('att_emp_date_search'))),'0')
 		]);
 		echo json_encode([
 			'getNIK' => $this->session->userdata('att_emp_nik'),
@@ -322,11 +324,35 @@ class AttendanceController extends CI_Controller {
 		$file_pdf = 'Laporan-Kehadiran-Karyawan_'.$this->session->userdata('att_emp_date').$shift;
 		// setting paper
 		$paper = 'A4';
-        //orientasi paper potrait / landscape
+		//orientasi paper potrait / landscape
 		$orientation = "potrait";
 		$page = $this->load->view('report/reportAttEmp', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
+	public function rekapBulananKaryawan()
+	{
+		$m = date('F', mktime(0, 0, 0, $this->session->userdata('recap_month'),1,$this->session->userdata('recap_year')));
+		$bulan = strftime('%B', strtotime($m))."-".$this->session->userdata('recap_year');
+		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year');
+		$nik = $this->session->userdata('att_emp_nik');
+		$name = $this->attendance->get_by_nik_employee($nik)->name;
+		$data = [
+			"title" => "Rekap Kehadiran Bulanan Karyawan",
+			"lists" => $this->attendance->dataRecapSumEmp(),
+			"month" => $month,
+			"nik" => $nik,
+			"name" => $name
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Kehadiran-Bulanan-Karyawan_'.$bulan."-".$nik."_".$name;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/rekapBulananKaryawan', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+
 	public function printAttendanceVis()
 	{
 		$data = [
@@ -338,11 +364,12 @@ class AttendanceController extends CI_Controller {
 		$file_pdf = 'Laporan-Kedatangan-Pengunjung_'.$this->session->userdata('att_vis_date');
 		// setting paper
 		$paper = 'A4';
-        //orientasi paper potrait / landscape
+		//orientasi paper potrait / landscape
 		$orientation = "portrait";
 		$page = $this->load->view('report/reportAttVis', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
+
 	public function exportCSV_emp()
 	{
 		if ($this->session->userdata('att_emp_shift')) {

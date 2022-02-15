@@ -104,6 +104,7 @@ $route = [
 	// report
 	'printAttendanceEmp' => 'AttendanceController/printAttendanceEmp',
 	'printAttendanceVis' => 'AttendanceController/printAttendanceVis',
+	'rekapBulananKaryawan' => 'AttendanceController/rekapBulananKaryawan',
 	// export CSV
 	'exportCSV_emp' => 'AttendanceController/exportCSV_emp',
 	'exportCSV_vis' => 'AttendanceController/exportCSV_vis',

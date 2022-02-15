@@ -283,6 +283,23 @@ class Attendance extends CI_Model {
 			'CAST(first_scan as date) =' => $this->session->userdata('att_vis_date')
 		])->result();
 	}
+	public function dataRecapScanEmp()
+	{
+		$table = 'acc_transaction_2a';
+		return $this->db->from($table)->where([
+			'date' => $this->session->userdata('att_emp_date_search'),
+			'pin' => $this->session->userdata('att_emp_nik')
+		])->order_by('event_time','desc')->get()->result();
+	}
+	public function dataRecapSumEmp()
+	{
+		$table = 'acc_transaction_3a';
+		return $this->db->from($table)->where([
+			"date_part('month',date)" => $this->session->userdata('recap_month') ?? ltrim(date('m'),'0'),
+			"date_part('year',date)" => $this->session->userdata('recap_year') ?? ltrim(date('Y'),'0'),
+			"pin" => $this->session->userdata('att_emp_nik')
+		])->order_by('in_scan','desc')->get()->result();
+	}
 
 	public function get_by_pin_visitor($pin)
 	{

@@ -45,11 +45,8 @@
 										<div class="col-xl-9">
 											<div class="row justify-content-between mx-1 my-3">
 												<div class="col-auto">
-													<!-- <button type="button" class="btn btn-sm btn-outline-primary shadow-sm">
-														<i class="fas fa-fw fa-calendar-alt"></i> Pilih Bulan & Tanggal
-													</button> -->
 													<div class="form-group form-label-group">
-														<div class="input-group input-group-sm">
+														<div class="input-group">
 															<div class="input-group-prepend">
 																<div class="input-group-text border-0 shadow-sm bg-white text-material-green"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Pilih Bulan & Tahun &nbsp;</div>
 															</div>
@@ -57,13 +54,11 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-auto">
+												<div class="col">
 													<span class="text-primary font-weight-bold px-3">Rekap Kehadiran Sebulan</span>
 												</div>
 												<div class="col-auto">
-													<button type="button" class="btn btn-sm btn-outline-primary shadow-sm">
-														<i class="fas fa-fw fa-print"></i> Print
-													</button>
+													<a type="button" class="btn btn-sm btn-primary d-inline" href="<?= base_url('rekapBulananKaryawan') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 												</div>
 											</div>
 											<div class="table-responsive px-1">
