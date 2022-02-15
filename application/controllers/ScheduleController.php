@@ -231,7 +231,7 @@ class ScheduleController extends CI_Controller {
 		$path = './assets/import/';
 		$config['upload_path'] = $path;
 		$config['allowed_types'] = 'csv|xls|xlsx';
-		$config['max_size']  = '13312';
+		$config['max_size']  = '4096';
 		$config['overwrite'] = true;
 		$config['file_name'] = 'importschedule';
 		
@@ -256,12 +256,12 @@ class ScheduleController extends CI_Controller {
 				$result = [];
 				$collects = [];
 				$strep = "/";
-				while (($row = fgetcsv($handle, 13312, ",")) != FALSE) {
-					$row[3] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[3])));
-					$row[4] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[4])));
-					$row[5] = date('H:i:s',strtotime($row[5]));
-					$row[6] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[6])));
-					$row[7] = date('H:i:s',strtotime($row[7]));
+				while (($row = fgetcsv($handle, 4096, ",")) != FALSE) {
+					// $row[3] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[3])));
+					// $row[4] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[4])));
+					// $row[5] = date('H:i:s',strtotime($row[5]));
+					// $row[6] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[6])));
+					// $row[7] = date('H:i:s',strtotime($row[7]));
 					$result[] = $row;
 					$collect = [];
 					$collect = [

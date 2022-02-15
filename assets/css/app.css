@@ -38,3 +38,21 @@ table {
 .text-material-blue {
 	color: #42A5F5 !important;
 }
+.bg-material-green {
+	background-color: #1AB292 !important;
+}
+.text-material-green {
+	color: #1AB292 !important;
+}
+.bg-material-red {
+	background-color: #EF5350 !important;
+}
+.text-material-red {
+	color: #EF5350 !important;
+}
+.bg-material-orange {
+	background-color: #FF8A65 !important;
+}
+.text-material-orange {
+	color: #FF8A65 !important;
+}

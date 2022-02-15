@@ -27,7 +27,9 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_emp_date' => date("Y-m-d"),
 			'att_emp_date_search' => date("Y-m-d"),
-			'att_emp_nik' => $this->attendance->getRndmSch()->nik
+			'att_emp_nik' => $this->attendance->getRndmSch()->nik,
+			'recap_month' => date('m'),
+			'recap_year' => date('Y')
 		]);
 		$this->session->unset_userdata('att_emp_shift');
 		$path_port = '8098';
@@ -87,6 +89,8 @@ class AttendanceController extends CI_Controller {
 			$this->session->set_userdata([
 				'att_emp_date' => $date,
 				'att_emp_date_search' => $date,
+				'recap_month' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year' => ltrim(date('Y',strtotime($date)),'0')
 			]);
 			echo json_encode([
 				'date' => strftime('%A, %d %B %Y', strtotime($date))
@@ -99,6 +103,8 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_emp_date' => $date,
 			'att_emp_date_search' => $date,
+			'recap_month' => ltrim(date('m'),'0'),
+			'recap_year' => ltrim(date('Y'),'0')
 		]);
 		echo json_encode([
 			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
@@ -112,6 +118,8 @@ class AttendanceController extends CI_Controller {
 			$this->session->set_userdata([
 				'att_emp_date' => $date,
 				'att_emp_date_search' => $date,
+				'recap_month' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year' => ltrim(date('Y',strtotime($date)),'0')
 			]);
 			echo json_encode([
 				'date' => strftime('%A, %d %B %Y', strtotime($date))
@@ -123,7 +131,11 @@ class AttendanceController extends CI_Controller {
 		$get_date = new DateTime($this->session->userdata('att_emp_date_search'));
 		$date = $get_date->modify('-1 day')->format('Y-m-d');
 		if ($date) {
-			$this->session->set_userdata('att_emp_date_search',$date);
+			$this->session->set_userdata([
+				'att_emp_date_search' => $date,
+				'recap_month' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year' => ltrim(date('Y',strtotime($date)),'0')
+			]);
 			echo json_encode([
 				'date' => strftime('%A, %d %B %Y', strtotime($date))
 			]);
@@ -131,7 +143,11 @@ class AttendanceController extends CI_Controller {
 	}
 	public function att_today_emp_detail()
 	{
-		$this->session->set_userdata('att_emp_date_search',date("Y-m-d"));
+		$this->session->set_userdata([
+			'att_emp_date_search' => date("Y-m-d"),
+			'recap_month' => ltrim(date('m'),'0'),
+			'recap_year' => ltrim(date('Y'),'0')
+		]);
 		echo json_encode([
 			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
 		]);
@@ -141,7 +157,11 @@ class AttendanceController extends CI_Controller {
 		$get_date = new DateTime($this->session->userdata('att_emp_date_search'));
 		$date = $get_date->modify('+1 day')->format('Y-m-d');
 		if ($date) {
-			$this->session->set_userdata('att_emp_date_search',$date);
+			$this->session->set_userdata([
+				'att_emp_date_search' => $date,
+				'recap_month' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year' => ltrim(date('Y',strtotime($date)),'0')
+			]);
 			echo json_encode([
 				'date' => strftime('%A, %d %B %Y', strtotime($date))
 			]);
@@ -164,6 +184,8 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_emp_date' => $date,
 			'att_emp_date_search' => $date,
+			'recap_month' => ltrim(date('m',strtotime($date)),'0'),
+			'recap_year' => ltrim(date('Y',strtotime($date)),'0')
 		]);
 		echo json_encode([
 			'date' => strftime('%A, %d %B %Y', strtotime($date))
@@ -178,9 +200,23 @@ class AttendanceController extends CI_Controller {
 			'date' => strftime('%A, %d %B %Y', strtotime($date))
 		]);
 	}
+	public function recapSumEmp($param)
+	{
+		$getMonth = explode("-",$param)[0];
+		$month = ltrim($getMonth,'0');
+		$year = explode("-",$param)[1];
+		$this->session->set_userdata([
+			'recap_month' => $month,
+			'recap_year' => $year
+		]);
+		echo json_encode([
+			'month' => $month,
+			'year' => $year
+		],JSON_PRETTY_PRINT);
+	}
 	public function att_sum_emp()
 	{
-		$list = $this->attendance->dt_detail_emp();
+		$list = $this->attendance->dt_sum_emp();
 		$data = [];
 		$no = $_POST['start'];
 		foreach ($list as $emp) {

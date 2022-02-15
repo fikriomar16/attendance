@@ -12,10 +12,21 @@ let config = {
 	enableTime: false,
 	dateFormat: "Y-m-d",
 };
+let configRecap = {
+	plugins: [
+	new monthSelectPlugin({
+          shorthand: true, //defaults to false
+          dateFormat: "m-Y", //defaults to "F Y"
+          theme: "material-blue" // defaults to "light"
+      })
+	]
+};
 const app = angular.module('attEmployee', []);
 app.controller('attEmployee',($scope,$http) => {
 	const fp = flatpickr('.selectDate',config);
 	fp[0];
+	const fp2 = flatpickr('.recapDate',configRecap);
+	fp2[0];
 	$http.get(base+'attendance').then((res) => {
 		$scope.getAttDate = res.data.date;
 		angular.element('.get-date').removeClass('d-none');
@@ -176,5 +187,10 @@ app.controller('attEmployee',($scope,$http) => {
 	}
 	$scope.showPhoto = (url) => {
 		angular.element('.emp-photo').attr('src',url);
+	}
+	$scope.recap_date = () => {
+		$http.get(base+'recapSumEmp/'+$scope.recapDate).then((res) => {
+			table_sum.DataTable().ajax.reload();
+		});
 	}
 });

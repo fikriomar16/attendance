@@ -30,9 +30,11 @@
 		<script src="<?= base_url('assets/js/schedule/employee.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='attendance/employee'): ?>
+		<script src="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/index.js') ?>"></script>
 		<script src="<?= base_url('assets/js/attendance/employee.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='attendance/visitor'): ?>
+		<script src="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/index.js') ?>"></script>
 		<script src="<?= base_url('assets/js/attendance/visitor.js') ?>"></script>
 	<?php endif ?>
 	<?php if ($p=='setup/duration'): ?>

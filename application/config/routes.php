@@ -89,6 +89,7 @@ $route = [
 	'attendance/att_today_vis' => 'AttendanceController/att_today_vis',
 	'attendance/att_tomorrow_vis' => 'AttendanceController/att_tomorrow_vis',
 	'att_getDate_vis/(:any)' => 'AttendanceController/att_getDate_vis/$1',
+	'recapSumEmp/(:any)' => 'AttendanceController/recapSumEmp/$1',
 
 	'attendance/set_shift/(:any)' => 'AttendanceController/set_shift/$1',
 	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',

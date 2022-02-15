@@ -43,9 +43,25 @@
 								<div class="tab-pane fade show active" id="att_summary" role="tabpanel" aria-labelledby="pills-home-tab">
 									<div class="row justify-content-center card-summary">
 										<div class="col-xl-9">
-											<div class="row justify-content-center mx-1 my-3">
-												<div class="col">
-													<button type="button" class="btn btn-primary shadow-sm">
+											<div class="row justify-content-between mx-1 my-3">
+												<div class="col-auto">
+													<!-- <button type="button" class="btn btn-sm btn-outline-primary shadow-sm">
+														<i class="fas fa-fw fa-calendar-alt"></i> Pilih Bulan & Tanggal
+													</button> -->
+													<div class="form-group form-label-group">
+														<div class="input-group input-group-sm">
+															<div class="input-group-prepend">
+																<div class="input-group-text border-0 shadow-sm bg-white text-material-green"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Pilih Bulan & Tahun &nbsp;</div>
+															</div>
+															<input type="text" name="recapDate" id="recapDate" ng-model="recapDate" ng-change="recap_date()" class="form-control text-center bg-material-green text-white recapDate border-0 shadow-sm col-3">
+														</div>
+													</div>
+												</div>
+												<div class="col-auto">
+													<span class="text-primary font-weight-bold px-3">Rekap Kehadiran Sebulan</span>
+												</div>
+												<div class="col-auto">
+													<button type="button" class="btn btn-sm btn-outline-primary shadow-sm">
 														<i class="fas fa-fw fa-print"></i> Print
 													</button>
 												</div>

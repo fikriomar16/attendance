@@ -11,6 +11,13 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/fontawesome-free/css/all.min.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/themes/material_blue.css') ?>">
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/sweetalert2/themes/material-ui/material-ui.min.css') ?>">
+	<?php $p = uri_string(); ?>
+	<?php if ($p=='attendance/employee'): ?>
+		<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/style.css') ?>">
+	<?php endif ?>
+	<?php if ($p=='attendance/visitor'): ?>
+		<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/style.css') ?>">
+	<?php endif ?>
 	<link rel="icon" href="<?= base_url('assets/img/undraw_posting_photo.svg') ?>">
 	<title><?= $title ?? '' ?></title>
 </head>

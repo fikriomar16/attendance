@@ -48,7 +48,7 @@
 							</div>
 						</div>
 					</form>
-					<form action="<?= base_url('importSchCSV') ?>" id="importForm" name="importForm" class="d-none importForm">
+					<form action="<?= base_url('importSchCSV') ?>" enctype="multipart/form-data" id="importForm" name="importForm" class="d-none importForm">
 						<input type="file" name="import_sch" id="import_sch" class="import_sch" accept=".csv" onchange="angular.element(this).scope().doImportCSV(this.files)">
 					</form>
 				</div>
