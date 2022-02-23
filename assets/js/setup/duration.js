@@ -30,6 +30,8 @@ app.controller('setDur',($scope,$http) => {
 		$scope.auth_dept_id = '';
 		$scope.late_allowed = '';
 		$scope.out_allowed = '';
+		$scope.out_allowed_friday = '';
+		$scope.out_allowed_saturday = '';
 		$scope.checkDept();
 		$scope.getTitle = 'Add New Duration';
 		angular.element('.card-new').removeClass('d-none');
@@ -49,11 +51,23 @@ app.controller('setDur',($scope,$http) => {
 				'id':$scope.id_dur,
 				'auth_dept_id':$scope.auth_dept_id,
 				'late_allowed':$scope.late_allowed,
-				'out_allowed':$scope.out_allowed
+				'out_allowed':$scope.out_allowed,
+				'out_allowed_friday':$scope.out_allowed_friday,
+				'out_allowed_saturday':$scope.out_allowed_saturday
 			}
 		}).then((res) => {
 			if (res.data.error) {
-				errorNotif(res.data.error);
+				var list = '';
+				var loop = 0;
+				while (loop < res.data.error.length) {
+					list+='<ul class="text-left">';
+					list+='<li>';
+					list+=res.data.error[loop];
+					list+='</li>';
+					list+='</ul>';
+					loop++;
+				}
+				listErrorNotif(list);
 			} else if (res.data.success) {
 				$scope.reloadTable();
 				successPopUp(res.data.success);
@@ -79,8 +93,12 @@ app.controller('setDur',($scope,$http) => {
 				$scope.auth_dept_id = result.data.auth_dept_id;
 				$scope.late_allowed = result.data.late_allowed;
 				$scope.out_allowed = result.data.out_allowed;
+				$scope.out_allowed_friday = result.data.out_allowed_friday;
+				$scope.out_allowed_saturday = result.data.out_allowed_saturday;
 				document.getElementById('late_allowed').value = result.data.late_allowed;
 				document.getElementById('out_allowed').value = result.data.out_allowed;
+				document.getElementById('out_allowed_friday').value = result.data.out_allowed_friday;
+				document.getElementById('out_allowed_saturday').value = result.data.out_allowed_saturday;
 				flatpickr('.input-time',config);
 			});
 		});

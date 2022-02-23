@@ -36,3 +36,10 @@ const errorNotif = (msg) => {
 		timer: 2000
 	})
 }
+const listErrorNotif = (msg) => {
+	Swal.fire({
+		icon: 'error',
+		title: 'Peringatan!!',
+		html: msg
+	})
+}

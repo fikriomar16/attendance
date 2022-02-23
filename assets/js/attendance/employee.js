@@ -111,6 +111,12 @@ app.controller('attEmployee',($scope,$http) => {
 			table.DataTable().ajax.reload();
 		});
 	}
+	$scope.getShiftList = () => {
+		$http.get(base+'attendance/getShiftList').then((res) => {
+			$scope.shiftLists = res.data.lists;
+		});
+	}
+	$scope.getShiftList();
 	$scope.search = () => {
 		table.DataTable().search($scope.searchInTable).draw();
 	}
@@ -163,6 +169,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
+			$scope.getShiftList();
 		});
 	}
 	$scope.getToday = () => {
@@ -173,6 +180,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
+			$scope.getShiftList();
 		});
 	}
 	$scope.getTomorrow = () => {
@@ -183,6 +191,7 @@ app.controller('attEmployee',($scope,$http) => {
 			// reload tab
 			table.DataTable().ajax.reload();
 			$scope.refreshDetail();
+			$scope.getShiftList();
 		});
 	}
 	$scope.showPhoto = (url) => {

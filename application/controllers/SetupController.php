@@ -44,6 +44,8 @@ class SetupController extends CI_Controller {
 			$row[] = $dur->name;
 			$row[] = $dur->late_allowed;
 			$row[] = $dur->out_allowed;
+			$row[] = $dur->out_allowed_friday;
+			$row[] = $dur->out_allowed_saturday;
 			$row[] = '<div class="btn-group btn-group-sm shadow-sm border-0" role="group">
 			<button type="button" class="btn btn-primary btn-edit" data-id="'.$dur->id.'" onclick="angular.element(this).scope().edit('.$dur->id.')"><i class="fas fa-fw fa-pen"></i></button>
 			<button type="button" class="btn btn-danger btn-delete" data-id="'.$dur->id.'" onclick="angular.element(this).scope().delete('.$dur->id.')"><i class="fas fa-fw fa-trash"></i></button>
@@ -77,16 +79,36 @@ class SetupController extends CI_Controller {
 	public function saveDuration()
 	{
 		$form = json_decode(file_get_contents("php://input"));
+		$error = [];
 		if (empty($form->auth_dept_id) || empty($form->late_allowed) || empty($form->out_allowed)) {
+			if (empty($form->auth_dept_id)) {
+				$error[] = "Departement Wajib Dipilih";
+			}
+			if (empty($form->late_allowed)) {
+				$error[] = "Batas Keterlambatan Wajib Diisi";
+			}
+			if (empty($form->out_allowed)) {
+				$error[] = "Batas Durasi di Luar Wajib Diisi";
+			}
 			echo json_encode([
-				'error' => 'Seluruh Data Wajib Diisi'
+				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
 			$insert = [
 				'auth_dept_id' => $form->auth_dept_id,
 				'late_allowed' => date('H:i:s',strtotime($form->late_allowed)),
-				'out_allowed' => date('H:i:s',strtotime($form->out_allowed))
+				'out_allowed' => date('H:i:s',strtotime($form->out_allowed)),
 			];
+			if (empty($form->out_allowed_friday)) {
+				$insert['out_allowed_friday'] = date('H:i:s',strtotime($form->out_allowed));
+			} else {
+				$insert['out_allowed_friday'] = date('H:i:s',strtotime($form->out_allowed_friday));
+			}
+			if (empty($form->out_allowed_saturday)) {
+				$insert['out_allowed_saturday'] = date('H:i:s',strtotime($form->out_allowed));
+			} else {
+				$insert['out_allowed_saturday'] = date('H:i:s',strtotime($form->out_allowed_saturday));
+			}
 			if (empty($form->id)) {
 				$add = $this->setup->create_duration($insert);
 				if ($add) {

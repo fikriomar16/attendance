@@ -11,7 +11,7 @@ class Admin extends CI_Model {
 		$column_search = ['event_time','name','shift','dev_alias'];
 		$this->db->from($table)->where([
 			"CAST(event_time as date) =" => date('Y-m-d')
-		])->limit(50);
+		]);
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -46,7 +46,8 @@ class Admin extends CI_Model {
 	{
 		$this->_get_dt_dashboard();
 		if($_POST['length'] != -1)
-			$this->db->limit($_POST['length'], $_POST['start']);
+			// $this->db->limit($_POST['length'], $_POST['start']);
+			$this->db->limit(50);
 		return $this->db->get()->result();
 	}
 	public function count_filtered_dashboard()
@@ -83,7 +84,7 @@ class Admin extends CI_Model {
 		$column_search = ['event_time','name',NULL,'dev_alias'];
 		$this->db->from($table)->where([
 			"CAST(event_time as date) =" => date('Y-m-d')
-		])->limit(50);
+		]);
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -118,7 +119,8 @@ class Admin extends CI_Model {
 	{
 		$this->_get_dt_dashboard2();
 		if($_POST['length'] != -1)
-			$this->db->limit($_POST['length'], $_POST['start']);
+			// $this->db->limit($_POST['length'], $_POST['start']);
+			$this->db->limit(50);
 		return $this->db->get()->result();
 	}
 	public function count_filtered_dashboard2()

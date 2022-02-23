@@ -99,7 +99,6 @@ app.controller('schEmp',($scope,$http) => {
 	}
 	$scope.newSchedule = () => {
 		angular.element('#scheduleForm')[0].reset();
-		document.getElementById('shift').value = '';
 		document.getElementById('nik').value = '';
 		$scope.id_sch = '';
 		$scope.nik = '';
@@ -122,13 +121,22 @@ app.controller('schEmp',($scope,$http) => {
 			data:{
 				'id':$scope.id_sch,
 				'nik':$scope.nik,
-				'shift':$scope.shift,
 				'masuk':$scope.masuk,
 				'pulang':$scope.pulang
 			}
 		}).then((res) => {
 			if (res.data.error) {
-				errorNotif(res.data.error);
+				var list = '';
+				var loop = 0;
+				while (loop < res.data.error.length) {
+					list+='<ul class="text-left">';
+					list+='<li>';
+					list+=res.data.error[loop];
+					list+='</li>';
+					list+='</ul>';
+					loop++;
+				}
+				listErrorNotif(list);
 			} else if (res.data.success) {
 				table_sch.DataTable().ajax.reload();
 				successPopUp(res.data.success);
@@ -151,7 +159,6 @@ app.controller('schEmp',($scope,$http) => {
 			angular.element('.alert-loading').addClass('d-none');
 			$scope.empNik = res.data.nik;
 			$scope.empName = res.data.nama;
-			$scope.shift = res.data.shift;
 			$scope.masuk = res.data.masuk;
 			$scope.pulang = res.data.pulang;
 			document.getElementById('masuk').value = res.data.masuk;
@@ -169,8 +176,6 @@ app.controller('schEmp',($scope,$http) => {
 				maxDate: getEnd
 			});
 			$scope.nik = res.data.nik;
-			angular.element('#shift').selectpicker('val',res.data.shift);
-			document.getElementById('shift').value = res.data.shift;
 			angular.element('.scroll-to-top').click();
 		});
 	}

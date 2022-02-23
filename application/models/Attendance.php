@@ -15,17 +15,21 @@ class Attendance extends CI_Model {
 			$table.'.pin' => $nik
 		])->get()->row();
 	}
+	public function collectShift()
+	{
+		$table = 'sys_sch_users';
+		return $this->db->select('shift')->from($table)->group_by('shift')->order_by('shift','asc')->get()->result();
+	}
 
 	public function _get_datatable_employee()
 	{
 		$table = 'pers_person';
-		$join2 = 'auth_department';
-		$join3 = 'acc_transaction_3a';
+		$join2 = 'acc_transaction_3a';
 		$order = [$table.'.pin' => 'asc'];
-		$column_order = [null,null,$table.'.name','pin','shift',$join2.'.code'];
-		$column_search = [$table.'.name',$join3.'.pin','shift',$join2.'.name'];
-		$this->db->select("$table.name,$join2.name as dept_name,$table.name_spell,$table.pin,$join3.shift,$join2.code,$join2.id as dept_id")->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
-			$join3.'.date' => $this->session->userdata('att_emp_date')
+		$column_order = [null,null,$table.'.name','pin','shift',$join2.'.name'];
+		$column_search = [$table.'.name',$join2.'.pin','shift',$join2.'.dept_name'];
+		$this->db->select("$table.name,$join2.dept_name,$table.name_spell,$table.pin,$join2.shift")->from($table)->join($join2,$table.'.pin = '.$join2.'.pin')->where([
+			$join2.'.date' => $this->session->userdata('att_emp_date')
 		]);
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('shift', $this->session->userdata('att_emp_shift'));
@@ -75,10 +79,9 @@ class Attendance extends CI_Model {
 	public function count_all_employee()
 	{
 		$table = 'pers_person';
-		$join2 = 'auth_department';
-		$join3 = 'acc_transaction_3a';
-		return $this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left')->join($join3,$table.'.pin = '.$join3.'.pin')->where([
-			$join3.'.date' => $this->session->userdata('att_emp_date')
+		$join2 = 'acc_transaction_3a';
+		return $this->db->from($table)->join($join2,$table.'.pin = '.$join2.'.pin')->where([
+			$join2.'.date' => $this->session->userdata('att_emp_date')
 		])->count_all_results();
 	}
 
@@ -269,12 +272,12 @@ class Attendance extends CI_Model {
 
 	public function dataReportAttEmp()
 	{
+		$table = 'acc_transaction_3a';
+		$this->db->select('*')->from($table)->where('date',$this->session->userdata('att_emp_date'));
 		if ($this->session->userdata('att_emp_shift')) {
-			$shift = "AND shift='".$this->session->userdata('att_emp_shift')."'";
-		} else {
-			$shift = '';
+			$this->db->where('shift',$this->session->userdata('att_emp_shift'));
 		}
-		return $this->db->query("select acc_transaction_3a.pin, acc_transaction_3a.name, auth_department.name as dept_name, shift, in_scan, out_scan, late_duration, out_duration, in_duration from acc_transaction_3a,auth_department,pers_person  where pers_person.pin = acc_transaction_3a.pin and pers_person.auth_dept_id = auth_department.id and acc_transaction_3a.date = '".$this->session->userdata('att_emp_date')."'".$shift." order by in_scan desc")->result();
+		return $this->db->get()->result();
 	}
 	public function dataReportAttVis()
 	{

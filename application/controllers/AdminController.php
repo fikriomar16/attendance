@@ -41,6 +41,8 @@ class AdminController extends CI_Controller {
 				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
 			}
 			$row = [];
 			$row[] = $list->event_time;
@@ -80,6 +82,8 @@ class AdminController extends CI_Controller {
 				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
 			}
 			$row = [];
 			$row[] = $list->event_time;
@@ -114,6 +118,8 @@ class AdminController extends CI_Controller {
 				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
 			}
 			$row = [];
 			$row[] = $list->event_time;

@@ -56,3 +56,8 @@ table {
 .text-material-orange {
 	color: #FF8A65 !important;
 }
+
+.customSelect > option:checked {
+	background-color: #42A5F5;
+	color: #f8f9fa;
+}

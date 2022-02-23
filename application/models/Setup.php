@@ -7,11 +7,11 @@ class Setup extends CI_Model {
 	{
 		$table = 'sys_duration';
 		$table2 = 'auth_department';
-		$order = ['auth_dept_id' => 'asc'];
-		$column_order = [null,'auth_dept_id','late_allowed','out_allowed'];
-		$column_search = [$table2.'.name','CAST(late_allowed as varchar)','CAST(out_allowed as varchar)'];
+		$order = [$table2.'.name' => 'asc'];
+		$column_order = [null,$table2.'.name','late_allowed','out_allowed','out_allowed_friday','out_allowed_saturday'];
+		$column_search = [$table2.'.name','CAST(late_allowed as varchar)','CAST(out_allowed as varchar)','CAST(out_allowed_friday as varchar)','CAST(out_allowed_saturday as varchar)'];
 		$this->db->select(
-			"$table.id,$table2.id as dept_id,$table.auth_dept_id,$table.late_allowed,$table.out_allowed,$table2.name,$table2.code"
+			"$table.*,$table2.id as dept_id,$table2.name,$table2.code"
 		)->from($table)->join($table2, $table.'.auth_dept_id = '.$table2.'.id', 'left');
 		$i = 0;
 		foreach ($column_search as $item) // loop column

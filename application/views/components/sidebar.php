@@ -34,6 +34,12 @@
 			<span>Employee</span>
 		</a>
 	</li>
+	<li class="nav-item <?= ($p=='attendance/office')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('attendance/office') ?>">
+			<i class="fas fa-fw fa-building"></i>
+			<span>Office</span>
+		</a>
+	</li>
 	<li class="nav-item <?= ($p=='attendance/visitor')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('attendance/visitor') ?>">
 			<i class="far fa-fw fa-credit-card"></i>
@@ -67,6 +73,12 @@
 	<div class="sidebar-heading">
 		Log Data
 	</div>
+	<li class="nav-item <?= ($p=='scanlog/filter')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('scanlog/filter') ?>">
+			<i class="fas fa-fw fa-filter"></i>
+			<span>Filter Data Kehadiran</span>
+		</a>
+	</li>
 	<li class="nav-item <?= ($p=='scanlog')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('scanlog') ?>">
 			<i class="fas fa-fw fa-align-left"></i>

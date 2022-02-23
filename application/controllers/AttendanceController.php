@@ -81,6 +81,12 @@ class AttendanceController extends CI_Controller {
 			'shift' => $shift
 		]);
 	}
+	public function getShiftList()
+	{
+		echo json_encode([
+			'lists' => $this->attendance->collectShift()
+		],JSON_PRETTY_PRINT);
+	}
 	public function att_yesterday_emp()
 	{
 		$get_date = new DateTime($this->session->userdata('att_emp_date'));
@@ -286,6 +292,8 @@ class AttendanceController extends CI_Controller {
 				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$emp->dev_alias)[0].'</span>';
 			} else if (explode("-",$emp->dev_alias)[0] == "OUT") {
 				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$emp->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$emp->dev_alias.'</span>';
 			}
 			$no++;
 			$row = [];
@@ -477,11 +485,12 @@ class AttendanceController extends CI_Controller {
 	public function attresume_vis($id)
 	{
 		$data = $this->attendance->get_vis_att_by_id($id);
+		$get_last = $data->last_scan ?? $data->first_scan;
 		$this->session->set_userdata([
 			'att_vis_pin' => $data->pin,
 			'att_vis_date_search' => date("Y-m-d",strtotime($data->first_scan)),
 			'att_vis_first_scan' => $data->first_scan,
-			'att_vis_scan_6hour' => date("Y-m-d H:i:s", strtotime($data->first_scan.'+6 hours'))
+			'att_vis_scan_6hour' => date("Y-m-d H:i:s", strtotime($get_last.'+6 hours'))
 		]);
 		echo json_encode([
 			'getName' => $data->name,
@@ -539,6 +548,8 @@ class AttendanceController extends CI_Controller {
 				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
 			}
 			$no++;
 			$row = [];

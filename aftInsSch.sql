@@ -15,8 +15,18 @@ END IF;
 IF (new.out_allowed) is null THEN
 	new.out_allowed = (select out_allowed from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
 END IF;
-new.sub_masuk = new.masuk - INTERVAL '30 min';
-new.sub_pulang = new.pulang + INTERVAL '360 min';
+IF (new.out_allowed_friday) is null THEN
+	new.out_allowed_friday = (select out_allowed_friday from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
+END IF;
+IF (new.out_allowed_saturday) is null THEN
+	new.out_allowed_saturday = (select out_allowed_saturday from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
+END IF;
+IF (new.sub_masuk) is null THEN
+	new.sub_masuk = new.masuk - INTERVAL '60 min';
+END IF;
+IF (new.sub_pulang) is null THEN
+	new.sub_pulang = new.pulang + INTERVAL '240 min';
+END IF;
 return new;
 end;
 $$
@@ -29,6 +39,6 @@ FOR EACH ROW
 EXECUTE PROCEDURE set_sch_user();
 
 /*
-DROP TRIGGER set_sch_user on sys_sch_users;
+DROP TRIGGER trg_set_sch_user on sys_sch_users;
 DROP FUNCTION set_sch_user();
 */

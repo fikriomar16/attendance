@@ -153,20 +153,34 @@ class ScheduleController extends CI_Controller {
 	}
 	public function saveSchedule()
 	{
+		$subMasuk = '-1 hours';
+		$subPulang = '+4 hours';
+		$error = [];
 		$form = json_decode(file_get_contents("php://input"));
-		if (empty($form->nik) || empty($form->shift) || empty($form->masuk) || empty($form->pulang)) {
+		if (empty($form->nik) || empty($form->masuk) || empty($form->pulang)) {
+			if (empty($form->nik)) {
+				$error[] = "Karyawan Wajib Dipilih";
+			}
+			if (empty($form->masuk)) {
+				$error[] = "Tanggal & Jam Masuk Wajib Diisi";
+			}
+			if (empty($form->pulang)) {
+				$error[] = "Tanggal & Jam Pulang Wajib Diisi";
+			}
 			echo json_encode([
-				'error' => 'Seluruh Data Wajib Diisi'
+				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
 			if (empty($form->id)) {
 				$add = $this->schedule->create_schedule([
 					'nik' => $form->nik,
 					'nama' => $this->schedule->get_by_nik_employee($form->nik)->name,
-					'shift' => $form->shift,
+					'shift' => date('H',strtotime($form->masuk)).'-'.date('H',strtotime($form->pulang)),
 					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
 					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
+					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
+					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
 				]);
 				if ($add) {
 					echo json_encode([
@@ -179,12 +193,12 @@ class ScheduleController extends CI_Controller {
 				}
 			} else {
 				$edit = $this->schedule->update_schedule($form->id,[
-					'shift' => $form->shift,
+					'shift' => date('H',strtotime($form->masuk)).'-'.date('H',strtotime($form->pulang)),
 					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
 					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
-					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.'-30 minutes')),
-					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.'+360 minutes')),
+					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
+					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
 				]);
 				if ($edit) {
 					echo json_encode([

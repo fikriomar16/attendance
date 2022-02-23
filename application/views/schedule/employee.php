@@ -11,38 +11,28 @@
 				<div class="card-body p-3">
 					<form action="<?= base_url('saveSchedule') ?>" id="scheduleForm" name="scheduleForm">
 						<div class="row justify-content-center">
-							<div class="col-md-9 select-emp">
+							<div class="col select-emp">
 								<div class="form-group form-label-group">
-									<label for="nik" class="small">Pilih Karyawan</label>
-									<select name="nik" id="nik" ng-model="nik" class="form-control text-center show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
+									<label for="nik" class="small font-weight-bold">Pilih Karyawan</label>
+									<select name="nik" id="nik" ng-model="nik" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
 										<option ng-repeat="emp in emps" value="{{emp.pin}}">{{emp.pin}} - {{emp.name}}</option>
 									</select>
 								</div>
 							</div>
-							<div class="col-md-9 my-auto info-emp text-center d-none">
+							<div class="col my-4 info-emp text-center d-none">
 								<span class="text-primary font-weight-bold">{{empNik}} - {{empName}}</span>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group form-label-group">
-									<label for="shift" class="small">Pilih Shift</label>
-									<select name="shift" id="shift" ng-model="shift" class="form-control text-center selectpicker show-menu-arrow" data-header="Pilih Shift">
-										<option value="1">Shift 1</option>
-										<option value="2">Shift 2</option>
-										<option value="3">Shift 3</option>
-									</select>
-								</div>
 							</div>
 						</div>
 						<div class="row justify-content-center">
 							<div class="col-lg-6">
 								<div class="form-group form-label-group">
-									<label for="masuk" class="small">Waktu Masuk</label>
+									<label for="masuk" class="small font-weight-bold">Tanggal & Jam Masuk</label>
 									<input type="text" name="masuk" id="masuk" ng-model="masuk" class="form-control text-center bg-light input-time">
 								</div>
 							</div>
 							<div class="col-lg-6">
 								<div class="form-group form-label-group">
-									<label for="pulang" class="small">Waktu Pulang</label>
+									<label for="pulang" class="small font-weight-bold">Tanggal & Jam Pulang</label>
 									<input type="text" name="pulang" id="pulang" ng-model="pulang" class="form-control text-center bg-light input-time">
 								</div>
 							</div>
@@ -138,7 +128,7 @@
 					<div class="row justify-content-between my-1 px-1">
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
-								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New</button>
+								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New Schedule</button>
 								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import from CSV</button>
 							</div>
 						</div>

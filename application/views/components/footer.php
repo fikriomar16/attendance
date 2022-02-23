@@ -1,4 +1,4 @@
-				<?= (ENVIRONMENT === 'development') ?  '<div class="text-center text-primary font-weight-bold">Page Rendered in {elapsed_time} seconds.</div>' : '' ?>
+				<?= (ENVIRONMENT === 'development') ?  '<div class="text-center text-primary my-5 font-weight-bold">Page Rendered in {elapsed_time} seconds.</div>' : '' ?>
 			</div>
 		</div>	
 	</div>
@@ -33,6 +33,10 @@
 		<script src="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/index.js') ?>"></script>
 		<script src="<?= base_url('assets/js/attendance/employee.js') ?>"></script>
 	<?php endif ?>
+	<?php if ($p=='attendance/office'): ?>
+		<script src="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/index.js') ?>"></script>
+		<script src="<?= base_url('assets/js/attendance/office.js') ?>"></script>
+	<?php endif ?>
 	<?php if ($p=='attendance/visitor'): ?>
 		<script src="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/index.js') ?>"></script>
 		<script src="<?= base_url('assets/js/attendance/visitor.js') ?>"></script>
@@ -42,6 +46,9 @@
 	<?php endif ?>
 	<?php if ($p=='scanlog'): ?>
 		<script src="<?= base_url('assets/js/scanlog/scanlog.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='scanlog/filter'): ?>
+		<script src="<?= base_url('assets/js/scanlog/filter.js') ?>"></script>
 	<?php endif ?>
 </body>
 </html>

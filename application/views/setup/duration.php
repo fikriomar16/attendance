@@ -17,24 +17,38 @@
 									<div class="col">
 										<div class="form-group form-label-group">
 											<label for="auth_dept_id" class="small">Pilih Departement</label>
-											<select name="auth_dept_id" id="auth_dept_id" ng-model="auth_dept_id" class="form-control text-center show-menu-arrow" data-header="Pilih Departement" ng-options="dept.id as dept.name for dept in depts"></select>
+											<select name="auth_dept_id" id="auth_dept_id" ng-model="auth_dept_id" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Departement" ng-options="dept.id as dept.name for dept in depts"></select>
 										</div>
 									</div>
 								</div>
 								<div class="row justify-content-center">
 									<div class="col-lg-6">
 										<div class="form-group form-label-group">
-											<label for="late_allowed" class="small">Diperbolehkan Terlambat</label>
-											<input type="time" name="late_allowed" id="late_allowed" ng-model="late_allowed" class="form-control text-center bg-light input-time">
+											<label for="late_allowed" class="small">Batas Keterlambatan</label>
+											<input type="text" name="late_allowed" id="late_allowed" ng-model="late_allowed" class="form-control text-center bg-light input-time">
 										</div>
 									</div>
 									<div class="col-lg-6">
 										<div class="form-group form-label-group">
-											<label for="out_allowed" class="small">Diperbolehkan Keluar</label>
-											<input type="time" name="out_allowed" id="out_allowed" ng-model="out_allowed" class="form-control text-center bg-light input-time">
+											<label for="out_allowed" class="small">Batas Durasi di Luar</label>
+											<input type="text" name="out_allowed" id="out_allowed" ng-model="out_allowed" class="form-control text-center bg-light input-time">
 										</div>
 									</div>
-									<span class="text-danger px-3 notif-edit d-none">*kosongkan jika tidak ingin merubah data</span>
+									<span class="text-danger px-3 notif-edit d-none my-3">*kosongkan jika tidak ingin merubah data</span>
+								</div>
+								<div class="row justify-content-center">
+									<div class="col-lg-6">
+										<div class="form-group form-label-group">
+											<label for="out_allowed" class="small">Batas Durasi di Luar (Jumat)</label>
+											<input type="text" name="out_allowed_friday" id="out_allowed_friday" ng-model="out_allowed_friday" class="form-control text-center bg-light input-time">
+										</div>
+									</div>
+									<div class="col-lg-6">
+										<div class="form-group form-label-group">
+											<label for="out_allowed" class="small">Batas Durasi di Luar (Sabtu)</label>
+											<input type="text" name="out_allowed_saturday" id="out_allowed_saturday" ng-model="out_allowed_saturday" class="form-control text-center bg-light input-time">
+										</div>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -54,7 +68,7 @@
 		</div>
 	</div>
 	<div class="row justify-content-center">
-		<div class="col-xl-9">
+		<div class="col-xl-12">
 			<div class="card border-0 border-bottom-primary shadow mb-4 rounded">
 				<div class="card-header border-0">
 					<div class="row justify-content-between">
@@ -71,7 +85,7 @@
 				<div class="card-body p-3">
 					<div class="row justify-content-between my-1 px-1">
 						<div class="col-auto my-1">
-							<button type="button" class="btn btn-primary btn-sm" ng-click="newDuration()"><i class="fas fa-fw fa-plus-circle"></i> New</button>
+							<button type="button" class="btn btn-primary btn-sm" ng-click="newDuration()"><i class="fas fa-fw fa-plus-circle"></i> New Setup Duration</button>
 						</div>
 						<div class="col-xl-4 col-md-6 my-1">
 							<div class="input-group">
@@ -94,6 +108,8 @@
 											<th>Departement</th>
 											<th>Late Allowed</th>
 											<th>Out Allowed</th>
+											<th>Out Allowed (Friday)</th>
+											<th>Out Allowed (Saturday)</th>
 											<th width="10%">Action</th>
 										</tr>
 									</thead>

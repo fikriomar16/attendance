@@ -84,6 +84,7 @@ $route = [
 	'attendance/att_today_emp_detail' => 'AttendanceController/att_today_emp_detail',
 	'attendance/att_tomorrow_emp_detail' => 'AttendanceController/att_tomorrow_emp_detail',
 	'att_getDate_emp/(:any)' => 'AttendanceController/att_getDate_emp/$1',
+	'attendance/getShiftList' => 'AttendanceController/getShiftList',
 	// set Date vis
 	'attendance/att_yesterday_vis' => 'AttendanceController/att_yesterday_vis',
 	'attendance/att_today_vis' => 'AttendanceController/att_today_vis',
@@ -139,4 +140,9 @@ $route = [
 
 	'scanlog' => 'ScanlogController',
 	'scanlog/dt_scanlog' => 'ScanlogController/dt_scanlog',
+	'scanlog/filter' => 'ScanlogController/filter',
+	'scanlog/getPinName' => 'ScanlogController/getPinName',
+	'scanlog/getResume' => 'ScanlogController/getResume',
+	'scanlog/dt_filter' => 'ScanlogController/dt_filter',
+	'scanlog/getFilterData' => 'ScanlogController/getFilterData',
 ];
