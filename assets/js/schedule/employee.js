@@ -18,7 +18,9 @@ let config = {
 	minDate: minDate,
 	maxDate: maxDate
 };
+let tbodyTr;
 app.controller('schEmp',($scope,$http) => {
+	$scope.importData = [];
 	$http.get(base+'schedule/empList').then((res) => {
 		$scope.emps = res.data;
 	});
@@ -102,6 +104,7 @@ app.controller('schEmp',($scope,$http) => {
 		document.getElementById('nik').value = '';
 		$scope.id_sch = '';
 		$scope.nik = '';
+		$scope.shift = '';
 		$scope.masuk = '';
 		$scope.pulang = '';
 		angular.element('.info-emp').addClass('d-none');
@@ -121,6 +124,7 @@ app.controller('schEmp',($scope,$http) => {
 			data:{
 				'id':$scope.id_sch,
 				'nik':$scope.nik,
+				'shift':$scope.shift,
 				'masuk':$scope.masuk,
 				'pulang':$scope.pulang
 			}
@@ -159,10 +163,12 @@ app.controller('schEmp',($scope,$http) => {
 			angular.element('.alert-loading').addClass('d-none');
 			$scope.empNik = res.data.nik;
 			$scope.empName = res.data.nama;
+			$scope.shift = res.data.shift;
 			$scope.masuk = res.data.masuk;
 			$scope.pulang = res.data.pulang;
 			document.getElementById('masuk').value = res.data.masuk;
 			document.getElementById('pulang').value = res.data.pulang;
+			document.getElementById('shift').value = res.data.shift;
 			var getDate = new Date(res.data.masuk);
 			var getStart = getDate.getFullYear()+'-'+(getDate.getMonth()+1)+'-'+getDate.getDate();
 			var getEnd = getDate.getFullYear()+'-'+(getDate.getMonth()+1)+'-'+(getDate.getDate()+6);
@@ -231,18 +237,66 @@ app.controller('schEmp',($scope,$http) => {
 			headers: {'Content-Type': undefined },
 			transformRequest: angular.identity
 		}).then((res) => {
+			$scope.importData = [];
 			if (res.data.error) {
 				errorPopUp(res.data.error);
 			}
 			if (res.data.success) {
-				successPopUp(res.data.success);
-				console.table(res.data.result);
-				console.table(res.data.collect);
+				if (res.data.collect.length == 0) {
+					errorPopUp('Data Kosong atau Sudah Terimport');
+				} else {
+					var loop = 0;
+					tbodyTr = '';
+					while (loop < res.data.collect.length) {
+						tbodyTr+= '<tr>';
+						tbodyTr+= '<td class="text-primary font-weight-bold">';
+						tbodyTr+= res.data.collect[loop].nik;
+						tbodyTr+= '</td>';
+						tbodyTr+= '<td>';
+						tbodyTr+= res.data.collect[loop].nama;
+						tbodyTr+= '</td>';
+						tbodyTr+= '<td>';
+						tbodyTr+= res.data.collect[loop].shift;
+						tbodyTr+= '</td>';
+						tbodyTr+= '<td>';
+						tbodyTr+= res.data.collect[loop].tanggal;
+						tbodyTr+= '</td>';
+						tbodyTr+= '<td>';
+						tbodyTr+= res.data.collect[loop].masuk;
+						tbodyTr+= '</td>';
+						tbodyTr+= '<td>';
+						tbodyTr+= res.data.collect[loop].pulang;
+						tbodyTr+= '</td>';
+						tbodyTr+= '</tr>';
+						loop++;
+					}
+					$scope.importData = res.data.collect;
+					angular.element('#table-import').html(tbodyTr);
+					successPopUp(res.data.success);
+					angular.element('#modalImport').modal('show');
+				}
 			}
 		}),(err) => {
 			console.log(err);
 		};
 		angular.element('#importForm')[0].reset();
 		document.getElementById("import_sch").value = "";
+	}
+	$scope.importFromModal = () => {
+		$http({
+			method:"POST",
+			url:base+'processImport',
+			data:$scope.importData
+		}).then((res) => {
+			if (res.data.error) {
+				errorNotif(res.data.error);
+			} else if (res.data.success) {
+				successPopUp(res.data.success);
+				table_sch.DataTable().ajax.reload();
+				angular.element('#modalImport').modal('hide');
+			}
+		}),(err) => {
+			console.log(err);
+		};
 	}
 });

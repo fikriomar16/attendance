@@ -15,12 +15,20 @@
 								<div class="form-group form-label-group">
 									<label for="nik" class="small font-weight-bold">Pilih Karyawan</label>
 									<select name="nik" id="nik" ng-model="nik" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
-										<option ng-repeat="emp in emps" value="{{emp.pin}}">{{emp.pin}} - {{emp.name}}</option>
+										<option ng-repeat="emp in emps" value="{{emp.pin}}">
+											{{emp.pin}} - {{emp.name}} - {{emp.dept_name}}
+										</option>
 									</select>
 								</div>
 							</div>
 							<div class="col my-4 info-emp text-center d-none">
 								<span class="text-primary font-weight-bold">{{empNik}} - {{empName}}</span>
+							</div>
+							<div class="col-2">
+								<div class="form-group form-label-group">
+									<label for="shift" class="small font-weight-bold">Shift</label>
+									<input type="text" name="shift" id="shift" ng-model="shift" class="form-control text-center bg-light" oninput="this.value=this.value.toUpperCase()">
+								</div>
 							</div>
 						</div>
 						<div class="row justify-content-center">
@@ -39,7 +47,7 @@
 						</div>
 					</form>
 					<form action="<?= base_url('importSchCSV') ?>" enctype="multipart/form-data" id="importForm" name="importForm" class="d-none importForm">
-						<input type="file" name="import_sch" id="import_sch" class="import_sch" accept=".csv" onchange="angular.element(this).scope().doImportCSV(this.files)">
+						<input type="file" name="import_sch" id="import_sch" class="import_sch" accept=".csv,.xls,.xlsx" onchange="angular.element(this).scope().doImportCSV(this.files)">
 					</form>
 				</div>
 				<div class="card-footer border-0 shadow-sm">
@@ -129,7 +137,7 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New Schedule</button>
-								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import from CSV</button>
+								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import from Excel or CSV</button>
 							</div>
 						</div>
 						<div class="col-xl-4 col-md-6 my-1">
@@ -161,6 +169,39 @@
 							</div>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalImport" data-backdrop="static" tabindex="-1" aria-labelledby="modalImportLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+			<div class="modal-content border-0">
+				<div class="modal-header bg-light shadow-sm border-0">
+					<h5 class="modal-title text-primary font-weight-bold" id="modalImportLabel">Import Data</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="table-responsive">
+						<table class="table table-striped table-hover align-middle shadow-sm">
+							<thead class="thead-light">
+								<tr>
+									<th>NIK</th>
+									<th>NAMA</th>
+									<th>SHIFT</th>
+									<th>TANGGAL</th>
+									<th>MASUK</th>
+									<th>PULANG</th>
+								</tr>
+							</thead>
+							<tbody id="table-import"></tbody>
+						</table>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-sm btn-rounded btn-primary shadow-sm m-2" ng-click="importFromModal()"><i class="fas fa-fw fa-save"></i> Import Data</button>
+					<button type="button" class="btn btn-sm btn-rounded btn-secondary shadow-sm m-2" data-dismiss="modal"><i class="fas fa-fw fa-times-circle"></i> Batal</button>
 				</div>
 			</div>
 		</div>

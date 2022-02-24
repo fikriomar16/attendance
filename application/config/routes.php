@@ -75,7 +75,6 @@ $route = [
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',
 	'attendance/visitor' => 'AttendanceController/visitor',
-	'attendance/sch_employee' => 'AttendanceController/sch_employee',
 	// set Date emp
 	'attendance/att_yesterday_emp' => 'AttendanceController/att_yesterday_emp',
 	'attendance/att_today_emp' => 'AttendanceController/att_today_emp',
@@ -97,26 +96,24 @@ $route = [
 	'attresume_vis/(:any)' => 'AttendanceController/attresume_vis/$1',
 	// dataTable
 	'attendance/dt_employee' => 'AttendanceController/dt_employee',
-	'attendance/dt_visitor' => 'AttendanceController/dt_visitor',
 	'attendance/att_sum_emp' => 'AttendanceController/att_sum_emp',
 	'attendance/att_det_recap_emp' => 'AttendanceController/att_det_recap_emp',
 	'attendance/att_hist_scan_emp' => 'AttendanceController/att_hist_scan_emp',
+	'attendance/dt_visitor' => 'AttendanceController/dt_visitor',
 	'attendance/att_hist_scan_vis' => 'AttendanceController/att_hist_scan_vis',
 	// report
 	'printAttendanceEmp' => 'AttendanceController/printAttendanceEmp',
-	'printAttendanceVis' => 'AttendanceController/printAttendanceVis',
 	'rekapBulananKaryawan' => 'AttendanceController/rekapBulananKaryawan',
+	'historyScanKaryawan' => 'AttendanceController/historyScanKaryawan',
+	'printAttendanceVis' => 'AttendanceController/printAttendanceVis',
 	// export CSV
 	'exportCSV_emp' => 'AttendanceController/exportCSV_emp',
 	'exportCSV_vis' => 'AttendanceController/exportCSV_vis',
 
 	'schedule' => 'ScheduleController',
 	'schedule/employee' => 'ScheduleController/employee',
-	'schedule/internal' => 'ScheduleController/internal',
 	'schedule/dt_employee' => 'ScheduleController/dt_employee',
-	'schedule/dt_internal' => 'ScheduleController/dt_internal',
 	'schedule/sch_employee' => 'ScheduleController/sch_employee',
-	'schedule/sch_internal' => 'ScheduleController/sch_internal',
 	'sch_emp_ytd' => 'ScheduleController/get_yesterday_emp',
 	'sch_emp_tmr' => 'ScheduleController/get_tomorrow_emp',
 	'sch_emp_tdy' => 'ScheduleController/get_today_emp',
@@ -126,7 +123,9 @@ $route = [
 	'saveSchedule' => 'ScheduleController/saveSchedule',
 	'deleteSchedule/(:any)' => 'ScheduleController/deleteSchedule/$1',
 	'exportSchTemplate' => 'ScheduleController/exportSchTemplate',
+	// import CSV
 	'importSchCSV' => 'ScheduleController/importSchCSV',
+	'processImport' => 'ScheduleController/processImport',
 
 	'setup' => 'SetupController',
 	'setup/duration' => 'SetupController/duration',

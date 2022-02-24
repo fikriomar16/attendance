@@ -53,7 +53,6 @@ class AttendanceController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $no;
-			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
 			$row[] = $emp->name_spell;
 			$row[] = $emp->pin;
 			$row[] = $emp->shift;
@@ -231,7 +230,6 @@ class AttendanceController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $emp->date;
-			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
 			$row[] = $emp->shift;
 			$row[] = $emp->in_scan;
 			$row[] = $emp->out_scan;
@@ -315,6 +313,32 @@ class AttendanceController extends CI_Controller {
 		echo json_encode($output);
 	}
 
+	public function office()
+	{
+		if (!$this->session->userdata('user')) {
+			redirect('login');
+		}
+		$this->session->set_userdata([
+			'att_off_date' => date("Y-m-d"),
+			'att_off_date_search' => date("Y-m-d"),
+			'att_off_nik' => $this->attendance->getRndmSch()->nik,
+			'recap_month' => date('m'),
+			'recap_year' => date('Y')
+		]);
+		$this->session->unset_userdata('att_off_shift');
+		$path_port = '8098';
+		$data = [
+			'title' => 'Management Attendance',
+			'path_local' => "http://localhost:$path_port",
+			'path_url' => "http://10.126.25.150:$path_port"
+		];
+		$this->load->view('components/header', $data);
+		$this->load->view('components/sidebar', $data);
+		$this->load->view('components/topbar', $data);
+		$this->load->view('attendance/office', $data);
+		$this->load->view('components/footer', $data);
+	}
+
 	public function printAttendanceEmp()
 	{
 		if ($this->session->userdata('att_emp_shift')) {
@@ -358,6 +382,30 @@ class AttendanceController extends CI_Controller {
 		//orientasi paper potrait / landscape
 		$orientation = "potrait";
 		$page = $this->load->view('report/rekapBulananKaryawan', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+	public function historyScanKaryawan()
+	{
+		$lists = $this->attendance->dataRecapScanEmp();
+		$nik = $this->session->userdata('att_emp_nik');
+		$name = $lists[0]->name;
+		$date = $this->session->userdata('att_emp_date');
+		$shift = $lists[0]->shift;
+		$data = [
+			"title" => "Riwayat Scan Karyawan",
+			"lists" => $lists,
+			"nik" => $nik,
+			"name" => $name,
+			"date" => $date,
+			"shift" => $shift
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Riwayat-Scan-Karyawan_'.$nik."-".$name."_".$date;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/historyScanKaryawan', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
 
@@ -565,6 +613,32 @@ class AttendanceController extends CI_Controller {
 			"draw" => $_POST['draw'],
 			"recordsTotal" => $this->attendance->count_all_history_vis(),
 			"recordsFiltered" => $this->attendance->count_filtered_history_vis(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function dt_office()
+	{
+		$lists = $this->attendance->datatable_office();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
+			$row[] = $list->name_spell;
+			$row[] = $list->pin;
+			$row[] = $list->shift;
+			$row[] = $list->dept_name;
+			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$list->pin.'" onclick="angular.element(this).scope().show('.$list->pin.')"><i class="fas fa-fw fa-list-alt"></i> Detail</button>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_office(),
+			"recordsFiltered" => $this->attendance->count_filtered_office(),
 			"data" => $data,
 		];
 		echo json_encode($output);

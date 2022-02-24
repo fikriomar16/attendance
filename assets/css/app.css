@@ -61,3 +61,7 @@ table {
 	background-color: #42A5F5;
 	color: #f8f9fa;
 }
+
+#shift, [name="shift"] {
+	text-transform:uppercase;
+}

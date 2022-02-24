@@ -9,6 +9,7 @@
 	<style type="text/css">
 		body {
 			font-size: 0.75rem;
+			margin: 0;
 		}
 	</style>
 </head>

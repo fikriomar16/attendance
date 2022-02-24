@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-app="attEmployee" ng-controller="attEmployee">
+<div class="container-fluid" ng-app="attOffice" ng-controller="attOffice">
 	<div class="row justify-content-between">
 		<div class="col">
 			<div class="card border-0 border-left-primary shadow rounded mt-1 mb-5 card-show d-none">
@@ -54,15 +54,15 @@
 														</div>
 													</div>
 												</div>
-												<div class="col-6">
+												<div class="col">
 													<span class="text-primary font-weight-bold px-3">Rekap Kehadiran Sebulan</span>
 												</div>
 												<div class="col-auto">
-													<a type="button" class="btn btn-sm btn-primary d-inline" href="<?= base_url('rekapBulananKaryawan') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
+													<a type="button" class="btn btn-sm btn-primary d-inline" href="<?= base_url('rekapBulananOffice') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 												</div>
 											</div>
 											<div class="table-responsive px-1">
-												<table class="table table-striped table-hover align-middle shadow-sm" id="sumTable" data-source="<?= base_url('attendance/att_sum_emp') ?>">
+												<table class="table table-striped table-hover align-middle shadow-sm" id="sumTable" data-source="<?= base_url('attendance/att_sum_off') ?>">
 													<thead class="thead-light">
 														<tr>
 															<th>Date</th>
@@ -70,8 +70,6 @@
 															<th>First Scan</th>
 															<th>Last Scan</th>
 															<th>Late Duration</th>
-															<th>Out Duration</th>
-															<th>In Duration</th>
 														</tr>
 													</thead>
 													<tbody></tbody>
@@ -84,7 +82,7 @@
 									<div class="row justify-content-center mx-1 card-detail">
 										<div class="col">
 											<div class="table-responsive px-1">
-												<table class="table table-striped table-hover align-middle shadow-sm" id="detRecapTable" data-source="<?= base_url('attendance/att_det_recap_emp') ?>">
+												<table class="table table-striped table-hover align-middle shadow-sm" id="detRecapTable" data-source="<?= base_url('attendance/att_det_recap_off') ?>">
 													<thead class="thead-light">
 														<tr>
 															<th width="5%">#</th>
@@ -95,8 +93,6 @@
 															<th>First Scan</th>
 															<th>Last Scan</th>
 															<th>Late Duration</th>
-															<th>Out Duration</th>
-															<th>In Duration</th>
 														</tr>
 													</thead>
 													<tbody></tbody>
@@ -111,13 +107,13 @@
 													<span class="text-primary font-weight-bold px-3">Data Riwayat Scan</span>
 												</div>
 												<div class="col-auto">
-													<a type="button" class="btn btn-sm btn-primary shadow-sm d-inline" href="<?= base_url('historyScanKaryawan') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
+													<a type="button" class="btn btn-sm btn-primary shadow-sm d-inline" href="<?= base_url('historyScanOffice') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 												</div>
 											</div>
 											<div class="row justify-content-center">
 												<div class="col">
 													<div class="table-responsive px-1">
-														<table class="table table-striped table-hover align-middle shadow-sm" id="detHistoryTable" data-source="<?= base_url('attendance/att_hist_scan_emp') ?>">
+														<table class="table table-striped table-hover align-middle shadow-sm" id="detHistoryTable" data-source="<?= base_url('attendance/att_hist_scan_off') ?>">
 															<thead class="thead-light">
 																<tr>
 																	<th width="5%">#</th>
@@ -179,7 +175,7 @@
 	</div>
 	<div class="row justify-content-center my-1">
 		<div class="col">
-			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-attendance" data-source="<?= base_url('attresume_emp/') ?>">
+			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-attendance" data-source="<?= base_url('attresume_off/') ?>">
 				<div class="card-header">
 					<div class="row justify-content-between">
 						<div class="col-auto">
@@ -196,8 +192,8 @@
 					<div class="row justify-content-between my-1 px-1">
 						<div class="col-auto my-1">
 							<div class="btn-group" role="group">
-								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceEmp') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
-								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_emp') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
+								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceOff') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
+								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_off') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
 							</div>
 						</div>
 						<div class="col-xl-6 col-md-9 my-1">
@@ -218,7 +214,7 @@
 					<div class="row justify-content-center my-2">
 						<div class="col">
 							<div class="table-responsive px-1">
-								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('attendance/dt_employee') ?>">
+								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('attendance/dt_office') ?>">
 									<thead class="thead-light">
 										<tr>
 											<th width="5%">No</th>

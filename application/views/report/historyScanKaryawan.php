@@ -17,14 +17,17 @@
 	<div class="container-fluid p-0 m-0">
 		<div class="row justify-content-center">
 			<div class="col">
-				<h4 class="text-dark font-weight-bold text-center">Laporan Kedatangan Pengunjung</h3>
+				<h4 class="text-dark font-weight-bold text-center"><?= $title ?? '' ?></h3>
 			</div>
 		</div>
 		<div class="row justify-content-center">
 			<div class="col">
 				<div class="row justify-content-between">
 					<div class="col-auto">
-						<p><span class="font-weight-bold text-dark">Date : </span><?= $date ?></p>
+						<p><span class="font-weight-bold text-dark">Nama : </span><?= $name ?> - <span class="font-weight-bold text-dark">NIK : </span><?= $nik ?></p>
+					</div>
+					<div class="col-auto">
+						<p><span class="font-weight-bold text-dark">Date : </span><?= $date ?> - <span class="font-weight-bold text-dark">Shift : </span><?= $shift ?></p>
 					</div>
 				</div>
 			</div>
@@ -36,20 +39,31 @@
 						<thead class="thead-light">
 							<tr>
 								<th width="5%">No</th>
-								<th>Name</th>
-								<th>First Scan</th>
-								<th>Last Scan</th>
+								<th>Scan Time</th>
+								<th>Gate</th>
+								<th>Shift</th>
+								<th>Status</th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php $no = 0; ?>
 							<?php foreach ($lists as $list): ?>
-								<?php $no++; ?>
+								<?php
+									$no++;
+									if (explode("-",$list->dev_alias)[0] == "IN") {
+										$io = explode("-",$list->dev_alias)[0];
+									} else if (explode("-",$list->dev_alias)[0] == "OUT") {
+										$io = explode("-",$list->dev_alias)[0];
+									} else {
+										$io = 'ETC';
+									}
+								?>
 								<tr>
 									<td><?= $no; ?></td>
-									<td><?= $list->name; ?></td>
-									<td><?= $list->first_scan; ?></td>
-									<td><?= $list->last_scan; ?></td>
+									<td><?= $list->event_time; ?></td>
+									<td><?= $list->dev_alias; ?></td>
+									<td><?= $list->shift; ?></td>
+									<td><?= $io; ?></td>
 								</tr>
 							<?php endforeach ?>
 						</tbody>

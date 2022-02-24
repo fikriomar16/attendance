@@ -21,8 +21,8 @@ let configRecap = {
       })
 	]
 };
-const app = angular.module('attEmployee', []);
-app.controller('attEmployee',($scope,$http) => {
+const app = angular.module('attOffice', []);
+app.controller('attOffice',($scope,$http) => {
 	const fp = flatpickr('.selectDate',config);
 	fp[0];
 	const fp2 = flatpickr('.recapDate',configRecap);

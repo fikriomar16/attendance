@@ -5,12 +5,13 @@ class Schedule extends CI_Model {
 
 	public function _get_datatable_employee()
 	{
-		$table = 'pers_person';
+		$table = 'sys_sch_users';
 		$join2 = 'auth_department';
-		$order = ['pin' => 'asc'];
-		$column_order = [null,$table.'.name',$table.'.pin',$join2.'.code'];
-		$column_search = [$table.'.name',$table.'.name_spell',$table.'.pin',$join2.'.name'];
-		$this->db->from($table)->join($join2,$table.'.auth_dept_id = '.$join2.'.id', 'left');
+		$join3 = 'pers_person';
+		$order = ['nik' => 'asc'];
+		$column_order = [null,$table.'.nama',$table.'.nik',$join2.'.name'];
+		$column_search = [$table.'.nama',$table.'.nik',$join2.'.name'];
+		$this->db->select("$table.nama,$table.nik,$join2.name as dept_name")->from($table)->join($join3,"$table.nik = $join3.pin","left")->join($join2,"$join3.auth_dept_id = $join2.id")->group_by("nama,nik,dept_name");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -55,8 +56,10 @@ class Schedule extends CI_Model {
 	}
 	public function count_all_employee()
 	{
-		$table = 'pers_person';
-		return $this->db->from($table)->count_all_results();
+		$table = 'sys_sch_users';
+		$join2 = 'auth_department';
+		$join3 = 'pers_person';
+		return $this->db->select("$table.nama,$table.nik,$join2.name as dept_name")->from($table)->join($join3,"$table.nik = $join3.pin","left")->join($join2,"$join3.auth_dept_id = $join2.id")->group_by("nama,nik,dept_name")->count_all_results();
 	}
 	public function get_by_id_employee($id)
 	{
@@ -150,7 +153,9 @@ class Schedule extends CI_Model {
 
 	public function checkEmp()
 	{
-		return $this->db->get('pers_person')->result();
+		$table = 'pers_person';
+		$table2 = 'auth_department';
+		return $this->db->select("$table.*,$table2.code,$table2.name as dept_name")->from($table)->join($table2,$table.'.auth_dept_id = '.$table2.'.id', 'left')->order_by('code','asc')->get()->result();
 	}
 
 	public function create_schedule($data)
@@ -165,6 +170,18 @@ class Schedule extends CI_Model {
 	public function delete_schedule($id)
 	{
 		return $this->db->where('id', $id)->delete('sys_sch_users');
+	}
+	public function checkSch($nik,$masuk,$pulang)
+	{
+		return $this->db->get_where('sys_sch_users',[
+			'nik' => $nik,
+			'masuk' => $masuk,
+			'pulang' => $pulang
+		])->row();
+	}
+	public function insertFromImport($data)
+	{
+		return $this->db->insert_batch('sys_sch_users', $data);
 	}
 
 }

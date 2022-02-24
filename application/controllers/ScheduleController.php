@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class ScheduleController extends CI_Controller {
 
 	public function __construct()
@@ -97,10 +98,10 @@ class ScheduleController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $no;
-			$row[] = $emp->name_spell;
-			$row[] = $emp->pin;
-			$row[] = $emp->name;
-			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->pin.'" onclick="angular.element(this).scope().getsch('.$emp->pin.')"><i class="fas fa-fw fa-calendar-alt"></i> Schedule</button>';
+			$row[] = $emp->nama;
+			$row[] = $emp->nik;
+			$row[] = $emp->dept_name;
+			$row[] = '<button type="button" class="btn btn-primary btn-sm btn-sch shadow-sm" data-id="'.$emp->nik.'" onclick="angular.element(this).scope().getsch('.$emp->nik.')"><i class="fas fa-fw fa-calendar-alt"></i> Schedule</button>';
 
 			$data[] = $row;
 		}
@@ -157,6 +158,11 @@ class ScheduleController extends CI_Controller {
 		$subPulang = '+4 hours';
 		$error = [];
 		$form = json_decode(file_get_contents("php://input"));
+		if (empty($form->shift)) {
+			$shift = date('H',strtotime($form->masuk)).'-'.date('H',strtotime($form->pulang));
+		} else {
+			$shift = $form->shift;
+		}
 		if (empty($form->nik) || empty($form->masuk) || empty($form->pulang)) {
 			if (empty($form->nik)) {
 				$error[] = "Karyawan Wajib Dipilih";
@@ -167,6 +173,9 @@ class ScheduleController extends CI_Controller {
 			if (empty($form->pulang)) {
 				$error[] = "Tanggal & Jam Pulang Wajib Diisi";
 			}
+			if (empty($form->shift)) {
+				$error[] = "Pastikan Shift Terisi, jika kosong maka default akan mengatur nama shift dengan 'JamMasuk-JamPulang'. ex: '07-13'";
+			}
 			echo json_encode([
 				'error' => $error
 			],JSON_PRETTY_PRINT);
@@ -175,7 +184,7 @@ class ScheduleController extends CI_Controller {
 				$add = $this->schedule->create_schedule([
 					'nik' => $form->nik,
 					'nama' => $this->schedule->get_by_nik_employee($form->nik)->name,
-					'shift' => date('H',strtotime($form->masuk)).'-'.date('H',strtotime($form->pulang)),
+					'shift' => $shift,
 					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
 					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
@@ -193,7 +202,7 @@ class ScheduleController extends CI_Controller {
 				}
 			} else {
 				$edit = $this->schedule->update_schedule($form->id,[
-					'shift' => date('H',strtotime($form->masuk)).'-'.date('H',strtotime($form->pulang)),
+					'shift' => $shift,
 					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
 					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
@@ -234,7 +243,7 @@ class ScheduleController extends CI_Controller {
 		header("Pragma: no-cache");
 		header("Expires: 0");
 		$handle = fopen('php://output', 'w');
-		$head = ['NIK','Nama','Shift','Tanggal','Tanggal Masuk','Jam Masuk','Tanggal Pulang','Jam Pulang'];
+		$head = ['Pers Number','Employee Name','DWS Date','DWS','DWS IN','DWS OUT'];
 		fputcsv($handle, $head);
 		fclose($handle);
 		exit;
@@ -242,8 +251,7 @@ class ScheduleController extends CI_Controller {
 
 	public function importSchCSV()
 	{
-		$path = './assets/import/';
-		$config['upload_path'] = $path;
+		$config['upload_path'] = './assets/import/';
 		$config['allowed_types'] = 'csv|xls|xlsx';
 		$config['max_size']  = '4096';
 		$config['overwrite'] = true;
@@ -260,53 +268,123 @@ class ScheduleController extends CI_Controller {
 			$data = [
 				'upload_data' => $this->upload->data()
 			];
+			$strep = ".";
 			$filename = $data['upload_data']['file_name'];
 			$extension = $data['upload_data']['file_ext'];
+			$filePath = $data['upload_data']['full_path'];
 			if ($extension == '.csv') {
 				// make sure its csv file
-				$handle = fopen($path.$filename, "r");
-				$head = ['NIK','Nama','Shift','Tanggal','Tanggal Masuk','Jam Masuk','Tanggal Pulang','Jam Pulang'];
+				$handle = fopen($filePath, "r");
+				$head = ['Pers Number','Employee Name','DWS Date','DWS','DWS IN','DWS OUT'];
 				$i = 0;
 				$result = [];
 				$collects = [];
-				$strep = "/";
+				$cekdb = [];
 				while (($row = fgetcsv($handle, 4096, ",")) != FALSE) {
-					// $row[3] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[3])));
-					// $row[4] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[4])));
-					// $row[5] = date('H:i:s',strtotime($row[5]));
-					// $row[6] = date('Y-m-d',strtotime(str_replace($strep, "-", $row[6])));
-					// $row[7] = date('H:i:s',strtotime($row[7]));
 					$result[] = $row;
 					$collect = [];
-					$collect = [
-						'nik' => $row[0],
-						'nama' => $row[1],
-						'shift' => $row[2],
-						'tanggal' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[3]))),
-						'masuk' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[4]))).' '.date('H:i:s',strtotime($row[5])),
-						'pulang' => date('Y-m-d',strtotime(str_replace($strep, "-", $row[6]))).' '.date('H:i:s',strtotime($row[7]))
-					];
-					$collects[] = $collect;
+					$nik = strval($row[0]);
+					$nama = $row[1];
+					$shift = $row[3];
+					$tgl = date('Y-m-d',strtotime(str_replace($strep, "-", $row[2])));
+					$msk = date('H:i:s',strtotime($row[4]));
+					$plg = date('H:i:s',strtotime($row[5]));
+					$masuk = $tgl.' '.$msk;
+					$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
+					if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
+						if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
+							$collect = [
+								'nik' => $nik,
+								'nama' => $nama,
+								'shift' => $shift,
+								'tanggal' => $tgl,
+								'masuk' => $masuk,
+								'pulang' => $pulang
+							];
+							$collects[] = $collect;
+							$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
+						}
+						$i++;
+					}
+					$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
 				}
 				unset($result[0]);
-				unset($collects[0]);
 				fclose($handle);
 
-				unlink($path.$filename);
+				unlink($filePath);
 				echo json_encode([
 					'success' => 'Berhasil Mengimport CSV',
+					'type' => 'csv',
 					'result' => $result,
-					'collect' => $collects
+					'collect' => (array) $collects,
+					'cekdb' => $cekdb
 				]);
 			}
 			if ($extension == '.xls' || $extension == '.xlsx') {
 				// make sure its xls or xlsx file
-				unlink($path.$filename);
+				if ($extension == '.xls') {
+					$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+				}
+				if ($extension == '.xlsx') {
+					$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+				}
+				$spreadsheet = $reader->load($filePath);
+				$sheetData = $spreadsheet->getActiveSheet()->toArray();
+				$collects = [];
+				$cekdb = [];
+				$i = 0;
+				foreach ($sheetData as $row) {
+					$collect = [];
+					$nik = strval($row[0]);
+					$nama = $row[1];
+					$shift = $row[3];
+					$tgl = date('Y-m-d',strtotime(str_replace($strep, "-", $row[2])));
+					$msk = date('H:i:s',strtotime($row[4]));
+					$plg = date('H:i:s',strtotime($row[5]));
+					$masuk = $tgl.' '.$msk;
+					$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
+					if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
+						if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
+							$collect = [
+								'nik' => $nik,
+								'nama' => $nama,
+								'shift' => $shift,
+								'tanggal' => $tgl,
+								'masuk' => $masuk,
+								'pulang' => $pulang
+							];
+							$collects[] = $collect;
+						}
+						$i++;
+					}
+					$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
+				}
+				unset($sheetData[0]);
+				unlink($filePath);
 				echo json_encode([
-					'success' => 'Berhasil Mengimport Excel File'
+					'success' => 'Berhasil Mengimport Excel File',
+					'type' => 'excel',
+					'result' => $sheetData,
+					'collect' => $collects,
+					'cekdb' => $cekdb
 				]);
 			}
 		}
+	}
+	public function processImport()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		$import = $this->schedule->insertFromImport($form);
+		if ($import) {
+			echo json_encode([
+				'success' => 'Berhasil Mengimport Data, Data Telah Disimpan'
+			],JSON_PRETTY_PRINT);
+		} else {
+			echo json_encode([
+				'error' => 'Terjadi Kesalahan'
+			],JSON_PRETTY_PRINT);
+		}
+		
 	}
 
 }
