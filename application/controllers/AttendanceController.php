@@ -811,7 +811,7 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
-		$title = 'Laporan-Kehadiran-Office'.$this->session->userdata('att_off_date').$shift;
+		$title = 'Laporan-Kehadiran-Office_'.$this->session->userdata('att_off_date').$shift;
 		header("Content-type: application/csv");
 		header("Content-Disposition: attachment; filename=".$title.".csv");
 		header("Pragma: no-cache");

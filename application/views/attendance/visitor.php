@@ -1,7 +1,7 @@
 <div class="container-fluid" ng-app="visTrace" ng-controller="visTrace">
 	<div class="row justify-content-between">
 		<div class="col">
-			<div class="card border-0 border-left-primary shadow rounded mt-1 mb-5 card-show d-none">
+			<div class="card border-0 shadow rounded mt-1 mb-5 card-show d-none">
 				<div class="card-header">
 					<div class="row justify-content-between">
 						<div class="col-auto">

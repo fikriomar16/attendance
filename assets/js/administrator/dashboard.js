@@ -1,7 +1,7 @@
 const base = angular.element('body').data('home');
 const table = angular.element('#dataTable');
 const source = table.data('source');
-const refreshPerSec = 1;
+const refreshPerMin = 1;
 const app = angular.module('dashboardApp', []);
 app.controller('dashboardController',($scope,$http) => {
 	setTimeout(() => {
@@ -9,6 +9,7 @@ app.controller('dashboardController',($scope,$http) => {
 	},1000);
 	table.DataTable({
 		"sDom":"tir",
+		"bSort": false,
 		"pageLength": 50,
 		"processing": true,
 		"serverSide": true,
@@ -32,12 +33,15 @@ app.controller('dashboardController',($scope,$http) => {
 		$http.get(base+'countEmpVis').then((res) => {
 			$scope.countEmployee = res.data.countEmployee;
 			$scope.countVisitor = res.data.countVisitor;
+			$scope.countOffice = res.data.countOffice;
 		});
 	}
 	$scope.getCount();
 	$scope.reloadAll = () => {
 		$scope.getCount();
 		$scope.reloadTable();
-		$scope.reloadTable2();
 	}
+	setInterval(() => {
+		$scope.reloadAll();
+	}, refreshPerMin * 60000);
 });

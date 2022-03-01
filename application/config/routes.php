@@ -71,6 +71,7 @@ $route = [
 	'merged_db' => 'AdminController/merged_db',
 	'countEmpVis' => 'AdminController/countEmpVis',
 	'late' => 'AdminController/late_page',
+	'dt_late' => 'AdminController/dt_late',
 
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',

@@ -4,7 +4,7 @@
 			<div class="alert alert-primary alert-loading text-center font-weight-bold d-none" role="alert">
 				<div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div> Sedang Memuat Data
 			</div>
-			<div class="card border-0 border-left-primary shadow mb-4 rounded card-new d-none">
+			<div class="card border-0 shadow mb-4 rounded card-new d-none">
 				<div class="card-header border-0">
 					<span class="text-primary font-weight-bold px-3">{{getTitle}}</span>
 				</div>

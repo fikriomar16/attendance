@@ -65,7 +65,7 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col">
-			<div class="card border-0 border-left-primary shadow mb-4 rounded card-schedule d-none" data-source="<?= base_url('getresume_emp') ?>/">
+			<div class="card border-0 shadow mb-4 rounded card-schedule d-none" data-source="<?= base_url('getresume_emp') ?>/">
 				<div class="card-header border-0 shadow-sm">
 					<div class="row justify-content-between">
 						<div class="col-auto">
