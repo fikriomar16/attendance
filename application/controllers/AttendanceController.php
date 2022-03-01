@@ -53,7 +53,7 @@ class AttendanceController extends CI_Controller {
 			$no++;
 			$row = [];
 			$row[] = $no;
-			$row[] = $emp->name_spell;
+			$row[] = $emp->name;
 			$row[] = $emp->pin;
 			$row[] = $emp->shift;
 			$row[] = $emp->dept_name;
@@ -184,6 +184,20 @@ class AttendanceController extends CI_Controller {
 			'getNIK' => $this->session->userdata('att_emp_nik'),
 			'getName' => $this->attendance->get_by_nik_employee($nik)->name,
 			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('att_emp_date_search')))
+		]);
+	}
+	public function attresume_off($nik)
+	{
+		$this->session->set_userdata([
+			'att_off_date_search' => $this->session->userdata('att_off_date'),
+			'att_off_nik' => $nik,
+			'recap_month_off' => ltrim(date('m',strtotime($this->session->userdata('att_off_date_search'))),'0'),
+			'recap_year_off' => ltrim(date('Y',strtotime($this->session->userdata('att_off_date_search'))),'0')
+		]);
+		echo json_encode([
+			'getNIK' => $this->session->userdata('att_off_nik'),
+			'getName' => $this->attendance->get_by_nik_employee($nik)->name,
+			'getSearchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('att_off_date_search')))
 		]);
 	}
 	public function att_getDate_emp($date)
@@ -322,8 +336,8 @@ class AttendanceController extends CI_Controller {
 			'att_off_date' => date("Y-m-d"),
 			'att_off_date_search' => date("Y-m-d"),
 			'att_off_nik' => $this->attendance->getRndmSch()->nik,
-			'recap_month' => date('m'),
-			'recap_year' => date('Y')
+			'recap_month_off' => date('m'),
+			'recap_year_off' => date('Y')
 		]);
 		$this->session->unset_userdata('att_off_shift');
 		$path_port = '8098';
@@ -337,6 +351,241 @@ class AttendanceController extends CI_Controller {
 		$this->load->view('components/topbar', $data);
 		$this->load->view('attendance/office', $data);
 		$this->load->view('components/footer', $data);
+	}
+	public function dt_office()
+	{
+		$lists = $this->attendance->datatable_office();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = $list->name;
+			$row[] = $list->pin;
+			$row[] = $list->shift;
+			$row[] = $list->dept_name;
+			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$list->pin.'" onclick="angular.element(this).scope().show('.$list->pin.')"><i class="fas fa-fw fa-list-alt"></i> Detail</button>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_office(),
+			"recordsFiltered" => $this->attendance->count_filtered_office(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function att_yesterday_off()
+	{
+		$get_date = new DateTime($this->session->userdata('att_off_date'));
+		$date = $get_date->modify('-1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_off_date' => $date,
+				'att_off_date_search' => $date,
+				'recap_month_off' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year_off' => ltrim(date('Y',strtotime($date)),'0')
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_today_off()
+	{
+		$date = date("Y-m-d");
+		$this->session->set_userdata([
+			'att_off_date' => $date,
+			'att_off_date_search' => $date,
+			'recap_month_off' => ltrim(date('m'),'0'),
+			'recap_year_off' => ltrim(date('Y'),'0')
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
+		]);
+	}
+	public function att_tomorrow_off()
+	{
+		$get_date = new DateTime($this->session->userdata('att_off_date'));
+		$date = $get_date->modify('+1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_off_date' => $date,
+				'att_off_date_search' => $date,
+				'recap_month_off' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year_off' => ltrim(date('Y',strtotime($date)),'0')
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_yesterday_off_detail()
+	{
+		$get_date = new DateTime($this->session->userdata('att_off_date_search'));
+		$date = $get_date->modify('-1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_off_date_search' => $date,
+				'recap_month_off' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year_off' => ltrim(date('Y',strtotime($date)),'0')
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_today_off_detail()
+	{
+		$this->session->set_userdata([
+			'att_off_date_search' => date("Y-m-d"),
+			'recap_month_off' => ltrim(date('m'),'0'),
+			'recap_year_off' => ltrim(date('Y'),'0')
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
+		]);
+	}
+	public function att_tomorrow_off_detail()
+	{
+		$get_date = new DateTime($this->session->userdata('att_off_date_search'));
+		$date = $get_date->modify('+1 day')->format('Y-m-d');
+		if ($date) {
+			$this->session->set_userdata([
+				'att_off_date_search' => $date,
+				'recap_month_off' => ltrim(date('m',strtotime($date)),'0'),
+				'recap_year_off' => ltrim(date('Y',strtotime($date)),'0')
+			]);
+			echo json_encode([
+				'date' => strftime('%A, %d %B %Y', strtotime($date))
+			]);
+		}
+	}
+	public function att_getDate_off($date)
+	{
+		$this->session->set_userdata([
+			'att_off_date' => $date,
+			'att_off_date_search' => $date,
+			'recap_month_off' => ltrim(date('m',strtotime($date)),'0'),
+			'recap_year_off' => ltrim(date('Y',strtotime($date)),'0')
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime($date))
+		]);
+	}
+	public function set_shift_off($shift = 0)
+	{
+		if ($shift == 0) {
+			$this->session->unset_userdata('att_off_shift');
+		} else {
+			$this->session->set_userdata('att_off_shift',$shift);
+		}
+		echo json_encode([
+			'shift' => $shift
+		]);
+	}
+	public function att_sum_off()
+	{
+		$list = $this->attendance->dt_sum_off();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($list as $emp) {
+			$no++;
+			$row = [];
+			$row[] = $emp->date;
+			$row[] = $emp->shift;
+			$row[] = $emp->in_scan;
+			$row[] = $emp->out_scan;
+			$row[] = $emp->late_duration;
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_detail_off(),
+			"recordsFiltered" => $this->attendance->count_filtered_detail_off(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function att_det_recap_off()
+	{
+		$list = $this->attendance->dt_detail_off();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($list as $emp) {
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = $emp->date;
+			$row[] = $emp->shift;
+			$row[] = $emp->masuk;
+			$row[] = $emp->pulang;
+			$row[] = $emp->in_scan;
+			$row[] = $emp->out_scan;
+			$row[] = $emp->late_duration;
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_detail_off(),
+			"recordsFiltered" => $this->attendance->count_filtered_detail_off(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function att_hist_scan_off()
+	{
+		$path_port = '8098';
+		$local = 'localhost';
+		$url = '10.126.25.150';
+		$path = "http://$url:$path_port";
+		$list = $this->attendance->dt_history_off();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($list as $emp) {
+			if (explode("-",$emp->dev_alias)[0] == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$emp->dev_alias)[0].'</span>';
+			} else if (explode("-",$emp->dev_alias)[0] == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$emp->dev_alias)[0].'</span>';
+			} else {
+				$io = '<span class="badge badge-pill badge-info">'.$emp->dev_alias.'</span>';
+			}
+			$no++;
+			$row = [];
+			$row[] = $no;
+			$row[] = $emp->event_time;
+			$row[] = $emp->dev_alias;
+			$row[] = $emp->shift;
+			$row[] = $io;
+			$row[] = '<button type="button" class="btn btn-success btn-sm btn-photo" data-path="'.$path.$emp->vid_linkage_handle.'" onclick="angular.element(this).scope().showPhoto(\''.$path.$emp->vid_linkage_handle.'\')"><i class="fas fa-fw fa-image"></i> Photo</button>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->attendance->count_all_history_off(),
+			"recordsFiltered" => $this->attendance->count_filtered_history_off(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+	public function recapSumOff($param)
+	{
+		$getMonth = explode("-",$param)[0];
+		$month = ltrim($getMonth,'0');
+		$year = explode("-",$param)[1];
+		$this->session->set_userdata([
+			'recap_month_off' => $month,
+			'recap_year_off' => $year
+		]);
+		echo json_encode([
+			'month' => $month,
+			'year' => $year
+		],JSON_PRETTY_PRINT);
 	}
 
 	public function printAttendanceEmp()
@@ -361,6 +610,29 @@ class AttendanceController extends CI_Controller {
 		$page = $this->load->view('report/reportAttEmp', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
+	public function printAttendanceOff()
+	{
+		if ($this->session->userdata('att_off_shift')) {
+			$shift = '_Shift_'.$this->session->userdata('att_off_shift');
+		} else {
+			$shift = '';
+		}
+		$data = [
+			"title" => "Laporan Kehadiran Office",
+			"lists" => $this->attendance->dataReportAttOff(),
+			"shift" => $this->session->userdata('att_off_shift') ?? 'All',
+			"date" => $this->session->userdata('att_off_date')
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Kehadiran-Office'.$this->session->userdata('att_off_date').$shift;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/reportAttOff', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+
 	public function rekapBulananKaryawan()
 	{
 		$m = date('F', mktime(0, 0, 0, $this->session->userdata('recap_month'),1,$this->session->userdata('recap_year')));
@@ -384,6 +656,30 @@ class AttendanceController extends CI_Controller {
 		$page = $this->load->view('report/rekapBulananKaryawan', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
+	public function rekapBulananOffice()
+	{
+		$m = date('F', mktime(0, 0, 0, $this->session->userdata('recap_month_off'),1,$this->session->userdata('recap_year_off')));
+		$bulan = strftime('%B', strtotime($m))."-".$this->session->userdata('recap_year_off');
+		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year_off');
+		$nik = $this->session->userdata('att_off_nik');
+		$name = $this->attendance->get_by_nik_employee($nik)->name;
+		$data = [
+			"title" => "Rekap Kehadiran Bulanan Office",
+			"lists" => $this->attendance->dataRecapSumOff(),
+			"month" => $month,
+			"nik" => $nik,
+			"name" => $name
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Kehadiran-Bulanan-Office'.$bulan."-".$nik."_".$name;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/rekapBulananOffice', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+
 	public function historyScanKaryawan()
 	{
 		$lists = $this->attendance->dataRecapScanEmp();
@@ -406,6 +702,52 @@ class AttendanceController extends CI_Controller {
 		//orientasi paper potrait / landscape
 		$orientation = "potrait";
 		$page = $this->load->view('report/historyScanKaryawan', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+	public function historyScanOffice()
+	{
+		$lists = $this->attendance->dataRecapScanOff();
+		$nik = $this->session->userdata('att_off_nik');
+		$name = $lists[0]->name;
+		$date = $this->session->userdata('att_off_date');
+		$shift = $lists[0]->shift;
+		$data = [
+			"title" => "Riwayat Scan Office",
+			"lists" => $lists,
+			"nik" => $nik,
+			"name" => $name,
+			"date" => $date,
+			"shift" => $shift
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Riwayat-Scan-Office'.$nik."-".$name."_".$date;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/historyScanKaryawan', $data,true);
+		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+	}
+	public function historyScanVisitor()
+	{
+		$lists = $this->attendance->dataRecapScanVis();
+		$nik = $this->session->userdata('att_vis_pin');
+		$name = $lists[0]->name;
+		$date = $this->session->userdata('att_vis_date');
+		$data = [
+			"title" => "Riwayat Scan Visitor",
+			"lists" => $lists,
+			"nik" => $nik,
+			"name" => $name,
+			"date" => $date
+		];
+		$this->load->library('pdfgenerator');
+		$file_pdf = 'Laporan-Riwayat-Scan-Pengunjung'.$name."_".$date;
+		// setting paper
+		$paper = 'A4';
+		//orientasi paper potrait / landscape
+		$orientation = "potrait";
+		$page = $this->load->view('report/historyScanVisitor', $data,true);
 		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
 	}
 
@@ -439,7 +781,7 @@ class AttendanceController extends CI_Controller {
 		header("Pragma: no-cache");
 		header("Expires: 0");
 		$handle = fopen('php://output', 'w');
-		$header = ['No','NIK','Name','Department','Shift','First Scan','Last Scan','Late Duration','Out Duration','In Duration'];
+		$header = ['No','NIK','Name','Department','Shift','In Schedule','Out Schedule','First Scan','Last Scan','Late Duration','Out Duration','In Duration'];
 		$lists = $this->attendance->dataReportAttEmp();
 		$no = 0;
 		fputcsv($handle, $header);
@@ -450,11 +792,47 @@ class AttendanceController extends CI_Controller {
 			$collect[] = $list->name;
 			$collect[] = $list->dept_name;
 			$collect[] = $list->shift;
+			$collect[] = $list->masuk;
+			$collect[] = $list->pulang;
 			$collect[] = $list->in_scan;
 			$collect[] = $list->out_scan;
 			$collect[] = $list->late_duration;
 			$collect[] = $list->out_duration;
 			$collect[] = $list->in_duration;
+			fputcsv($handle, $collect);
+		}
+		fclose($handle);
+		exit;
+	}
+	public function exportCSV_off()
+	{
+		if ($this->session->userdata('att_off_shift')) {
+			$shift = '_Shift_'.$this->session->userdata('att_off_shift');
+		} else {
+			$shift = '';
+		}
+		$title = 'Laporan-Kehadiran-Office'.$this->session->userdata('att_off_date').$shift;
+		header("Content-type: application/csv");
+		header("Content-Disposition: attachment; filename=".$title.".csv");
+		header("Pragma: no-cache");
+		header("Expires: 0");
+		$handle = fopen('php://output', 'w');
+		$header = ['No','NIK','Name','Department','Shift','In Schedule','Out Schedule','First Scan','Last Scan','Late Duration'];
+		$lists = $this->attendance->dataReportAttOff();
+		$no = 0;
+		fputcsv($handle, $header);
+		foreach ($lists as $list) {
+			$collect = [];
+			$collect[] = ++$no;
+			$collect[] = $list->pin;
+			$collect[] = $list->name;
+			$collect[] = $list->dept_name;
+			$collect[] = $list->shift;
+			$collect[] = $list->masuk;
+			$collect[] = $list->pulang;
+			$collect[] = $list->in_scan;
+			$collect[] = $list->out_scan;
+			$collect[] = $list->late_duration;
 			fputcsv($handle, $collect);
 		}
 		fclose($handle);
@@ -613,32 +991,6 @@ class AttendanceController extends CI_Controller {
 			"draw" => $_POST['draw'],
 			"recordsTotal" => $this->attendance->count_all_history_vis(),
 			"recordsFiltered" => $this->attendance->count_filtered_history_vis(),
-			"data" => $data,
-		];
-		echo json_encode($output);
-	}
-	public function dt_office()
-	{
-		$lists = $this->attendance->datatable_office();
-		$data = [];
-		$no = $_POST['start'];
-		foreach ($lists as $list) {
-			$no++;
-			$row = [];
-			$row[] = $no;
-			$row[] = '<span class="badge badge-pill badge-success">Fingerprint</span>';
-			$row[] = $list->name_spell;
-			$row[] = $list->pin;
-			$row[] = $list->shift;
-			$row[] = $list->dept_name;
-			$row[] = '<button type="button" class="btn btn-info btn-sm btn-show" data-id="'.$list->pin.'" onclick="angular.element(this).scope().show('.$list->pin.')"><i class="fas fa-fw fa-list-alt"></i> Detail</button>';
-
-			$data[] = $row;
-		}
-		$output = [
-			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->attendance->count_all_office(),
-			"recordsFiltered" => $this->attendance->count_filtered_office(),
 			"data" => $data,
 		];
 		echo json_encode($output);

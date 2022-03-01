@@ -93,7 +93,7 @@ app.controller('attOffice',($scope,$http) => {
 		}]
 	});
 	$scope.select_date = () => {
-		$http.get(base+'att_getDate_emp/'+$scope.selectDate).then((res) => {
+		$http.get(base+'att_getDate_off/'+$scope.selectDate).then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
 			// reload tab
@@ -107,7 +107,7 @@ app.controller('attOffice',($scope,$http) => {
 		} else {
 			shift = $scope.shiftList;
 		}
-		$http.get(base+'attendance/set_shift/'+shift).then((res) => {
+		$http.get(base+'attendance/set_shift_off/'+shift).then((res) => {
 			table.DataTable().ajax.reload();
 		});
 	}
@@ -144,25 +144,25 @@ app.controller('attOffice',($scope,$http) => {
 		});
 	}
 	$scope.getAttYesterday = () => {
-		$http.get(base+'attendance/att_yesterday_emp_detail').then((res) => {
+		$http.get(base+'attendance/att_yesterday_off_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
 			$scope.refreshDetail();
 		});
 	}
 	$scope.getAttToday = () => {
-		$http.get(base+'attendance/att_today_emp_detail').then((res) => {
+		$http.get(base+'attendance/att_today_off_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
 			$scope.refreshDetail();
 		});
 	}
 	$scope.getAttTomorrow = () => {
-		$http.get(base+'attendance/att_tomorrow_emp_detail').then((res) => {
+		$http.get(base+'attendance/att_tomorrow_off_detail').then((res) => {
 			$scope.getSearchDate = res.data.date;
 			$scope.refreshDetail();
 		});
 	}
 	$scope.getYesterday = () => {
-		$http.get(base+'attendance/att_yesterday_emp').then((res) => {
+		$http.get(base+'attendance/att_yesterday_off').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
 			$scope.searchDate = res.data.date;
@@ -173,7 +173,7 @@ app.controller('attOffice',($scope,$http) => {
 		});
 	}
 	$scope.getToday = () => {
-		$http.get(base+'attendance/att_today_emp').then((res) => {
+		$http.get(base+'attendance/att_today_off').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
 			$scope.searchDate = res.data.date;
@@ -184,7 +184,7 @@ app.controller('attOffice',($scope,$http) => {
 		});
 	}
 	$scope.getTomorrow = () => {
-		$http.get(base+'attendance/att_tomorrow_emp').then((res) => {
+		$http.get(base+'attendance/att_tomorrow_off').then((res) => {
 			$scope.getAttDate = res.data.date;
 			$scope.getSearchDate = res.data.date;
 			$scope.searchDate = res.data.date;
@@ -195,10 +195,10 @@ app.controller('attOffice',($scope,$http) => {
 		});
 	}
 	$scope.showPhoto = (url) => {
-		angular.element('.emp-photo').attr('src',url);
+		angular.element('.off-photo').attr('src',url);
 	}
 	$scope.recap_date = () => {
-		$http.get(base+'recapSumEmp/'+$scope.recapDate).then((res) => {
+		$http.get(base+'recapSumOff/'+$scope.recapDate).then((res) => {
 			table_sum.DataTable().ajax.reload();
 		});
 	}

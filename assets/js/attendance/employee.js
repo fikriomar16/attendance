@@ -122,6 +122,7 @@ app.controller('attEmployee',($scope,$http) => {
 	}
 	$scope.reloadTable = () => {
 		table.DataTable().ajax.reload();
+		$scope.getShiftList();
 	}
 	$scope.closeShow = () => {
 		angular.element('.card-show').addClass('d-none');

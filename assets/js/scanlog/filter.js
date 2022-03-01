@@ -17,7 +17,7 @@ app.controller('ScanLog',($scope,$http) => {
 	table.DataTable({
 		'sDom': 'tr',
 		'bSort': false,
-		"pageLength": 50,
+		"pageLength": 100,
 		"processing": true,
 		"serverSide": true,
 		"order": [],

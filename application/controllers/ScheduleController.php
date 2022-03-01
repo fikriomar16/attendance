@@ -61,12 +61,22 @@ class ScheduleController extends CI_Controller {
 	{
 		$this->session->set_userdata('employee_sch',[
 			'nik' => $nik,
-			'date' => date("Y-m-d")
+			'date' => $this->session->userdata('employee_sch')['date']
 		]);
 		echo json_encode([
 			'getSchName' => $this->schedule->get_by_nik_employee($nik)->name ?? '',
 			'getSchDate' => strftime('%A, %d %B %Y', strtotime($this->session->userdata('employee_sch')['date'])),
 			'schId' => $nik
+		]);
+	}
+	public function getDate_sch($date)
+	{
+		$this->session->set_userdata('employee_sch',[
+			'nik' => $this->session->userdata('employee_sch')['nik'],
+			'date' => $date
+		]);
+		echo json_encode([
+			'date' => strftime('%A, %d %B %Y', strtotime($date))
 		]);
 	}
 
@@ -268,107 +278,54 @@ class ScheduleController extends CI_Controller {
 			$data = [
 				'upload_data' => $this->upload->data()
 			];
-			$strep = ".";
 			$filename = $data['upload_data']['file_name'];
 			$extension = $data['upload_data']['file_ext'];
 			$filePath = $data['upload_data']['full_path'];
+			if ($extension == '.xls') {
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+			}
+			if ($extension == '.xlsx') {
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+			}
 			if ($extension == '.csv') {
-				// make sure its csv file
-				$handle = fopen($filePath, "r");
-				$head = ['Pers Number','Employee Name','DWS Date','DWS','DWS IN','DWS OUT'];
-				$i = 0;
-				$result = [];
-				$collects = [];
-				$cekdb = [];
-				while (($row = fgetcsv($handle, 4096, ",")) != FALSE) {
-					$result[] = $row;
-					$collect = [];
-					$nik = strval($row[0]);
-					$nama = $row[1];
-					$shift = $row[3];
-					$tgl = date('Y-m-d',strtotime(str_replace($strep, "-", $row[2])));
-					$msk = date('H:i:s',strtotime($row[4]));
-					$plg = date('H:i:s',strtotime($row[5]));
-					$masuk = $tgl.' '.$msk;
-					$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
-					if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
-						if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
-							$collect = [
-								'nik' => $nik,
-								'nama' => $nama,
-								'shift' => $shift,
-								'tanggal' => $tgl,
-								'masuk' => $masuk,
-								'pulang' => $pulang
-							];
-							$collects[] = $collect;
-							$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
-						}
-						$i++;
-					}
-					$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
-				}
-				unset($result[0]);
-				fclose($handle);
-
-				unlink($filePath);
-				echo json_encode([
-					'success' => 'Berhasil Mengimport CSV',
-					'type' => 'csv',
-					'result' => $result,
-					'collect' => (array) $collects,
-					'cekdb' => $cekdb
-				]);
+				$reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
 			}
-			if ($extension == '.xls' || $extension == '.xlsx') {
-				// make sure its xls or xlsx file
-				if ($extension == '.xls') {
-					$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
-				}
-				if ($extension == '.xlsx') {
-					$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-				}
-				$spreadsheet = $reader->load($filePath);
-				$sheetData = $spreadsheet->getActiveSheet()->toArray();
-				$collects = [];
-				$cekdb = [];
-				$i = 0;
-				foreach ($sheetData as $row) {
-					$collect = [];
-					$nik = strval($row[0]);
-					$nama = $row[1];
-					$shift = $row[3];
-					$tgl = date('Y-m-d',strtotime(str_replace($strep, "-", $row[2])));
-					$msk = date('H:i:s',strtotime($row[4]));
-					$plg = date('H:i:s',strtotime($row[5]));
-					$masuk = $tgl.' '.$msk;
-					$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
-					if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
-						if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
-							$collect = [
-								'nik' => $nik,
-								'nama' => $nama,
-								'shift' => $shift,
-								'tanggal' => $tgl,
-								'masuk' => $masuk,
-								'pulang' => $pulang
-							];
-							$collects[] = $collect;
-						}
-						$i++;
+			$spreadsheet = $reader->load($filePath);
+			$sheetData = $spreadsheet->getActiveSheet()->toArray();
+			$collects = [];
+			$i = 0;
+			foreach ($sheetData as $row) {
+				$collect = [];
+				$nik = strval($row[0]);
+				$nama = $row[1];
+				$shift = $row[3];
+				$tgl = date('Y-m-d',strtotime(str_replace(".", "-", $row[2])));
+				$msk = date('H:i:s',strtotime($row[4]));
+				$plg = date('H:i:s',strtotime($row[5]));
+				$masuk = $tgl.' '.$msk;
+				$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
+				if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
+					if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
+						$collect = [
+							'nik' => $nik,
+							'nama' => $nama,
+							'shift' => $shift,
+							'tanggal' => $tgl,
+							'masuk' => $masuk,
+							'pulang' => $pulang
+						];
+						$collects[] = $collect;
 					}
-					$cekdb[] = $this->schedule->checkSch($nik,$masuk,$pulang);
+					$i++;
 				}
-				unset($sheetData[0]);
-				unlink($filePath);
-				echo json_encode([
-					'success' => 'Berhasil Mengimport Excel File',
-					'type' => 'excel',
-					'result' => $sheetData,
-					'collect' => $collects,
-					'cekdb' => $cekdb
-				]);
 			}
+			unset($sheetData[0]);
+			unlink($filePath);
+			echo json_encode([
+				'success' => "Berhasil Mengimport File $extension",
+				'result' => $sheetData,
+				'collect' => $collects
+			]);
 		}
 	}
 	public function processImport()

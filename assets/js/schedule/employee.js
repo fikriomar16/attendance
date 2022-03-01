@@ -18,6 +18,10 @@ let config = {
 	minDate: minDate,
 	maxDate: maxDate
 };
+let config2 = {
+	enableTime: false,
+	dateFormat: "Y-m-d",
+};
 let tbodyTr;
 app.controller('schEmp',($scope,$http) => {
 	$scope.importData = [];
@@ -33,6 +37,8 @@ app.controller('schEmp',($scope,$http) => {
 	}
 	const fp = flatpickr('.input-time',config);
 	fp[0];
+	const fp2 = flatpickr('.selectDate',config2);
+	fp2[0];
 	table.DataTable({
 		"sDom" : 'tipr',
 		"processing": true,
@@ -99,6 +105,12 @@ app.controller('schEmp',($scope,$http) => {
 			$scope.getSchDate= res.data.date;
 		});
 	}
+	$scope.select_date = () => {
+		$http.get(base+'getDate_sch/'+$scope.selectDate).then((res) => {
+			$scope.getSchDate= res.data.date;
+			table_sch.DataTable().ajax.reload();
+		});
+	}
 	$scope.newSchedule = () => {
 		angular.element('#scheduleForm')[0].reset();
 		document.getElementById('nik').value = '';
@@ -143,6 +155,7 @@ app.controller('schEmp',($scope,$http) => {
 				listErrorNotif(list);
 			} else if (res.data.success) {
 				table_sch.DataTable().ajax.reload();
+				table.DataTable().ajax.reload();
 				successPopUp(res.data.success);
 				$scope.closeAdd();
 			}
@@ -204,6 +217,7 @@ app.controller('schEmp',($scope,$http) => {
 						errorNotif(res.data.error);
 					} else if (res.data.success) {
 						table_sch.DataTable().ajax.reload();
+						table.DataTable().ajax.reload();
 						successPopUp(res.data.success);
 					}
 				});
@@ -228,7 +242,6 @@ app.controller('schEmp',($scope,$http) => {
 		})
 	}
 	$scope.doImportCSV = (files) => {
-		infoPopUp('Mengimport Data....');
 		var fd = new FormData();
 		fd.append("import_sch", files[0]);
 		$http.post(angular.element('#importForm').attr('action'),fd,{
@@ -291,9 +304,10 @@ app.controller('schEmp',($scope,$http) => {
 			if (res.data.error) {
 				errorNotif(res.data.error);
 			} else if (res.data.success) {
-				successPopUp(res.data.success);
-				table_sch.DataTable().ajax.reload();
 				angular.element('#modalImport').modal('hide');
+				table_sch.DataTable().ajax.reload();
+				table.DataTable().ajax.reload();
+				successPopUp(res.data.success);
 			}
 		}),(err) => {
 			console.log(err);

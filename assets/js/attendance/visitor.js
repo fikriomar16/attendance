@@ -93,4 +93,7 @@ app.controller('visTrace',($scope,$http) => {
 			$scope.getDate = res.data.date;
 		});
 	}
+	$scope.showPhoto = (url) => {
+		angular.element('.vis-photo').attr('src',url);
+	}
 });

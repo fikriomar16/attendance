@@ -16,7 +16,7 @@
 									<label for="nik" class="small font-weight-bold">Pilih Karyawan</label>
 									<select name="nik" id="nik" ng-model="nik" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
 										<option ng-repeat="emp in emps" value="{{emp.pin}}">
-											{{emp.pin}} - {{emp.name}} - {{emp.dept_name}}
+											{{emp.pin}} - {{emp.name}} [{{emp.dept_name}}]
 										</option>
 									</select>
 								</div>
@@ -78,17 +78,25 @@
 				</div>
 				<div class="card-body p-3">
 					<input type="hidden" ng-model="schId">
-					<div class="row justify-content-center my-1 px-1">
-						<div class="col-auto my-1">
-							<button type="button" class="btn btn-primary btn-sm" ng-click="getYesterday()"><i class="fas fa-fw fa-chevron-left"></i> Hari Sebelum</button>
+					<div class="row justify-content-between my-2 px-1">
+						<div class="col-auto">
+							<div class="form-group form-label-group">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<div class="input-group-text border-0 shadow-sm bg-white text-material-orange"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Search </div>
+									</div>
+									<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center bg-material-orange text-white selectDate border-0 shadow-sm col-5">
+								</div>
+							</div>
 						</div>
-						<div class="col-auto my-1">
-							<button class="btn btn-sm btn-primary shadow-sm" ng-click="getToday()">
+						<div class="col-auto">
+							<button class="btn btn-primary shadow-sm btn-sm" ng-click="getToday()">
 								<span class="font-weight-bold px-2">Hari Ini</span>
 							</button>
-						</div>
-						<div class="col-auto my-1">
-							<button type="button" class="btn btn-primary btn-sm" ng-click="getTomorrow()">Hari Sesudah <i class="fas fa-fw fa-chevron-right"></i></button>
+							<div class="btn-group btn-group-sm shadow-sm mx-1" role="group">
+								<button type="button" class="btn btn-outline-primary" ng-click="getYesterday()"><i class="fas fa-fw fa-chevron-left"></i></button>
+								<button type="button" class="btn btn-outline-primary" ng-click="getTomorrow()"><i class="fas fa-fw fa-chevron-right"></i></button>
+							</div>
 						</div>
 					</div>
 					<div class="row justify-content-center my-2">
