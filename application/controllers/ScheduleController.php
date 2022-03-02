@@ -294,6 +294,8 @@ class ScheduleController extends CI_Controller {
 			$sheetData = $spreadsheet->getActiveSheet()->toArray();
 			$collects = [];
 			$i = 0;
+			$subMasuk = '-1 hours';
+			$subPulang = '+4 hours';
 			foreach ($sheetData as $row) {
 				$collect = [];
 				$nik = strval($row[0]);
@@ -312,7 +314,9 @@ class ScheduleController extends CI_Controller {
 							'shift' => $shift,
 							'tanggal' => $tgl,
 							'masuk' => $masuk,
-							'pulang' => $pulang
+							'pulang' => $pulang,
+							'sub_masuk' => date('Y-m-d H:i:s',strtotime($masuk.$subMasuk)),
+							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang))
 						];
 						$collects[] = $collect;
 					}
