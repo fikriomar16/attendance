@@ -65,6 +65,8 @@ $route = [
 	'auth' => 'AuthController/check_auth',
 	'logout' => 'AuthController/logout',
 
+	'sideToggle/(:any)' => 'AdminController/sideToggle/$1',
+
 	'dashboard' => 'AdminController',
 	'dt_dashboard' => 'AdminController/dt_dashboard',
 	'dt_dashboard2' => 'AdminController/dt_dashboard2',

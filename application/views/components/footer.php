@@ -18,6 +18,15 @@
 	<script src="<?= base_url('assets/vendor/flatpickr/dist/flatpickr.min.js') ?>"></script>
 	<script src="<?= base_url('assets/vendor/sweetalert2/dist/sweetalert2.min.js') ?>"></script>
 	<script src="<?= base_url('assets/js/notif.js') ?>"></script>
+	<script type="text/javascript">
+		const sidebar_toggle = () => {
+			if ($('.toggled').length > 0) {
+				$.get($('body').data('home')+'sideToggle/deact');
+			} else {
+				$.get($('body').data('home')+'sideToggle/act');
+			}
+		}
+	</script>
 	<!-- Functional -->
 	<?php $p = uri_string(); ?>
 	<?php if ($p=='dashboard'||$p==''): ?>

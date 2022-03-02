@@ -190,6 +190,7 @@ class ScheduleController extends CI_Controller {
 				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
+			$allowed = $this->schedule->get_allowed($form->nik);
 			if (empty($form->id)) {
 				$add = $this->schedule->create_schedule([
 					'nik' => $form->nik,
@@ -200,6 +201,10 @@ class ScheduleController extends CI_Controller {
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
 					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
 					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
+					'late_allowed' => $allowed->late_allowed,
+					'out_allowed' => $allowed->out_allowed,
+					'out_allowed_friday' => $allowed->out_allowed_friday,
+					'out_allowed_saturday' => $allowed->out_allowed_saturday,
 				]);
 				if ($add) {
 					echo json_encode([
@@ -218,6 +223,10 @@ class ScheduleController extends CI_Controller {
 					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
 					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
 					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
+					'late_allowed' => $allowed->late_allowed,
+					'out_allowed' => $allowed->out_allowed,
+					'out_allowed_friday' => $allowed->out_allowed_friday,
+					'out_allowed_saturday' => $allowed->out_allowed_saturday,
 				]);
 				if ($edit) {
 					echo json_encode([
@@ -306,6 +315,7 @@ class ScheduleController extends CI_Controller {
 				$plg = date('H:i:s',strtotime($row[5]));
 				$masuk = $tgl.' '.$msk;
 				$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
+				$allowed = $this->schedule->get_allowed($nik);
 				if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
 					if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
 						$collect = [
@@ -316,7 +326,11 @@ class ScheduleController extends CI_Controller {
 							'masuk' => $masuk,
 							'pulang' => $pulang,
 							'sub_masuk' => date('Y-m-d H:i:s',strtotime($masuk.$subMasuk)),
-							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang))
+							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang)),
+							'late_allowed' => $allowed->late_allowed,
+							'out_allowed' => $allowed->out_allowed,
+							'out_allowed_friday' => $allowed->out_allowed_friday,
+							'out_allowed_saturday' => $allowed->out_allowed_saturday
 						];
 						$collects[] = $collect;
 					}

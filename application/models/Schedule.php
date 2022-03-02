@@ -179,6 +179,10 @@ class Schedule extends CI_Model {
 			'pulang' => $pulang
 		])->row();
 	}
+	public function get_allowed($nik)
+	{
+		return $this->db->query("SELECT * FROM sys_duration,pers_person WHERE sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = '$nik'")->row();
+	}
 	public function insertFromImport($data)
 	{
 		return $this->db->insert_batch('sys_sch_users', $data);

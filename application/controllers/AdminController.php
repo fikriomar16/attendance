@@ -12,6 +12,16 @@ class AdminController extends CI_Controller {
 		$this->load->model('Admin','admin');
 	}
 
+	public function sideToggle($status)
+	{
+		if ($status == 'deact') {
+			$this->session->set_userdata('sideToggle',FALSE);
+		} else if ($status == 'act') {
+			$this->session->set_userdata('sideToggle',TRUE);
+		}
+		echo json_encode(['status' => $this->session->userdata('sideToggle')],JSON_PRETTY_PRINT);
+	}
+
 	public function index()
 	{
 		if (!$this->session->userdata('user')) {
@@ -26,40 +36,7 @@ class AdminController extends CI_Controller {
 		$this->load->view('administrator/dashboard', $data);
 		$this->load->view('components/footer', $data);
 	}
-	public function dt_dashboard()
-	{
-		$lists = $this->admin->datatable_dashboard();
-		$data = [];
-		$no = $_POST['start'];
-		foreach ($lists as $list) {
-			if ($list->shift == NULL) {
-				$type = '<span class="badge badge-pill badge-info">Visitor</span>';
-			} else {
-				$type = '<span class="badge badge-pill badge-success">Employee</span>';
-			}
-			if (explode("-",$list->dev_alias)[0] == "IN") {
-				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
-			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
-				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
-			} else {
-				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
-			}
-			$row = [];
-			$row[] = $list->event_time;
-			$row[] = $list->name;
-			$row[] = $type;
-			$row[] = $io;
 
-			$data[] = $row;
-		}
-		$output = [
-			'draw' => $_POST['draw'],
-			'recordsTotal' => $this->admin->count_all_dashboard(),
-			'recordsFiltered' => $this->admin->count_filtered_dashboard(),
-			'data' => $data,
-		];
-		echo json_encode($output);
-	}
 	public function countEmpVis()
 	{
 		echo json_encode([
@@ -68,40 +45,7 @@ class AdminController extends CI_Controller {
 			"countVisitor" => $this->admin->countVisToday()->count_id ?? 0
 		],JSON_PRETTY_PRINT);
 	}
-	public function dt_dashboard2()
-	{
-		$lists = $this->admin->datatable_dashboard2();
-		$data = [];
-		$no = $_POST['start'];
-		foreach ($lists as $list) {
-			if ($list->shift == NULL) {
-				$type = '<span class="badge badge-pill badge-info">Visitor</span>';
-			} else {
-				$type = '<span class="badge badge-pill badge-success">Employee</span>';
-			}
-			if (explode("-",$list->dev_alias)[0] == "IN") {
-				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
-			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
-				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
-			} else {
-				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
-			}
-			$row = [];
-			$row[] = $list->event_time;
-			$row[] = $list->name;
-			$row[] = $type;
-			$row[] = $io;
 
-			$data[] = $row;
-		}
-		$output = [
-			'draw' => $_POST['draw'],
-			'recordsTotal' => $this->admin->count_all_dashboard2(),
-			'recordsFiltered' => $this->admin->count_filtered_dashboard2(),
-			'data' => $data,
-		];
-		echo json_encode($output);
-	}
 	public function merged_db()
 	{
 		$list1 = $this->admin->datatable_dashboard();
@@ -115,20 +59,20 @@ class AdminController extends CI_Controller {
 		$no = $_POST['start'];
 		foreach ($lists as $list) {
 			if (empty($list->shift)) {
-				$type = '<h5><span class="badge badge-info">Visitor</span></h5>';
+				$type = '<h5><span class="badge badge-info shadow">Visitor</span></h5>';
 			} else {
 				if (substr($list->dept_name,0,4) == "Prod") {
-					$type = '<h5><span class="badge badge-success">Employee</span></h5>';
+					$type = '<h5><span class="badge badge-success shadow">Employee</span></h5>';
 				} else {
-					$type = '<h5><span class="badge badge-primary">Office</span></h5>';
+					$type = '<h5><span class="badge badge-primary shadow">Office</span></h5>';
 				}
 			}
 			if (explode("-",$list->dev_alias)[0] == "IN") {
-				$io = '<h5><span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span></h5>';
+				$io = '<h5><span class="badge badge-pill badge-primary shadow">'.explode("-",$list->dev_alias)[0].'</span></h5>';
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
-				$io = '<h5><span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span></h5>';
+				$io = '<h5><span class="badge badge-pill badge-danger shadow">'.explode("-",$list->dev_alias)[0].'</span></h5>';
 			} else {
-				$io = '<h5><span class="badge badge-pill badge-secondary">'.$list->dev_alias.'</span></h5>';
+				$io = '<h5><span class="badge badge-pill badge-secondary shadow">'.$list->dev_alias.'</span></h5>';
 			}
 			$row = [];
 			$row[] = $list->event_time;
@@ -204,9 +148,9 @@ class AdminController extends CI_Controller {
 					$data[] = $row;
 
 					$tbody.='<tr>';
-					$tbody.='<td>'.$list->name.'</td>';
-					$tbody.='<td>'.$list->pin.'</td>';
-					$tbody.='<td>'.$list->dept_name.'</td>';
+					$tbody.='<td class="text-primary font-weight-bold">'.$list->name.'</td>';
+					$tbody.='<td class="text-danger font-weight-bold">'.$list->pin.'</td>';
+					$tbody.='<td class="font-weight-bold">'.$list->dept_name.'</td>';
 					$tbody.='<td class="text-center">'.$status.'</td>';
 					$tbody.='</tr>';
 					$i++;

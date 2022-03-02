@@ -4,9 +4,6 @@ const source = table.data('source');
 const refreshPerMin = 1;
 const app = angular.module('dashboardApp', []);
 app.controller('dashboardController',($scope,$http) => {
-	setTimeout(() => {
-		angular.element('.show-count').removeClass('d-none');
-	},1000);
 	table.DataTable({
 		"sDom":"tir",
 		"bSort": false,
@@ -34,6 +31,7 @@ app.controller('dashboardController',($scope,$http) => {
 			$scope.countEmployee = res.data.countEmployee;
 			$scope.countVisitor = res.data.countVisitor;
 			$scope.countOffice = res.data.countOffice;
+			angular.element('.show-count').removeClass('d-none');
 		});
 	}
 	$scope.getCount();

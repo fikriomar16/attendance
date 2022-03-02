@@ -1,15 +1,22 @@
-<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+<?php
+if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideToggle') == FALSE) {
+	$toggle = '';
+} else if ($this->session->userdata('sideToggle') == TRUE) {
+	$toggle = 'toggled';
+}
+?>
+<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion <?= $toggle ?>" id="accordionSidebar">
 	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('/') ?>">
 		<div class="sidebar-brand-icon">
 			<i class="fab fa-envira"></i>
 		</div>
-		<div class="sidebar-brand-text mx-3">Regios</div>
+		<div class="sidebar-brand-text mx-3">Attendance</div>
 	</a>
 	<?php $p = uri_string(); ?>
 	<hr class="sidebar-divider">
 	<!-- Administrator -->
 	<div class="sidebar-heading mr-3">
-		Administrator
+		Dashboard
 	</div>
 	<li class="nav-item <?= ($p=='dashboard'||$p=='')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('dashboard') ?>">
@@ -89,6 +96,6 @@
 	<hr class="sidebar-divider d-none d-md-block">
 	<!-- Sidebar Toggler (Sidebar) -->
 	<div class="text-center d-none d-md-inline">
-		<button class="rounded-circle border-0" id="sidebarToggle"></button>
+		<button class="rounded-circle border-0" id="sidebarToggle" onclick="sidebar_toggle()"></button>
 	</div>
 </ul>
