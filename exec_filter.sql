@@ -255,7 +255,7 @@ IF (new.dev_alias in ('Office','Poliklinik')) THEN
 				);
 				RAISE NOTICE 'INSERT TIER 2 B';
 				/* Cek Data di Tier 3 */
-				IF EXISTS (SELECT * from acc_transaction_3b,sys_sch_users where sys_sch_users.nik=new.pin and acc_transaction_3b.pin=sys_sch_users.nik and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time and sys_sch_users.tanggal=acc_transaction_3b.date order by masuk desc limit 1) THEN
+				IF EXISTS (SELECT * from acc_transaction_3b,sys_sch_users where sys_sch_users.nik=new.pin and acc_transaction_3b.pin=sys_sch_users.nik and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time and sys_sch_users.tanggal=acc_transaction_3b.date order by sys_sch_users.masuk desc limit 1) THEN
 					RAISE NOTICE 'ADA DATA DI TIER 3';
 					UPDATE acc_transaction_3b 
 					SET flag_sap = 1, last_scan = new.event_time

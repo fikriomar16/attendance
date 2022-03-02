@@ -547,8 +547,8 @@ class Attendance extends CI_Model {
 	{
 		$table = 'acc_transaction_3b';
 		$order = ['pin' => 'desc'];
-		$column_order = ['date','shift','in_scan','out_scan','late_duration'];
-		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)'];
+		$column_order = ['date','shift','first_scan','last_scan','late_duration'];
+		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(first_scan as varchar)','CAST(last_scan as varchar)','CAST(late_duration as varchar)'];
 		$this->db->from($table)->where([
 			"date_part('month',date)" => $this->session->userdata('recap_month_off') ?? ltrim(date('m'),'0'),
 			"date_part('year',date)" => $this->session->userdata('recap_year_off') ?? ltrim(date('Y'),'0'),
@@ -610,8 +610,8 @@ class Attendance extends CI_Model {
 	{
 		$table = 'acc_transaction_3b';
 		$order = ['pin' => 'desc'];
-		$column_order = ['date','shift','masuk','pulang','in_scan','out_scan','late_duration'];
-		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)'];
+		$column_order = ['date','shift','masuk','pulang','first_scan','last_scan','late_duration'];
+		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(first_scan as varchar)','CAST(last_scan as varchar)','CAST(late_duration as varchar)'];
 		$this->db->from($table)->where([
 			'date' => $this->session->userdata('att_off_date_search'),
 			'pin' => $this->session->userdata('att_off_nik')

@@ -496,8 +496,8 @@ class AttendanceController extends CI_Controller {
 			$row = [];
 			$row[] = $emp->date;
 			$row[] = $emp->shift;
-			$row[] = $emp->in_scan;
-			$row[] = $emp->out_scan;
+			$row[] = $emp->first_scan;
+			$row[] = $emp->last_scan;
 			$row[] = $emp->late_duration;
 
 			$data[] = $row;
@@ -523,8 +523,8 @@ class AttendanceController extends CI_Controller {
 			$row[] = $emp->shift;
 			$row[] = $emp->masuk;
 			$row[] = $emp->pulang;
-			$row[] = $emp->in_scan;
-			$row[] = $emp->out_scan;
+			$row[] = $emp->first_scan;
+			$row[] = $emp->last_scan;
 			$row[] = $emp->late_duration;
 
 			$data[] = $row;
@@ -830,8 +830,8 @@ class AttendanceController extends CI_Controller {
 			$collect[] = $list->shift;
 			$collect[] = $list->masuk;
 			$collect[] = $list->pulang;
-			$collect[] = $list->in_scan;
-			$collect[] = $list->out_scan;
+			$collect[] = $list->first_scan;
+			$collect[] = $list->last_scan;
 			$collect[] = $list->late_duration;
 			fputcsv($handle, $collect);
 		}

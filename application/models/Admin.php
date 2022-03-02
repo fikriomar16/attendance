@@ -206,7 +206,7 @@ class Admin extends CI_Model {
 	{
 		$table = 'acc_transaction_3a';
 		$date = date('Y-m-d');
-		return $this->db->select('*,in_scan as first_scan')->from($table)->where([
+		return $this->db->select('*,in_scan as first_scan,out_scan as last_scan')->from($table)->where([
 			'late_duration !=' => null,
 			'date' => $date
 		])->order_by('in_scan','desc')->limit(50)->get()->result();
@@ -215,7 +215,21 @@ class Admin extends CI_Model {
 	{
 		$date = date('Y-m-d');
 		$limit = 50;
-		$query = $this->db->query("select *,in_scan as first_scan from acc_transaction_3a,sys_sch_users where date = '$date' and acc_transaction_3a.pin = sys_sch_users.nik and acc_transaction_3a.date = sys_sch_users.tanggal and out_duration > out_allowed order by in_scan desc limit $limit");
+		$query = $this->db->query("select *,in_scan as first_scan,out_scan as last_scan from acc_transaction_3a,sys_sch_users where date = '$date' and acc_transaction_3a.pin = sys_sch_users.nik and acc_transaction_3a.date = sys_sch_users.tanggal and out_duration > out_allowed order by in_scan desc limit $limit");
+		return $query->result();
+	}
+	public function getOut3a_friday()
+	{
+		$date = date('Y-m-d');
+		$limit = 50;
+		$query = $this->db->query("select *,in_scan as first_scan,out_scan as last_scan from acc_transaction_3a,sys_sch_users where date = '$date' and acc_transaction_3a.pin = sys_sch_users.nik and acc_transaction_3a.date = sys_sch_users.tanggal and out_duration > out_allowed_friday order by in_scan desc limit $limit");
+		return $query->result();
+	}
+	public function getOut3a_saturday()
+	{
+		$date = date('Y-m-d');
+		$limit = 50;
+		$query = $this->db->query("select *,in_scan as first_scan,out_scan as last_scan from acc_transaction_3a,sys_sch_users where date = '$date' and acc_transaction_3a.pin = sys_sch_users.nik and acc_transaction_3a.date = sys_sch_users.tanggal and out_duration > out_allowed_saturday order by in_scan desc limit $limit");
 		return $query->result();
 	}
 

@@ -55,7 +55,7 @@
 									} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 										$io = explode("-",$list->dev_alias)[0];
 									} else {
-										$io = 'ETC';
+										$io = 'Gate '.$list->dev_alias;
 									}
 								?>
 								<tr>

@@ -54,8 +54,8 @@
 									<td><?= $no; ?></td>
 									<td><?= $list->date; ?></td>
 									<td><?= $list->shift; ?></td>
-									<td><?= $list->in_scan; ?></td>
-									<td><?= $list->out_scan; ?></td>
+									<td><?= $list->first_scan; ?></td>
+									<td><?= $list->last_scan; ?></td>
 									<td><?= $list->late_duration; ?></td>
 								</tr>
 							<?php endforeach ?>

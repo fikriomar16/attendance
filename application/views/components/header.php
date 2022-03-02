@@ -15,6 +15,9 @@
 	<?php if ($p=='attendance/employee'): ?>
 		<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/style.css') ?>">
 	<?php endif ?>
+	<?php if ($p=='attendance/office'): ?>
+		<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/style.css') ?>">
+	<?php endif ?>
 	<?php if ($p=='attendance/visitor'): ?>
 		<link rel="stylesheet" type="text/css" href="<?= base_url('assets/vendor/flatpickr/dist/plugins/monthSelect/style.css') ?>">
 	<?php endif ?>
