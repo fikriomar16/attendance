@@ -326,12 +326,14 @@ class ScheduleController extends CI_Controller {
 							'masuk' => $masuk,
 							'pulang' => $pulang,
 							'sub_masuk' => date('Y-m-d H:i:s',strtotime($masuk.$subMasuk)),
-							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang)),
-							'late_allowed' => $allowed->late_allowed,
-							'out_allowed' => $allowed->out_allowed,
-							'out_allowed_friday' => $allowed->out_allowed_friday,
-							'out_allowed_saturday' => $allowed->out_allowed_saturday
+							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang))
 						];
+						if ($allowed) {
+							$collect['late_allowed'] = $allowed->late_allowed;
+							$collect['out_allowed'] = $allowed->out_allowed;
+							$collect['out_allowed_friday'] = $allowed->out_allowed_friday;
+							$collect['out_allowed_saturday'] = $allowed->out_allowed_saturday;
+						}
 						$collects[] = $collect;
 					}
 					$i++;
@@ -343,7 +345,7 @@ class ScheduleController extends CI_Controller {
 				'success' => "Berhasil Mengimport File $extension",
 				'result' => $sheetData,
 				'collect' => $collects
-			]);
+			],JSON_PRETTY_PRINT);
 		}
 	}
 	public function processImport()
