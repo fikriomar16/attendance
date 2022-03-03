@@ -33,7 +33,7 @@ class Attendance extends CI_Model {
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('shift', $this->session->userdata('att_emp_shift'));
 		}
-		$this->db->group_by('name,dept_name,pin,shift');
+		// $this->db->group_by('name,dept_name,pin,shift');
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{

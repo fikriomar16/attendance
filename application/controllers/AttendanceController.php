@@ -69,15 +69,15 @@ class AttendanceController extends CI_Controller {
 		];
 		echo json_encode($output);
 	}
-	public function set_shift($shift = 0)
+	public function set_shift($shift)
 	{
-		if ($shift == 0) {
+		$this->session->set_userdata('att_emp_shift',$shift);
+		if ($shift == '0') {
 			$this->session->unset_userdata('att_emp_shift');
-		} else {
-			$this->session->set_userdata('att_emp_shift',$shift);
 		}
 		echo json_encode([
-			'shift' => $shift
+			'shift' => $shift,
+			'current_shift' => $this->session->userdata('att_emp_shift')
 		]);
 	}
 	public function getShiftList()
@@ -300,12 +300,13 @@ class AttendanceController extends CI_Controller {
 		$data = [];
 		$no = $_POST['start'];
 		foreach ($list as $emp) {
-			if (explode("-",$emp->dev_alias)[0] == "IN") {
-				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$emp->dev_alias)[0].'</span>';
-			} else if (explode("-",$emp->dev_alias)[0] == "OUT") {
-				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$emp->dev_alias)[0].'</span>';
+			$inout = explode("-",$emp->dev_alias)[0];
+			if ($inout == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.$inout.'</span>';
+			} else if ($inout == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.$inout.'</span>';
 			} else {
-				$io = '<span class="badge badge-pill badge-info">'.$emp->dev_alias.'</span>';
+				$io = '<span class="badge badge-pill badge-info">Gate '.$emp->dev_alias.'</span>';
 			}
 			$no++;
 			$row = [];
@@ -475,15 +476,15 @@ class AttendanceController extends CI_Controller {
 			'date' => strftime('%A, %d %B %Y', strtotime($date))
 		]);
 	}
-	public function set_shift_off($shift = 0)
+	public function set_shift_off($shift)
 	{
-		if ($shift == 0) {
+		$this->session->set_userdata('att_off_shift',$shift);
+		if ($shift == '0') {
 			$this->session->unset_userdata('att_off_shift');
-		} else {
-			$this->session->set_userdata('att_off_shift',$shift);
 		}
 		echo json_encode([
-			'shift' => $shift
+			'shift' => $shift,
+			'current_shift' => $this->session->userdata('att_off_shift')
 		]);
 	}
 	public function att_sum_off()
@@ -547,12 +548,13 @@ class AttendanceController extends CI_Controller {
 		$data = [];
 		$no = $_POST['start'];
 		foreach ($list as $emp) {
-			if (explode("-",$emp->dev_alias)[0] == "IN") {
-				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$emp->dev_alias)[0].'</span>';
-			} else if (explode("-",$emp->dev_alias)[0] == "OUT") {
-				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$emp->dev_alias)[0].'</span>';
+			$inout = explode("-",$emp->dev_alias)[0];
+			if ($inout == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.$inout.'</span>';
+			} else if ($inout == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.$inout.'</span>';
 			} else {
-				$io = '<span class="badge badge-pill badge-info">'.$emp->dev_alias.'</span>';
+				$io = '<span class="badge badge-pill badge-info">Gate '.$emp->dev_alias.'</span>';
 			}
 			$no++;
 			$row = [];
@@ -970,12 +972,13 @@ class AttendanceController extends CI_Controller {
 		$data = [];
 		$no = $_POST['start'];
 		foreach ($lists as $list) {
-			if (explode("-",$list->dev_alias)[0] == "IN") {
-				$io = '<span class="badge badge-pill badge-primary">'.explode("-",$list->dev_alias)[0].'</span>';
-			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
-				$io = '<span class="badge badge-pill badge-danger">'.explode("-",$list->dev_alias)[0].'</span>';
+			$inout = explode("-",$list->dev_alias)[0];
+			if ($inout == "IN") {
+				$io = '<span class="badge badge-pill badge-primary">'.$inout.'</span>';
+			} else if ($inout == "OUT") {
+				$io = '<span class="badge badge-pill badge-danger">'.$inout.'</span>';
 			} else {
-				$io = '<span class="badge badge-pill badge-info">'.$list->dev_alias.'</span>';
+				$io = '<span class="badge badge-pill badge-info">Gate '.$list->dev_alias.'</span>';
 			}
 			$no++;
 			$row = [];

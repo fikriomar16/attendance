@@ -7,7 +7,6 @@ const tableDetRecap = angular.element('#detRecapTable');
 const sourceDetRecap = tableDetRecap.data('source');
 const tableDetHistory = angular.element('#detHistoryTable');
 const sourceDetHistory = tableDetHistory.data('source');
-let shift;
 let config = {
 	enableTime: false,
 	dateFormat: "Y-m-d",
@@ -102,11 +101,11 @@ app.controller('attEmployee',($scope,$http) => {
 		});
 	}
 	$scope.getShift = () => {
+		var shift = $scope.shiftList;
 		if ($scope.shiftList == '') {
-			shift = '0';
-		} else {
-			shift = $scope.shiftList;
+			shift = 0;
 		}
+		console.log(shift);
 		$http.get(base+'attendance/set_shift/'+shift).then((res) => {
 			table.DataTable().ajax.reload();
 		});
