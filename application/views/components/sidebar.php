@@ -75,6 +75,12 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 			<span>Duration</span>
 		</a>
 	</li>
+	<li class="nav-item <?= ($p=='setup/shift')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('setup/shift') ?>">
+			<i class="fas fa-fw fa-stopwatch"></i>
+			<span>Shift</span>
+		</a>
+	</li>
 	<hr class="sidebar-divider">
 	<!-- Log Data-->
 	<div class="sidebar-heading">

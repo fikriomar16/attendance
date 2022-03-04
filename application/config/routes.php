@@ -159,8 +159,14 @@ $route = [
 	'get_by_id_duration/(:any)' => 'SetupController/get_by_id_duration/$1',
 	'saveDuration' => 'SetupController/saveDuration',
 	'deleteDuration/(:any)' => 'SetupController/deleteDuration/$1',
-	'setup/menu' => 'SetupController/menu',
 	'setup/dt_duration' => 'SetupController/dt_duration',
+
+	'setup/shift' => 'SetupController/shift',
+	'setup/dt_shift' => 'SetupController/dt_shift',
+	'deleteShift/(:any)' => 'SetupController/deleteShift/$1',
+	'get_by_id_shift/(:any)' => 'SetupController/get_by_id_shift/$1',
+	'saveShift' => 'SetupController/saveShift',
+	'importDWS' => 'SetupController/importDWS',
 
 	'scanlog' => 'ScanlogController',
 	'scanlog/dt_scanlog' => 'ScanlogController/dt_scanlog',

@@ -120,7 +120,7 @@ IF (select split_part(new.dev_alias, '-', 1))='IN' THEN
 					);
 					RAISE NOTICE 'INSERT TIER 2 EMPLOYEE';
 					/* Insert Data ke Tier 3 */
-					INSERT INTO acc_transaction_3a(area_name,dept_name,name,pin,shift,date,masuk,pulang,in_scan,out_duration,in_duration,flag_sap)
+					INSERT INTO acc_transaction_3a(area_name,dept_name,name,pin,shift,date,masuk,pulang,in_scan,out_duration,in_duration,flag_sap,out_allowed,shift_code)
 					values (
 						new.area_name,
 						new.dept_name,
@@ -133,7 +133,9 @@ IF (select split_part(new.dev_alias, '-', 1))='IN' THEN
 						new.event_time,
 						'00:00:00',
 						'00:00:00',
-						1
+						1,
+						(SELECT out_allowed from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+						(SELECT shift_code from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)
 					);
 					RAISE NOTICE 'INSERT TIER 3 EMPLOYEE';
 					IF new.event_time > (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN
@@ -262,7 +264,7 @@ IF (new.dev_alias in ('Office','Poliklinik')) THEN
 					WHERE pin = new.pin and masuk = (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1);
 				ELSE
 					RAISE NOTICE 'TIDAK ADA DATA DI TIER 3';
-					INSERT INTO acc_transaction_3b(area_name,dept_name,name,pin,shift,date,masuk,pulang,first_scan,flag_sap)
+					INSERT INTO acc_transaction_3b(area_name,dept_name,name,pin,shift,date,masuk,pulang,first_scan,flag_sap,out_allowed,shift_code)
 					values (
 						new.area_name,
 						new.dept_name,
@@ -273,7 +275,9 @@ IF (new.dev_alias in ('Office','Poliklinik')) THEN
 						(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
 						(SELECT pulang from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by pulang desc limit 1),
 						new.event_time,
-						1
+						1,
+						(SELECT out_allowed from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+						(SELECT shift_code from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)
 					);
 					RAISE NOTICE 'INSERT TIER 3 B';
 					IF new.event_time > (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN

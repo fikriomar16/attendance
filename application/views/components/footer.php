@@ -53,6 +53,9 @@
 	<?php if ($p=='setup/duration'): ?>
 		<script src="<?= base_url('assets/js/setup/duration.js') ?>"></script>
 	<?php endif ?>
+	<?php if ($p=='setup/shift'): ?>
+		<script src="<?= base_url('assets/js/setup/shift.js') ?>"></script>
+	<?php endif ?>
 	<?php if ($p=='scanlog'): ?>
 		<script src="<?= base_url('assets/js/scanlog/scanlog.js') ?>"></script>
 	<?php endif ?>
