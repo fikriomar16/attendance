@@ -6,11 +6,11 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 }
 ?>
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion <?= $toggle ?>" id="accordionSidebar">
-	<a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?= base_url('/') ?>">
-		<div class="sidebar-brand-icon">
-			<i class="fab fa-envira"></i>
+	<a class="sidebar-brand d-flex align-items-center justify-content-center bg-white shadow" href="<?= base_url('/') ?>">
+		<div class="sidebar-brand-icon text-primary d-none">
+			<i class="fas fa-building"></i>
 		</div>
-		<div class="sidebar-brand-text mx-3">Attendance</div>
+		<div class="sidebar-brand-text mx-3"><img class="img-fluid rounded company-logo" src="<?= base_url('assets/img/indofoodcbp_mini.png') ?>"></div>
 	</a>
 	<?php $p = uri_string(); ?>
 	<hr class="sidebar-divider">
