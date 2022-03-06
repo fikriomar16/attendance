@@ -344,6 +344,21 @@ class SetupController extends CI_Controller {
 			],JSON_PRETTY_PRINT);
 		}
 	}
+	public function processImport_DWS()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		$import = $this->setup->insertFromImport($form);
+		if ($import) {
+			echo json_encode([
+				'success' => 'Berhasil Mengimport Data, Data Telah Disimpan'
+			],JSON_PRETTY_PRINT);
+		} else {
+			echo json_encode([
+				'error' => 'Terjadi Kesalahan'
+			],JSON_PRETTY_PRINT);
+		}
+		
+	}
 
 }
 

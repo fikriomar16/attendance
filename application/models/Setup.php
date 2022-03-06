@@ -170,6 +170,10 @@ class Setup extends CI_Model {
 	{
 		return $this->db->where('id', $id)->delete('sys_shift');
 	}
+	public function insertFromImport($data)
+	{
+		return $this->db->insert_batch('sys_shift', $data);
+	}
 
 }
 

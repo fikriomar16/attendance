@@ -167,6 +167,7 @@ $route = [
 	'get_by_id_shift/(:any)' => 'SetupController/get_by_id_shift/$1',
 	'saveShift' => 'SetupController/saveShift',
 	'importDWS' => 'SetupController/importDWS',
+	'processImport_DWS' => 'SetupController/processImport_DWS',
 
 	'scanlog' => 'ScanlogController',
 	'scanlog/dt_scanlog' => 'ScanlogController/dt_scanlog',

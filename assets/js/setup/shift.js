@@ -114,7 +114,7 @@ app.controller('setShift',($scope,$http) => {
 	}
 	const table = angular.element('#dataTable').DataTable({
 		"sDom" : 'tipr',
-		"pageLength":15,
+		"pageLength": 20,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -187,7 +187,22 @@ app.controller('setShift',($scope,$http) => {
 		document.getElementById("import_dws").value = "";
 	}
 	$scope.importFromModal = () => {
-		infoPopUp('Test Import');
-		angular.element('#modalImport').modal('hide');
+		if ($scope.importData.length != 0) {
+			$http({
+				method:"POST",
+				url:base+'processImport_DWS',
+				data:$scope.importData
+			}).then((res) => {
+				if (res.data.error) {
+					errorNotif(res.data.error);
+				} else if (res.data.success) {
+					angular.element('#modalImport').modal('hide');
+					table.ajax.reload();
+					successPopUp(res.data.success);
+				}
+			}),(err) => {
+				console.log(err);
+			};
+		}
 	}
 });
