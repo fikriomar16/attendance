@@ -282,8 +282,7 @@ class ScheduleController extends CI_Controller {
 			echo json_encode([
 				'error' => $this->upload->display_errors()
 			]);
-		}
-		else {
+		} else {
 			$data = [
 				'upload_data' => $this->upload->data()
 			];

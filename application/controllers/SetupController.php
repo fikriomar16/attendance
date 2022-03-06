@@ -279,8 +279,7 @@ class SetupController extends CI_Controller {
 			echo json_encode([
 				'error' => $this->upload->display_errors()
 			]);
-		}
-		else {
+		} else {
 			$data = [
 				'upload_data' => $this->upload->data()
 			];
@@ -299,15 +298,49 @@ class SetupController extends CI_Controller {
 			$spreadsheet = $reader->load($filePath);
 			$sheetData = $spreadsheet->getActiveSheet()->toArray();
 			$collects = [];
+			$getSG = [];
+			$getMM = [];
 			$i = 0;
 			foreach ($sheetData as $row) {
 				$collect = [];
+				$arrSG = [];
+				$arrMM = [];
+				if ($i > 3) {
+					if ($row[1]) {
+						$collect = [
+							'shift_code' => $row[1],
+							'work_time' => date("H:i:s", mktime($row[2],0,0,12,12,2022)),
+							'work_start' => $row[3],
+							'work_end' => $row[4]
+						];
+						$collects[] = $collect;
+						if ($row[7]) {
+							$arrSG = [
+								'shift_code' => $row[7],
+								'work_time' => date("H:i:s", mktime($row[8],0,0,12,12,2022)),
+								'work_start' => $row[9],
+								'work_end' => $row[10]
+							];
+							$getSG[] = $arrSG;
+							if ($row[13]) {
+								$arrMM = [
+									'shift_code' => $row[13],
+									'work_time' => date("H:i:s", mktime($row[14],0,0,12,12,2022)),
+									'work_start' => $row[15],
+									'work_end' => $row[16],
+								];
+								$getMM[] = $arrMM;
+							}
+						}
+					}
+				}
+				$i++;
 			}
 			unlink($filePath);
 			echo json_encode([
 				'success' => "Berhasil Mengimport File $extension",
 				'result' => $sheetData,
-				'collect' => $collects
+				'collect' => array_merge($collects,$getSG,$getMM)
 			],JSON_PRETTY_PRINT);
 		}
 	}

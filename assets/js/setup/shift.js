@@ -1,7 +1,7 @@
 const base = angular.element('body').data('home');
 const source =  angular.element('#dataTable').data('source');
 const url = angular.element('#shiftForm').attr('action');
-const app = angular.module('setDur', []);
+const app = angular.module('setShift', []);
 let config = {
 	enableTime: true,
 	enableSeconds: true,
@@ -14,7 +14,7 @@ let config = {
 	altFormat: "H:i:S",
 	altInput: true
 };
-app.controller('setDur',($scope,$http) => {
+app.controller('setShift',($scope,$http) => {
 	const fp = flatpickr('.input-time',config);
 	fp[0];
 	$scope.newDuration = () => {
@@ -140,7 +140,7 @@ app.controller('setDur',($scope,$http) => {
 	$scope.doImportDWS = (files) => {
 		var fd = new FormData();
 		fd.append("import_dws", files[0]);
-		$http.post(angular.element('#import_dws').attr('action'),fd,{
+		$http.post(angular.element('#importForm').attr('action'),fd,{
 			withCredentials: true,
 			headers: {'Content-Type': 'multipart/form-data' },
 			headers: {'Content-Type': undefined },
@@ -151,30 +151,25 @@ app.controller('setDur',($scope,$http) => {
 				errorPopUp(res.data.error);
 			}
 			if (res.data.success) {
+				successPopUp(res.data.success);
 				if (res.data.collect.length == 0) {
 					errorPopUp('Data Kosong atau Sudah Terimport');
 				} else {
 					var loop = 0;
-					var tbodyTr = '';
+					tbodyTr = '';
 					while (loop < res.data.collect.length) {
 						tbodyTr+= '<tr>';
 						tbodyTr+= '<td class="text-primary font-weight-bold">';
-						tbodyTr+= res.data.collect[loop].nik;
+						tbodyTr+= res.data.collect[loop].shift_code;
 						tbodyTr+= '</td>';
 						tbodyTr+= '<td>';
-						tbodyTr+= res.data.collect[loop].nama;
+						tbodyTr+= res.data.collect[loop].work_time;
 						tbodyTr+= '</td>';
 						tbodyTr+= '<td>';
-						tbodyTr+= res.data.collect[loop].shift;
+						tbodyTr+= res.data.collect[loop].work_start;
 						tbodyTr+= '</td>';
 						tbodyTr+= '<td>';
-						tbodyTr+= res.data.collect[loop].tanggal;
-						tbodyTr+= '</td>';
-						tbodyTr+= '<td>';
-						tbodyTr+= res.data.collect[loop].masuk;
-						tbodyTr+= '</td>';
-						tbodyTr+= '<td>';
-						tbodyTr+= res.data.collect[loop].pulang;
+						tbodyTr+= res.data.collect[loop].work_end;
 						tbodyTr+= '</td>';
 						tbodyTr+= '</tr>';
 						loop++;
@@ -190,5 +185,9 @@ app.controller('setDur',($scope,$http) => {
 		};
 		angular.element('#importForm')[0].reset();
 		document.getElementById("import_dws").value = "";
+	}
+	$scope.importFromModal = () => {
+		infoPopUp('Test Import');
+		angular.element('#modalImport').modal('hide');
 	}
 });

@@ -1,4 +1,4 @@
-<div class="container-fluid" ng-app="setDur" ng-controller="setDur">
+<div class="container-fluid" ng-app="setShift" ng-controller="setShift">
 	<div class="row justify-content-center">
 		<div class="col-xl-12">
 			<div class="alert alert-primary alert-loading text-center font-weight-bold d-none" role="alert">
