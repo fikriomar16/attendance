@@ -70,3 +70,10 @@ table {
 	backdrop-filter: blur(2px);
 	transition: 0.5s ease;
 }
+
+.sidebar .sidebar-brand .sidebar-brand-icon i {
+	display: none;
+}
+.sidebar.toggled .sidebar-brand .sidebar-brand-icon i {
+	display: inline;
+}
