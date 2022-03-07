@@ -134,7 +134,7 @@
 							<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
 						</div>
 						<div class="col-auto">
-							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
+							<button class="btn btn-primary btn-rounded btn-sm mx-3" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
 						</div>

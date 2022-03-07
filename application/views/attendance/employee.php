@@ -154,7 +154,7 @@
 		</div>
 	</div>
 	<div class="row justify-content-between mt-1 mb-3">
-		<div class="col-auto">
+		<div class="col-lg-auto">
 			<div class="form-group form-label-group">
 				<div class="input-group">
 					<div class="input-group-prepend">
@@ -164,10 +164,10 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-3">
+		<div class="col-lg-3 py-3">
 			<span class="font-weight-bold h6 get-date d-none">{{getAttDate}}</span>
 		</div>
-		<div class="col-auto">
+		<div class="col-lg-auto">
 			<button class="btn btn-sm btn-primary shadow-sm" ng-click="getToday()">
 				<span class="font-weight-bold px-2">Today</span>
 			</button>
@@ -182,11 +182,11 @@
 			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-attendance" data-source="<?= base_url('attresume_emp/') ?>">
 				<div class="card-header">
 					<div class="row justify-content-between">
-						<div class="col-auto">
+						<div class="col-lg-auto">
 							<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
 						</div>
-						<div class="col-auto">
-							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
+						<div class="col-lg-auto">
+							<button class="btn btn-primary btn-rounded btn-sm mx-3" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
 						</div>
