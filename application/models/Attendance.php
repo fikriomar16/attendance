@@ -211,7 +211,7 @@ class Attendance extends CI_Model {
 	public function _get_dt_history_emp()
 	{
 		$table = 'acc_transaction_2a';
-		$order = [$table.'.event_time' => 'desc'];
+		$order = [$table.'.event_time' => 'asc'];
 		$column_order = [null,'event_time','dev_alias','shift','dev_alias'];
 		$column_search = ['CAST(event_time as varchar)','dev_alias','shift'];
 		$this->db->from($table)->where([
@@ -420,7 +420,7 @@ class Attendance extends CI_Model {
 	public function _get_dt_history_vis()
 	{
 		$table = 'acc_transaction_2c';
-		$order = ['event_time' => 'desc'];
+		$order = ['event_time' => 'asc'];
 		$column_order = [null,'event_time','dev_alias','dev_alias'];
 		$column_search = ['CAST(event_time as varchar)','dev_alias'];
 		$this->db->from($table)->where([
@@ -670,7 +670,7 @@ class Attendance extends CI_Model {
 	public function _get_dt_history_off()
 	{
 		$table = 'acc_transaction_2b';
-		$order = [$table.'.event_time' => 'desc'];
+		$order = [$table.'.event_time' => 'asc'];
 		$column_order = [null,'event_time','dev_alias','shift','dev_alias'];
 		$column_search = ['CAST(event_time as varchar)','dev_alias','shift'];
 		$this->db->from($table)->where([
