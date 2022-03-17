@@ -181,7 +181,7 @@ class Schedule extends CI_Model {
 	}
 	public function get_allowed($nik)
 	{
-		return $this->db->query("SELECT * FROM sys_duration,pers_person WHERE sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = '$nik'")->row();
+		return $this->db->query("SELECT late_allowed,out_allowed,out_allowed_friday,out_allowed_saturday FROM sys_duration,pers_person WHERE sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = '$nik'")->row();
 	}
 	public function insertFromImport($data)
 	{
