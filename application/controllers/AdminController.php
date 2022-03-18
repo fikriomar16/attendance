@@ -110,11 +110,15 @@ class AdminController extends CI_Controller {
 	{
 		if (date('l') == 'Friday') {
 			$list2 = $this->admin->getOut3a_friday();
+			$outAllow = $list2->out_allowed_friday;
 		} elseif (date('l') == 'Saturday') {
 			$list2 = $this->admin->getOut3a_saturday();
+			$outAllow = $list2->out_allowed_saturday;
 		} else {
 			$list2 = $this->admin->getOut3a();
+			$outAllow = $list2->out_allowed;
 		}
+		$outDur = $list2->out_duration;
 		$list1 = $this->admin->getLate3a();
 		$list3 = $this->admin->getLate3b();
 		$lists = array_merge_recursive($list2,$list1,$list3);
@@ -127,17 +131,15 @@ class AdminController extends CI_Controller {
 			$limit = 50;
 			foreach ($lists as $list) {
 				if ($i < $limit) {
-					if (!empty($list->out_allowed) && $list->out_duration > $list->out_allowed) {
-						$dur = date_create($list->out_duration);
-						$allowed = date_create($list->out_allowed);
+					if ($list->late_duration == null && $outDur != null) {
+						$dur = date_create($outDur);
+						$allowed = date_create($outAllow);
 						$difference = date_diff($dur,$allowed);
 						$raw_status = $difference->days * 24 * 60 + $difference->h * 60 + $difference->i;
 						$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$raw_status.' Menit</span></h5>';
-					} else {
-						if ($list->late_duration !== null) {
-							$raw_status = $list->late_duration;
-							$status = '<h5><span class="badge badge-warning text-dark shadow p-2">Terlambat : '.$raw_status.'</span></h5>';
-						}
+					} else if ($list->late_duration !== null)  {
+						$raw_status = $list->late_duration;
+						$status = '<h5><span class="badge badge-warning text-dark shadow p-2">Terlambat : '.$raw_status.'</span></h5>';
 					}
 					$row = [];
 					$row[] = $list->name;
@@ -159,7 +161,12 @@ class AdminController extends CI_Controller {
 			echo json_encode([
 				'success' => 'Data Ditemukan',
 				'raw' => $data,
-				'data' => $tbody
+				'data' => $tbody,
+				'list1' => $list1,
+				'list2' => $list2,
+				'list3' => $list3,
+				'out_allowed' => $outAllow,
+				'out_duration' => $outDur
 			],JSON_PRETTY_PRINT);
 		} else {
 			$row = '';
