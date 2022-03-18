@@ -264,16 +264,19 @@ class ScheduleController extends CI_Controller {
 
 	public function exportSchTemplate()
 	{
-		$title = 'Template_Import_Jadwal';
-		header("Content-type: application/csv");
-		header("Content-Disposition: attachment; filename=".$title.".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		$handle = fopen('php://output', 'w');
-		$head = ['Pers Number','Employee Name','DWS Date','DWS','DWS IN','DWS OUT'];
-		fputcsv($handle, $head);
-		fclose($handle);
-		exit;
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet(); 
+		$sheet->setCellValue('A1','Pers Number');
+		$sheet->setCellValue('B1','Employee Name');
+		$sheet->setCellValue('C1','DWS Date');
+		$sheet->setCellValue('D1','DWS');
+		$sheet->setCellValue('E1','DWS IN');
+		$sheet->setCellValue('F1','DWS OUT');
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="Import Jadwal.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 
 	public function importSchCSV()

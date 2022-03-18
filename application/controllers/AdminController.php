@@ -127,7 +127,7 @@ class AdminController extends CI_Controller {
 			$limit = 50;
 			foreach ($lists as $list) {
 				if ($i < $limit) {
-					if (!empty($list->out_allowed)) {
+					if (!empty($list->out_allowed) && $list->out_duration > $list->out_allowed) {
 						$dur = date_create($list->out_duration);
 						$allowed = date_create($list->out_allowed);
 						$difference = date_diff($dur,$allowed);
