@@ -131,6 +131,14 @@ class AdminController extends CI_Controller {
 			$limit = 50;
 			foreach ($lists as $list) {
 				if ($i < $limit) {
+					if (date('l') == 'Friday') {
+						$outAllow = $list->out_allowed_friday;
+					} elseif (date('l') == 'Saturday') {
+						$outAllow = $list->out_allowed_saturday;
+					} else {
+						$outAllow = $list->out_allowed;
+					}
+					$outDur = $list->out_duration;
 					if ($list->late_duration == null && $outDur != null) {
 						$dur = date_create($outDur);
 						$allowed = date_create($outAllow);
@@ -146,7 +154,6 @@ class AdminController extends CI_Controller {
 					$row[] = $list->pin;
 					$row[] = $list->dept_name;
 					$row[] = $raw_status;
-					$i++;
 					$data[] = $row;
 
 					$tbody.='<tr>';
@@ -164,9 +171,7 @@ class AdminController extends CI_Controller {
 				'data' => $tbody,
 				'list1' => $list1,
 				'list2' => $list2,
-				'list3' => $list3,
-				'out_allowed' => $outAllow,
-				'out_duration' => $outDur
+				'list3' => $list3
 			],JSON_PRETTY_PRINT);
 		} else {
 			$row = '';

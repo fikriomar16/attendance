@@ -77,7 +77,7 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	tableDetHistory.DataTable({
-		"sDom" : 'tir',
+		"sDom" : 'tirp',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
