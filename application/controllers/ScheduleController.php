@@ -326,7 +326,7 @@ class ScheduleController extends CI_Controller {
 				$masuk = $tgl.' '.$msk;
 				$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
 				$allowed = $this->schedule->get_allowed($nik);
-				if (!$this->schedule->checkSch($nik,$masuk,$pulang)) {
+				if (!$this->schedule->checkSch($nik,$masuk,$pulang) &&  $this->schedule->get_by_nik_employee($nik) && $nik != null) {
 					if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
 						$collect = [
 							'nik' => $nik,
