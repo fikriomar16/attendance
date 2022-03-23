@@ -26,7 +26,7 @@ class Attendance extends CI_Model {
 		$table = 'acc_transaction_3a';
 		$order = ['pin' => 'asc'];
 		$column_order = [null,'name','pin','shift','dept_name'];
-		$column_search = ['.name','.pin','shift','dept_name'];
+		$column_search = ['name','pin','shift','dept_name'];
 		$this->db->select("name,dept_name,pin,shift")->from($table)->where([
 			'date' => $this->session->userdata('att_emp_date')
 		]);

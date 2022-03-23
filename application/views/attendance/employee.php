@@ -134,10 +134,10 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-lg-4 p-2">
-											<div class="my-2 row justify-content-center">
+										<div class="col-lg-4 p-2 my-auto">
+											<div class="row justify-content-center">
 												<div class="col-lg-8">
-													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Employee" class="img-fluid emp-photo" id="emp-photo">
+													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Employee" class="img-fluid emp-photo rounded" id="emp-photo">
 												</div>
 											</div>
 										</div>
