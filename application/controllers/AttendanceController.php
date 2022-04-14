@@ -295,7 +295,7 @@ class AttendanceController extends CI_Controller {
 		$path_port = '8098';
 		$local = 'localhost';
 		$url = '10.126.25.150';
-		$path = "http://$url:$path_port";
+		$path = "http://$local:$path_port";
 		$list = $this->attendance->dt_history_emp();
 		$data = [];
 		$no = $_POST['start'];
@@ -543,7 +543,7 @@ class AttendanceController extends CI_Controller {
 		$path_port = '8098';
 		$local = 'localhost';
 		$url = '10.126.25.150';
-		$path = "http://$url:$path_port";
+		$path = "http://$local:$path_port";
 		$list = $this->attendance->dt_history_off();
 		$data = [];
 		$no = $_POST['start'];

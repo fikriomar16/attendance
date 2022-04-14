@@ -28,6 +28,9 @@ app.controller('schEmp',($scope,$http) => {
 	$http.get(base+'schedule/empList').then((res) => {
 		$scope.emps = res.data;
 	});
+	$http.get(base+'schedule/shiftList').then((res) => {
+		$scope.shifts = res.data;
+	});
 	$scope.closeSch = () => {
 		angular.element('.card-schedule').addClass('d-none');
 	}
@@ -114,15 +117,20 @@ app.controller('schEmp',($scope,$http) => {
 	$scope.newSchedule = () => {
 		angular.element('#scheduleForm')[0].reset();
 		document.getElementById('nik').value = '';
+		document.getElementById('shift').value = '';
 		$scope.id_sch = '';
 		$scope.nik = '';
 		$scope.shift = '';
 		$scope.masuk = '';
 		$scope.pulang = '';
 		angular.element('.info-emp').addClass('d-none');
+		angular.element('.div-timestamp').addClass('d-none');
+		angular.element('.div-tanggal').removeClass('d-none');
 		angular.element('.select-emp').removeClass('d-none');
 		angular.element('#nik').selectpicker('destroy');
 		angular.element('#nik').selectpicker('refresh');
+		angular.element('#shift').selectpicker('destroy');
+		angular.element('#shift').selectpicker('refresh');
 		$scope.getTitle = 'Add New Schedule';
 		angular.element('.card-new').removeClass('d-none');
 		fp[0].clear();
@@ -137,6 +145,7 @@ app.controller('schEmp',($scope,$http) => {
 				'id':$scope.id_sch,
 				'nik':$scope.nik,
 				'shift':$scope.shift,
+				'tanggal':$scope.tanggal,
 				'masuk':$scope.masuk,
 				'pulang':$scope.pulang
 			}
@@ -158,10 +167,12 @@ app.controller('schEmp',($scope,$http) => {
 				table.DataTable().ajax.reload();
 				successPopUp(res.data.success);
 				$scope.closeAdd();
+			} else {
+				console.log(res);
 			}
 		}),(err) => {
-			console.error(err);
 			errorNotif('Terjadi Sebuah Kesalahan');
+			console.error(err);
 		};
 	}
 	$scope.edit = (id) => {
@@ -171,6 +182,8 @@ app.controller('schEmp',($scope,$http) => {
 		$scope.getTitle = 'Edit Schedule';
 		angular.element('.info-emp').removeClass('d-none');
 		angular.element('.select-emp').addClass('d-none');
+		angular.element('.div-timestamp').removeClass('d-none');
+		angular.element('.div-tanggal').addClass('d-none');
 		$http.get(base+'get_by_id_employee_sch/'+id).then((res) => {
 			angular.element('.card-new').removeClass('d-none');
 			angular.element('.alert-loading').addClass('d-none');

@@ -31,7 +31,7 @@ class Attendance extends CI_Model {
 			'date' => $this->session->userdata('att_emp_date')
 		]);
 		if ($this->session->userdata('att_emp_shift')) {
-			$this->db->where('shift', $this->session->userdata('att_emp_shift'));
+			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
 		$this->db->group_by('name,dept_name,pin,shift');
 		$i = 0;
@@ -274,7 +274,7 @@ class Attendance extends CI_Model {
 		$table = 'acc_transaction_3a';
 		$this->db->select('*')->from($table)->where('date',$this->session->userdata('att_emp_date'));
 		if ($this->session->userdata('att_emp_shift')) {
-			$this->db->where('shift',$this->session->userdata('att_emp_shift'));
+			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
 		return $this->db->get()->result();
 	}
@@ -283,7 +283,7 @@ class Attendance extends CI_Model {
 		$table = 'acc_transaction_3b';
 		$this->db->select('*')->from($table)->where('date',$this->session->userdata('att_off_date'));
 		if ($this->session->userdata('att_off_shift')) {
-			$this->db->where('shift',$this->session->userdata('att_off_shift'));
+			$this->db->where('left(shift,2)',$this->session->userdata('att_off_shift'));
 		}
 		return $this->db->get()->result();
 	}
@@ -490,7 +490,7 @@ class Attendance extends CI_Model {
 			'date' => $this->session->userdata('att_off_date')
 		]);
 		if ($this->session->userdata('att_off_shift')) {
-			$this->db->where('shift', $this->session->userdata('att_off_shift'));
+			$this->db->where('left(shift,2)', $this->session->userdata('att_off_shift'));
 		}
 		$this->db->group_by('name,dept_name,pin,shift');
 		$i = 0;

@@ -27,11 +27,23 @@
 							<div class="col-2">
 								<div class="form-group form-label-group">
 									<label for="shift" class="small font-weight-bold">Shift</label>
-									<input type="text" name="shift" id="shift" ng-model="shift" class="form-control text-center bg-light" oninput="this.value=this.value.toUpperCase()">
+									<select name="shift" id="shift" ng-model="shift" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Shift" data-live-search="true">
+										<option ng-repeat="shift in shifts" value="{{shift.shift_code}}">
+											{{shift.shift_code}}
+										</option>
+									</select>
 								</div>
 							</div>
 						</div>
-						<div class="row justify-content-center">
+						<div class="row justify-content-center div-tanggal">
+							<div class="col-lg-6">
+								<div class="form-group form-label-group">
+									<label for="masuk" class="small font-weight-bold">Tanggal</label>
+									<input type="date" name="tanggal" id="tanggal" ng-model="tanggal" class="form-control text-center bg-light">
+								</div>
+							</div>
+						</div>
+						<div class="row justify-content-center div-timestamp d-none">
 							<div class="col-lg-6">
 								<div class="form-group form-label-group">
 									<label for="masuk" class="small font-weight-bold">Tanggal & Jam Masuk</label>

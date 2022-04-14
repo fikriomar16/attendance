@@ -9,33 +9,20 @@ END IF;
 IF (new.tanggal) is null THEN
 	new.tanggal = (select CAST(new.masuk as date));
 END IF;
-IF (new.out_allowed) is null THEN
-	new.out_allowed = (select out_allowed from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
+IF (new.shift_code) is null THEN
+	new.shift_code = new.shift;
 END IF;
-IF (new.out_allowed_friday) is null THEN
-	new.out_allowed_friday = (select out_allowed_friday from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
-END IF;
-IF (new.out_allowed_saturday) is null THEN
-	new.out_allowed_saturday = (select out_allowed_saturday from sys_duration,pers_person where sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = new.nik);
-END IF;
--- IF (new.out_allowed) is null THEN
--- 	new.out_allowed = (select out_allowed from sys_shift where shift_code = new.shift_code);
--- END IF;
--- IF (new.masuk) is null THEN
--- 	new.masuk = concat(new.tanggal,' ',(select work_start from sys_shift where shift_code = new.shift_code))::timestamp;
--- END IF;
--- IF (new.pulang) is null THEN
--- 	IF (select work_start from sys_shift where shift_code = new.shift_code) > (select work_end from sys_shift where shift_code = new.shift_code) THEN
--- 		new.pulang = concat(new.tanggal + INTERVAL '1 day',' ',(select work_end from sys_shift where shift_code = new.shift_code))::timestamp;
--- 	ELSE
--- 		new.pulang = concat(new.tanggal,' ',(select work_end from sys_shift where shift_code = new.shift_code))::timestamp;
--- 	END IF;
--- END IF;
 IF (new.sub_masuk) is null THEN
 	new.sub_masuk = new.masuk - INTERVAL '60 min';
 END IF;
 IF (new.sub_pulang) is null THEN
 	new.sub_pulang = new.pulang + INTERVAL '240 min';
+END IF;
+IF (new.out_allowed) is null THEN
+	new.out_allowed = (SELECT AGE(
+			(SELECT CONCAT('2012-12-12',' ',(SELECT AGE(new.pulang,new.masuk)))::timestamp),
+			(SELECT CONCAT('2012-12-12',' ',new.work_time)::timestamp)
+		));
 END IF;
 return new;
 end;

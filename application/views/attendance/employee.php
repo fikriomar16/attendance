@@ -209,7 +209,9 @@
 								</div>
 								<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold customSelect" name="shiftList" id="shiftList" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
 									<option value="">All Shift</option>
-									<option ng-repeat="list in shiftLists" value="{{list.shift}}">Shift {{list.shift}}</option>
+									<option value="PG">Shift PG</option>
+									<option value="SG">Shift SG</option>
+									<option value="MM">Shift MM</option>
 								</select>
 								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data..." ng-keyup="search()" ng-model="searchInTable">
 							</div>

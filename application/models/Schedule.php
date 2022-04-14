@@ -157,6 +157,10 @@ class Schedule extends CI_Model {
 		$table2 = 'auth_department';
 		return $this->db->select("$table.*,$table2.code,$table2.name as dept_name")->from($table)->join($table2,$table.'.auth_dept_id = '.$table2.'.id', 'left')->order_by('code','asc')->get()->result();
 	}
+	public function checkShift()
+	{
+		return $this->db->get('sys_shift')->result();
+	}
 
 	public function create_schedule($data)
 	{
@@ -179,9 +183,11 @@ class Schedule extends CI_Model {
 			'pulang' => $pulang
 		])->row();
 	}
-	public function get_allowed($nik)
+	public function get_allowed($shift)
 	{
-		return $this->db->query("SELECT late_allowed,out_allowed,out_allowed_friday,out_allowed_saturday FROM sys_duration,pers_person WHERE sys_duration.auth_dept_id=pers_person.auth_dept_id and pers_person.pin = '$nik'")->row();
+		return $this->db->get_where('sys_shift',[
+			'shift_code' => $shift
+		])->row();
 	}
 	public function insertFromImport($data)
 	{

@@ -1,18 +1,11 @@
 /* SB Admin Pro (https://sb-admin-pro.startbootstrap.com/index.html) */
 @font-face {
-	font-family: 'Inter';
-	src: URL('../vendor/Inter/Inter-VariableFont_slnt,wght.ttf') format('truetype');
-}
-@font-face {
 	font-family: 'Nunito';
 	src: URL('../vendor/Nunito/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
 	src: URL('../vendor/Nunito/Nunito-VariableFont_wght.ttf') format('truetype');
 }
 html {
 	scroll-behavior: smooth;
-}
-body {
-	/*font-family: 'Inter', sans-serif;*/
 }
 .btn-rounded {
 	border-radius: 1.563rem;
@@ -76,4 +69,28 @@ table {
 }
 .sidebar.toggled .sidebar-brand .sidebar-brand-icon i {
 	display: inline;
+}
+
+img, .sidebar, .sidebar * {
+	transition: 1s ease;
+}
+
+.sidebar.toggled > .nav-item > .nav-link > span {
+	display: none;
+}
+
+.sidebar.toggled .nav-item {
+	padding: 0.7rem 0;
+}
+
+.sidebar.toggled .nav-item.active {
+	background-color: #183281;
+}
+
+.sidebar.toggled .nav-link i {
+	font-size: larger;
+}
+
+.sidebar.toggled .sidebar-heading {
+	padding-bottom: 0.7rem;
 }

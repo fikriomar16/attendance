@@ -156,6 +156,11 @@ class ScheduleController extends CI_Controller {
 		$list = $this->schedule->checkEmp();
 		echo json_encode($list,JSON_PRETTY_PRINT);
 	}
+	public function shiftList()
+	{
+		$list = $this->schedule->checkShift();
+		echo json_encode($list,JSON_PRETTY_PRINT);
+	}
 
 	public function get_by_id_employee_sch($id)
 	{
@@ -173,24 +178,18 @@ class ScheduleController extends CI_Controller {
 		} else {
 			$shift = $form->shift;
 		}
-		if (empty($form->nik) || empty($form->masuk) || empty($form->pulang)) {
+		if (empty($form->nik) || empty($form->shift)) {
 			if (empty($form->nik)) {
 				$error[] = "Karyawan Wajib Dipilih";
 			}
-			if (empty($form->masuk)) {
-				$error[] = "Tanggal & Jam Masuk Wajib Diisi";
-			}
-			if (empty($form->pulang)) {
-				$error[] = "Tanggal & Jam Pulang Wajib Diisi";
-			}
 			if (empty($form->shift)) {
-				$error[] = "Pastikan Shift Terisi, jika kosong maka default akan mengatur nama shift dengan 'JamMasuk-JamPulang'. ex: '07-13'";
+				$error[] = "Shift Wajib Diisi";
 			}
 			echo json_encode([
 				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
-			// $allowed = $this->schedule->get_allowed($form->nik);
+			$allowed = $this->schedule->get_allowed($form->shift);
 			if (empty($form->id)) {
 				$data_add = [
 					'nik' => $form->nik,
@@ -203,10 +202,7 @@ class ScheduleController extends CI_Controller {
 					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
 				];
 				if ($allowed) {
-					$data_add['late_allowed'] = $allowed->late_allowed;
 					$data_add['out_allowed'] = $allowed->out_allowed;
-					$data_add['out_allowed_friday'] = $allowed->out_allowed_friday;
-					$data_add['out_allowed_saturday'] = $allowed->out_allowed_saturday;
 				}
 				$add = $this->schedule->create_schedule($data_add);
 				if ($add) {
@@ -221,29 +217,38 @@ class ScheduleController extends CI_Controller {
 					],JSON_PRETTY_PRINT);
 				}
 			} else {
-				$data_edit = [
-					'shift' => $shift,
-					'tanggal' => date('Y-m-d',strtotime($form->masuk)),
-					'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
-					'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
-					'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
-					'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
-				];
-				if ($allowed) {
-					$data_edit['late_allowed'] = $allowed->late_allowed;
-					$data_edit['out_allowed'] = $allowed->out_allowed;
-					$data_edit['out_allowed_friday'] = $allowed->out_allowed_friday;
-					$data_edit['out_allowed_saturday'] = $allowed->out_allowed_saturday;
-				}
-				$edit = $this->schedule->update_schedule($form->id,$data_edit);
-				if ($edit) {
+				if (empty($form->masuk) || empty($form->pulang)) {
+					if (empty($form->masuk)) {
+						$error[] = "Tanggal & Jam Masuk Wajib Diisi";
+					}
+					if (empty($form->pulang)) {
+						$error[] = "Tanggal & Jam Pulang Wajib Diisi";
+					}
 					echo json_encode([
-						'success' => 'Data Berhasil Diperbarui'
+						'error' => $error
 					],JSON_PRETTY_PRINT);
 				} else {
-					echo json_encode([
-						'error' => 'Terjadi Kesalahan'
-					],JSON_PRETTY_PRINT);
+					$data_edit = [
+						'shift' => $shift,
+						'tanggal' => date('Y-m-d',strtotime($form->masuk)),
+						'masuk' => date('Y-m-d H:i:s',strtotime($form->masuk)),
+						'pulang' => date('Y-m-d H:i:s',strtotime($form->pulang)),
+						'sub_masuk' => date('Y-m-d H:i:s',strtotime($form->masuk.$subMasuk)),
+						'sub_pulang' => date('Y-m-d H:i:s',strtotime($form->pulang.$subPulang)),
+					];
+					if ($allowed) {
+						$data_edit['out_allowed'] = $allowed->out_allowed;
+					}
+					$edit = $this->schedule->update_schedule($form->id,$data_edit);
+					if ($edit) {
+						echo json_encode([
+							'success' => 'Data Berhasil Diperbarui'
+						],JSON_PRETTY_PRINT);
+					} else {
+						echo json_encode([
+							'error' => 'Terjadi Kesalahan'
+						],JSON_PRETTY_PRINT);
+					}
 				}
 			}
 		}
@@ -325,8 +330,8 @@ class ScheduleController extends CI_Controller {
 				$plg = date('H:i:s',strtotime($row[5]));
 				$masuk = $tgl.' '.$msk;
 				$pulang = ($msk>$plg) ? date('Y-m-d', strtotime($tgl.'+1 day')).' '.$plg : $tgl.' '.$plg;
-				$allowed = $this->schedule->get_allowed($nik);
-				if (!$this->schedule->checkSch($nik,$masuk,$pulang) &&  $this->schedule->get_by_nik_employee($nik) && $nik != null) {
+				$allowed = $this->schedule->get_allowed($shift);
+				if (!$this->schedule->checkSch($nik,$masuk,$pulang) &&  $this->schedule->get_by_nik_employee($nik)) {
 					if ($i > 0 && $msk !== "00:00:00" && $plg !== "00:00:00") {
 						$collect = [
 							'nik' => $nik,
@@ -339,10 +344,7 @@ class ScheduleController extends CI_Controller {
 							'sub_pulang' => date('Y-m-d H:i:s',strtotime($pulang.$subPulang)),
 						];
 						if ($allowed) {
-							$collect['late_allowed'] = $allowed->late_allowed;
 							$collect['out_allowed'] = $allowed->out_allowed;
-							$collect['out_allowed_friday'] = $allowed->out_allowed_friday;
-							$collect['out_allowed_saturday'] = $allowed->out_allowed_saturday;
 						}
 						$collects[] = $collect;
 					}

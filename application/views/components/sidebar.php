@@ -69,13 +69,13 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 	<div class="sidebar-heading">
 		Setup
 	</div>
-	<li class="nav-item <?= ($p=='setup/duration')?'active':'' ?>">
+	<li class="d-none nav-item <?= ($p=='setup/duration')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('setup/duration') ?>">
 			<i class="fas fa-fw fa-stopwatch"></i>
 			<span>Duration</span>
 		</a>
 	</li>
-	<li class="d-none nav-item <?= ($p=='setup/shift')?'active':'' ?>">
+	<li class="nav-item <?= ($p=='setup/shift')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('setup/shift') ?>">
 			<i class="fas fa-fw fa-clock"></i>
 			<span>Shift</span>

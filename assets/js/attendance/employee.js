@@ -46,7 +46,7 @@ app.controller('attEmployee',($scope,$http) => {
 		}]
 	});
 	table_sum.DataTable({
-		"sDom" : 'tir',
+		"sDom" : 'tirp',
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -115,13 +115,11 @@ app.controller('attEmployee',($scope,$http) => {
 			$scope.shiftLists = res.data.lists;
 		});
 	}
-	$scope.getShiftList();
 	$scope.search = () => {
 		table.DataTable().search($scope.searchInTable).draw();
 	}
 	$scope.reloadTable = () => {
 		table.DataTable().ajax.reload();
-		$scope.getShiftList();
 	}
 	$scope.closeShow = () => {
 		angular.element('.card-show').addClass('d-none');

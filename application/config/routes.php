@@ -144,6 +144,7 @@ $route = [
 	'getDate_sch/(:any)' => 'ScheduleController/getDate_sch/$1',
 	'getresume_emp/(:any)' => 'ScheduleController/getresume_emp/$1',
 	'schedule/empList' => 'ScheduleController/empList',
+	'schedule/shiftList' => 'ScheduleController/shiftList',
 	'get_by_id_employee_sch/(:any)' => 'ScheduleController/get_by_id_employee_sch/$1',
 	'saveSchedule' => 'ScheduleController/saveSchedule',
 	'deleteSchedule/(:any)' => 'ScheduleController/deleteSchedule/$1',
@@ -176,4 +177,9 @@ $route = [
 	'scanlog/getResume' => 'ScanlogController/getResume',
 	'scanlog/dt_filter' => 'ScanlogController/dt_filter',
 	'scanlog/getFilterData' => 'ScanlogController/getFilterData',
+	'scanlog/exportFilter' => 'ScanlogController/exportFilter',
+
+	'import_sql' => 'QueryController',
+	'importSQL' => 'QueryController/importSQL',
+	'processImportSQL' => 'QueryController/processImportSQL',
 ];

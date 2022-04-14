@@ -108,22 +108,12 @@ class AdminController extends CI_Controller {
 
 	public function dt_late()
 	{
-		if (date('l') == 'Friday') {
-			$list2 = $this->admin->getOut3a_friday();
-			$outAllow = $list2->out_allowed_friday;
-		} elseif (date('l') == 'Saturday') {
-			$list2 = $this->admin->getOut3a_saturday();
-			$outAllow = $list2->out_allowed_saturday;
-		} else {
-			$list2 = $this->admin->getOut3a();
-			$outAllow = $list2->out_allowed;
-		}
+		$list2 = $this->admin->getOut3a();
 		$outDur = $list2->out_duration;
 		$list1 = $this->admin->getLate3a();
 		$list3 = $this->admin->getLate3b();
 		$lists = array_merge_recursive($list2,$list1,$list3);
 		$first = array_column($lists, 'first_scan');
-		// array_multisort($first, SORT_ASC, $lists);
 		if (count($lists) > 0) {
 			$data = [];
 			$tbody = '';
@@ -131,13 +121,7 @@ class AdminController extends CI_Controller {
 			$limit = 50;
 			foreach ($lists as $list) {
 				if ($i < $limit) {
-					if (date('l') == 'Friday') {
-						$outAllow = $list->out_allowed_friday;
-					} elseif (date('l') == 'Saturday') {
-						$outAllow = $list->out_allowed_saturday;
-					} else {
-						$outAllow = $list->out_allowed;
-					}
+					$outAllow = $list->out_allowed;
 					$outDur = $list->out_duration;
 					if ($list->late_duration == null && $outDur != null) {
 						$dur = date_create($outDur);
