@@ -32,7 +32,7 @@ _Etc, i don't remember exactly_
 ## __Screenshots__
 * __Login Page__
 ![Login](screenshots/1.PNG)
-* __Login Page__
+* __Dashboard Page__
 ![Dashboard](screenshots/2.PNG)
 * __Late Notice Page__
 ![Late](screenshots/3.PNG)
