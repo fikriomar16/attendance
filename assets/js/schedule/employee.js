@@ -22,14 +22,23 @@ let config2 = {
 	enableTime: false,
 	dateFormat: "Y-m-d",
 };
+let config3 = {
+	enableTime: true,
+	enableSeconds: true,
+	noCalendar: true,
+	minuteIncrement: 1,
+	dateFormat: "H:i:S",
+	time_24hr: true,
+	defaultHour: 0,
+	allowInput: true,
+	altFormat: "H:i:S",
+	altInput: true
+};
 let tbodyTr;
 app.controller('schEmp',($scope,$http) => {
 	$scope.importData = [];
 	$http.get(base+'schedule/empList').then((res) => {
 		$scope.emps = res.data;
-	});
-	$http.get(base+'schedule/shiftList').then((res) => {
-		$scope.shifts = res.data;
 	});
 	$scope.closeSch = () => {
 		angular.element('.card-schedule').addClass('d-none');
@@ -39,9 +48,11 @@ app.controller('schEmp',($scope,$http) => {
 		angular.element('#scheduleForm')[0].reset();$scope.id_sch = '';
 	}
 	const fp = flatpickr('.input-time',config);
-	fp[0];
 	const fp2 = flatpickr('.selectDate',config2);
+	const fp3 = flatpickr('.input-time-hmi',config3);
+	fp[0];
 	fp2[0];
+	fp3[0];
 	table.DataTable({
 		"sDom" : 'tipr',
 		"processing": true,
@@ -115,27 +126,28 @@ app.controller('schEmp',($scope,$http) => {
 		});
 	}
 	$scope.newSchedule = () => {
+		angular.element('.scroll-to-top').click();
 		angular.element('#scheduleForm')[0].reset();
 		document.getElementById('nik').value = '';
 		document.getElementById('shift').value = '';
 		$scope.id_sch = '';
 		$scope.nik = '';
 		$scope.shift = '';
+		$scope.work_time = '';
 		$scope.masuk = '';
 		$scope.pulang = '';
 		angular.element('.info-emp').addClass('d-none');
-		angular.element('.div-timestamp').addClass('d-none');
-		angular.element('.div-tanggal').removeClass('d-none');
 		angular.element('.select-emp').removeClass('d-none');
+		angular.element('.div-shift').removeClass('d-none');
+		angular.element('.info-shift').addClass('d-none');
 		angular.element('#nik').selectpicker('destroy');
 		angular.element('#nik').selectpicker('refresh');
-		angular.element('#shift').selectpicker('destroy');
-		angular.element('#shift').selectpicker('refresh');
 		$scope.getTitle = 'Add New Schedule';
 		angular.element('.card-new').removeClass('d-none');
 		fp[0].clear();
+		fp3.clear();
 		flatpickr('.input-time',config);
-		angular.element('.scroll-to-top').click();
+		flatpickr('.input-time-hmi',config3);
 	}
 	$scope.saveSchedule = () => {
 		$http({
@@ -145,7 +157,7 @@ app.controller('schEmp',($scope,$http) => {
 				'id':$scope.id_sch,
 				'nik':$scope.nik,
 				'shift':$scope.shift,
-				'tanggal':$scope.tanggal,
+				'work_time':$scope.work_time,
 				'masuk':$scope.masuk,
 				'pulang':$scope.pulang
 			}
@@ -177,24 +189,28 @@ app.controller('schEmp',($scope,$http) => {
 	}
 	$scope.edit = (id) => {
 		fp[0].destroy();
+		fp3.destroy();
 		angular.element('.alert-loading').removeClass('d-none');
 		$scope.id_sch = id;
 		$scope.getTitle = 'Edit Schedule';
-		angular.element('.info-emp').removeClass('d-none');
-		angular.element('.select-emp').addClass('d-none');
-		angular.element('.div-timestamp').removeClass('d-none');
-		angular.element('.div-tanggal').addClass('d-none');
 		$http.get(base+'get_by_id_employee_sch/'+id).then((res) => {
+			angular.element('.info-emp').removeClass('d-none');
+			angular.element('.select-emp').addClass('d-none');
+			angular.element('.div-shift').addClass('d-none');
+			angular.element('.info-shift').removeClass('d-none');
 			angular.element('.card-new').removeClass('d-none');
 			angular.element('.alert-loading').addClass('d-none');
-			$scope.empNik = res.data.nik;
-			$scope.empName = res.data.nama;
-			$scope.shift = res.data.shift;
-			$scope.masuk = res.data.masuk;
-			$scope.pulang = res.data.pulang;
 			document.getElementById('masuk').value = res.data.masuk;
 			document.getElementById('pulang').value = res.data.pulang;
 			document.getElementById('shift').value = res.data.shift;
+			document.getElementById('work_time').value = res.data.work_time;
+			$scope.empNik = res.data.nik;
+			$scope.empName = res.data.nama;
+			$scope.shift = res.data.shift;
+			$scope.work_time = res.data.work_time;
+			$scope.shiftCode = res.data.shift;
+			$scope.masuk = res.data.masuk;
+			$scope.pulang = res.data.pulang;
 			var getDate = new Date(res.data.masuk);
 			var getStart = getDate.getFullYear()+'-'+(getDate.getMonth()+1)+'-'+getDate.getDate();
 			var getEnd = getDate.getFullYear()+'-'+(getDate.getMonth()+1)+'-'+(getDate.getDate()+6);
@@ -207,6 +223,7 @@ app.controller('schEmp',($scope,$http) => {
 				minDate: getStart,
 				maxDate: getEnd
 			});
+			flatpickr('.input-time-hmi',config3);
 			$scope.nik = res.data.nik;
 			angular.element('.scroll-to-top').click();
 		});

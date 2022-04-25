@@ -189,6 +189,14 @@ class Schedule extends CI_Model {
 			'shift_code' => $shift
 		])->row();
 	}
+	public function countAllowed($start,$end,$worktime)
+	{
+		$query = "SELECT AGE(
+			(SELECT CONCAT('2012-12-12',' ',(SELECT AGE('$end','$start')))::timestamp),
+			(SELECT CONCAT('2012-12-12',' ','$worktime')::timestamp)
+		) as out_allowed";
+		return $this->db->query($query)->row();
+	}
 	public function insertFromImport($data)
 	{
 		return $this->db->insert_batch('sys_sch_users', $data);

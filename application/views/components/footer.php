@@ -62,5 +62,8 @@
 	<?php if ($p=='scanlog/filter'): ?>
 		<script src="<?= base_url('assets/js/scanlog/filter.js') ?>"></script>
 	<?php endif ?>
+	<?php if ($p=='import_sql'): ?>
+		<script src="<?= base_url('assets/js/query.js') ?>"></script>
+	<?php endif ?>
 </body>
 </html>

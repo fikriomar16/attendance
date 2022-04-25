@@ -207,7 +207,7 @@
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold customSelect" name="shiftList" id="shiftList" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
+								<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold selectpicker" name="shiftList" id="shiftList" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
 									<option value="">All Shift</option>
 									<option value="PG">Shift PG</option>
 									<option value="SG">Shift SG</option>

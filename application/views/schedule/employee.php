@@ -14,7 +14,7 @@
 							<div class="col select-emp">
 								<div class="form-group form-label-group">
 									<label for="nik" class="small font-weight-bold">Pilih Karyawan</label>
-									<select name="nik" id="nik" ng-model="nik" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
+									<select name="nik" id="nik" ng-model="nik" class="form-control custom-select text-center border-left-primary show-menu-arrow" data-header="Pilih Karyawan" data-live-search="true">
 										<option ng-repeat="emp in emps" value="{{emp.pin}}">
 											{{emp.pin}} - {{emp.name}} [{{emp.dept_name}}]
 										</option>
@@ -22,28 +22,27 @@
 								</div>
 							</div>
 							<div class="col my-4 info-emp text-center d-none">
-								<span class="text-primary font-weight-bold">{{empNik}} - {{empName}}</span>
+								<span class="text-primary font-weight-bold h3">{{empNik}} - {{empName}}</span>
 							</div>
-							<div class="col-2">
+						</div>
+						<div class="row justify-content-center">
+							<div class="col-3 div-shift">
 								<div class="form-group form-label-group">
 									<label for="shift" class="small font-weight-bold">Shift</label>
-									<select name="shift" id="shift" ng-model="shift" class="form-control custom-select text-center show-menu-arrow" data-header="Pilih Shift" data-live-search="true">
-										<option ng-repeat="shift in shifts" value="{{shift.shift_code}}">
-											{{shift.shift_code}}
-										</option>
-									</select>
+									<input type="text" name="shift" id="shift" ng-model="shift" class="form-control text-center bg-light">
 								</div>
 							</div>
-						</div>
-						<div class="row justify-content-center div-tanggal">
-							<div class="col-lg-6">
+							<div class="col-4 my-4 info-shift text-center d-none">
+								<span class="text-primary font-weight-bold">Shift : {{shiftCode}}</span>
+							</div>
+							<div class="col-md-6">
 								<div class="form-group form-label-group">
-									<label for="masuk" class="small font-weight-bold">Tanggal</label>
-									<input type="date" name="tanggal" id="tanggal" ng-model="tanggal" class="form-control text-center bg-light">
+									<label for="work_time" class="small font-weight-bold">Durasi Jam Kerja</label>
+									<input type="text" name="work_time" id="work_time" ng-model="work_time" class="form-control text-center bg-light input-time-hmi">
 								</div>
 							</div>
 						</div>
-						<div class="row justify-content-center div-timestamp d-none">
+						<div class="row justify-content-center div-timestamp">
 							<div class="col-lg-6">
 								<div class="form-group form-label-group">
 									<label for="masuk" class="small font-weight-bold">Tanggal & Jam Masuk</label>
