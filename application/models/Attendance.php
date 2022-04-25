@@ -42,11 +42,11 @@ class Attendance extends CI_Model {
 				if($i===0) // first loop
 				{
 					$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-					$this->db->like($item, $_POST['search']['value']);
+					$this->db->like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				else
 				{
-					$this->db->or_like($item, $_POST['search']['value']);
+					$this->db->or_like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				if(count($column_search) - 1 == $i) //last loop
 				{
@@ -368,11 +368,11 @@ class Attendance extends CI_Model {
 				if($i===0) // first loop
 				{
 					$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-					$this->db->like($item, $_POST['search']['value']);
+					$this->db->like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				else
 				{
-					$this->db->or_like($item, $_POST['search']['value']);
+					$this->db->or_like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				if(count($column_search) - 1 == $i) //last loop
 				{
@@ -501,11 +501,11 @@ class Attendance extends CI_Model {
 				if($i===0) // first loop
 				{
 					$this->db->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
-					$this->db->like($item, $_POST['search']['value']);
+					$this->db->like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				else
 				{
-					$this->db->or_like($item, $_POST['search']['value']);
+					$this->db->or_like("LOWER($item,)" strtolower($_POST['search']['value']));
 				}
 				if(count($column_search) - 1 == $i) //last loop
 				{
