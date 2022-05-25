@@ -39,10 +39,46 @@ class AdminController extends CI_Controller {
 
 	public function countEmpVis()
 	{
+		// code lists
+		// 2: Minyak
+		// 3: Sayur
+		// 4: Bumbu
+		// 12: Bawang
+		// 5: Accounting
+		// 6: HR
+		// 7: Quality Control
+		// 8: PPIC
+		// 9: Technic
+		// 10: Warehouse
+		// 11: Purchasing
 		echo json_encode([
 			"countEmployee" => $this->admin->countEmpToday() ?? 0,
+			"countEmployeeTotal" => $this->admin->countEmpTotal() ?? 0,
 			"countOffice" => $this->admin->countOffToday() ?? 0,
-			"countVisitor" => $this->admin->countVisToday()->count_id ?? 0
+			"countOfficeTotal" => $this->admin->countOffTotal() ?? 0,
+			"countVisitor" => $this->admin->countVisToday()->count_id ?? 0,
+			"countEmployeeMinyak" => $this->admin->countDWSDept(2) ?? 0,
+			"countEmployeeMinyakTotal" => $this->admin->countDWSDeptTotal(2) ?? 0,
+			"countEmployeeSayur" => $this->admin->countDWSDept(3) ?? 0,
+			"countEmployeeSayurTotal" => $this->admin->countDWSDeptTotal(3) ?? 0,
+			"countEmployeeBumbu" => $this->admin->countDWSDept(4) ?? 0,
+			"countEmployeeBumbuTotal" => $this->admin->countDWSDeptTotal(4) ?? 0,
+			"countEmployeeBawang" => $this->admin->countDWSDept(12) ?? 0,
+			"countEmployeeBawangTotal" => $this->admin->countDWSDeptTotal(12) ?? 0,
+			"countOfficeAccounting" => $this->admin->countDWSDept(5) ?? 0,
+			"countOfficeAccountingTotal" => $this->admin->countDWSDeptTotal(5) ?? 0,
+			"countOfficeHR" => $this->admin->countDWSDept(6) ?? 0,
+			"countOfficeHRTotal" => $this->admin->countDWSDeptTotal(6) ?? 0,
+			"countOfficeQC" => $this->admin->countDWSDept(7) ?? 0,
+			"countOfficeQCTotal" => $this->admin->countDWSDeptTotal(7) ?? 0,
+			"countOfficePPIC" => $this->admin->countDWSDept(8) ?? 0,
+			"countOfficePPICTotal" => $this->admin->countDWSDeptTotal(8) ?? 0,
+			"countOfficeTechnic" => $this->admin->countDWSDept(9) ?? 0,
+			"countOfficeTechnicTotal" => $this->admin->countDWSDeptTotal(9) ?? 0,
+			"countOfficeWarehouse" => $this->admin->countDWSDept(10) ?? 0,
+			"countOfficeWarehouseTotal" => $this->admin->countDWSDeptTotal(10) ?? 0,
+			"countOfficePurchasing" => $this->admin->countDWSDept(11) ?? 0,
+			"countOfficePurchasingTotal" => $this->admin->countDWSDeptTotal(11) ?? 0,
 		],JSON_PRETTY_PRINT);
 	}
 
@@ -59,7 +95,7 @@ class AdminController extends CI_Controller {
 		$no = $_POST['start'];
 		foreach ($lists as $list) {
 			if (empty($list->shift)) {
-				$type = '<h5><span class="badge badge-info shadow">Visitor</span></h5>';
+				$type = '<h5><span class="badge badge-secondary shadow">Visitor</span></h5>';
 			} else {
 				if (substr($list->dept_name,0,4) == "Prod") {
 					$type = '<h5><span class="badge badge-success shadow">Employee</span></h5>';
@@ -72,11 +108,11 @@ class AdminController extends CI_Controller {
 			} else if (explode("-",$list->dev_alias)[0] == "OUT") {
 				$io = '<h5><span class="badge badge-pill badge-danger shadow">'.explode("-",$list->dev_alias)[0].'</span></h5>';
 			} else {
-				$io = '<h5><span class="badge badge-pill badge-secondary shadow">'.$list->dev_alias.'</span></h5>';
+				$io = '<h5><span class="badge badge-pill badge-info shadow">'.$list->dev_alias.'</span></h5>';
 			}
 			$row = [];
-			$row[] = $list->event_time;
-			$row[] = $list->name;
+			$row[] = date('H:i:s', strtotime($list->event_time));
+			$row[] = "$list->pin / $list->name";
 			$row[] = $type;
 			$row[] = $io;
 
@@ -96,6 +132,11 @@ class AdminController extends CI_Controller {
 		if (!$this->session->userdata('user')) {
 			redirect('login');
 		}
+		$this->session->set_userdata([
+			'late_date' => date("Y-m-d"),
+			'late_search_date' => date("Y-m-d"),
+			'late_dept' => "Prod. Minyak"
+		]);
 		$data = [
 			'title' => 'Late Notice'
 		];
@@ -107,6 +148,95 @@ class AdminController extends CI_Controller {
 	}
 
 	public function dt_late()
+	{
+		$list1 = $this->admin->datatable_late_emp();
+		$list2 = $this->admin->datatable_late_off();
+		$lists = array_merge($list1,$list2);
+
+		$event = array_column($lists, 'first_scan');
+		array_multisort($event, SORT_DESC, $lists);
+		$data = [];
+		$no = $_POST['start'];
+
+		foreach ($lists as $list) {
+			$row = [];
+			$row[] = $list->pin;
+			$row[] = $list->name;
+			$row[] = $list->dept_name;
+			$row[] = '<h5><span class="badge badge-warning text-dark shadow p-1">Keterlambatan : '.$list->late_duration.'</span></h5>';
+
+			$data[] = $row;
+		}
+		$output = [
+			'draw' => $_POST['draw'],
+			'recordsTotal' => $this->admin->count_all_late_emp() + $this->admin->count_all_late_off(),
+			'recordsFiltered' => $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off(),
+			'data' => $data,
+		];
+		echo json_encode($output,JSON_PRETTY_PRINT);
+	}
+
+	public function out_page()
+	{
+		if (!$this->session->userdata('user')) {
+			redirect('login');
+		}
+		$this->session->set_userdata([
+			'out_date' => date("Y-m-d"),
+			'out_search_date' => date("Y-m-d"),
+			'out_dept' => "Prod. Minyak"
+		]);
+		$data = [
+			'title' => 'Out Notice'
+		];
+		$this->load->view('components/header', $data);
+		$this->load->view('components/sidebar', $data);
+		$this->load->view('components/topbar', $data);
+		$this->load->view('administrator/out', $data);
+		$this->load->view('components/footer', $data);
+	}
+	public function dt_out()
+	{
+		$lists = $this->admin->datatable_out_emp();
+		$data = [];
+		$no = $_POST['start'];
+		foreach ($lists as $list) {
+			$outDur = date_create($list->out_duration);
+			$outAllow = date_create($list->out_allowed);
+			$difference = date_diff($outDur,$outAllow);
+			$diffMin = $difference->days * 24 * 60 + $difference->h * 60 + $difference->i;
+			$diffSec = $diffMin * 60 + $difference->s;
+			if ($diffMin == 0) {
+				$status = "$diffSec Detik";
+			} else {
+				$status = "$diffMin Menit";
+			}
+			$no++;
+			$row = [];
+			$row[] = $list->pin;
+			$row[] = $list->name;
+			$row[] = $list->shift;
+			$row[] = $list->dept_name;
+			$row[] = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$status.' </span></h5>';
+
+			$data[] = $row;
+		}
+		$output = [
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->admin->count_all_out_emp(),
+			"recordsFiltered" => $this->admin->count_filtered_out_emp(),
+			"data" => $data,
+		];
+		echo json_encode($output);
+	}
+
+	public function showMenuFor()
+	{
+		$user = $this->session->userdata('user');
+		echo json_encode($user);
+	}
+
+	public function dumpOutLate()
 	{
 		$list2 = $this->admin->getOut3a();
 		$outDur = $list2->out_duration;
@@ -123,12 +253,16 @@ class AdminController extends CI_Controller {
 				if ($i < $limit) {
 					$outAllow = $list->out_allowed;
 					$outDur = $list->out_duration;
-					if ($list->late_duration == null && $outDur != null) {
+					if ($list->late_duration == null && $outDur > $outAllow) {
 						$dur = date_create($outDur);
 						$allowed = date_create($outAllow);
 						$difference = date_diff($dur,$allowed);
 						$raw_status = $difference->days * 24 * 60 + $difference->h * 60 + $difference->i;
-						$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$raw_status.' Menit</span></h5>';
+						if ($raw_status != 0) {
+							$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$raw_status.' Menit</span></h5>';
+						} else {
+							$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.($raw_status * 60 + $difference->s).' Detik</span></h5>';
+						}
 					} else if ($list->late_duration !== null)  {
 						$raw_status = $list->late_duration;
 						$status = '<h5><span class="badge badge-warning text-dark shadow p-2">Terlambat : '.$raw_status.'</span></h5>';

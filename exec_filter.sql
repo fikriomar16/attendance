@@ -169,51 +169,49 @@ IF (select split_part(new.dev_alias, '-', 1))='OUT' THEN
 	END IF;
 END IF;
 IF (new.dev_alias in ('Office','Poliklinik')) THEN
-	IF EXISTS (SELECT code from auth_department,pers_person where pers_person.auth_dept_id=auth_department.id and pers_person.pin=new.pin and CAST(auth_department.code as integer) not in (2,3,4,12)) THEN
-		IF EXISTS (select masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN
-			INSERT INTO acc_transaction_2b(id,area_name,dept_name,dev_alias,dev_sn,event_time,name,pin,vid_linkage_handle,shift,date,masuk,pulang,verify_mode_name,verify_mode_no)
+	IF EXISTS (select masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN
+		INSERT INTO acc_transaction_2b(id,area_name,dept_name,dev_alias,dev_sn,event_time,name,pin,vid_linkage_handle,shift,date,masuk,pulang,verify_mode_name,verify_mode_no)
+		values (
+			new.id,
+			new.area_name,
+			new.dept_name,
+			new.dev_alias,
+			new.dev_sn,
+			new.event_time,
+			new.name,
+			new.pin,
+			new.vid_linkage_handle,
+			(SELECT shift from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+			(SELECT tanggal from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+			(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+			(SELECT pulang from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by pulang desc limit 1),
+			new.verify_mode_name,
+			new.verify_mode_no
+		);
+		IF EXISTS (SELECT * from acc_transaction_3b,sys_sch_users where sys_sch_users.nik=new.pin and acc_transaction_3b.pin=sys_sch_users.nik and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time and sys_sch_users.tanggal=acc_transaction_3b.date order by sys_sch_users.masuk desc limit 1) THEN
+			UPDATE acc_transaction_3b 
+			SET flag_sap = 1, last_scan = new.event_time
+			WHERE pin = new.pin and masuk = (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1);
+		ELSE
+			INSERT INTO acc_transaction_3b(area_name,dept_name,name,pin,shift,date,masuk,pulang,first_scan,flag_sap,out_allowed,shift_code)
 			values (
-				new.id,
 				new.area_name,
 				new.dept_name,
-				new.dev_alias,
-				new.dev_sn,
-				new.event_time,
 				new.name,
 				new.pin,
-				new.vid_linkage_handle,
 				(SELECT shift from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
 				(SELECT tanggal from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
 				(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
 				(SELECT pulang from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by pulang desc limit 1),
-				new.verify_mode_name,
-				new.verify_mode_no
+				new.event_time,
+				1,
+				(SELECT out_allowed from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
+				(SELECT shift_code from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)
 			);
-			IF EXISTS (SELECT * from acc_transaction_3b,sys_sch_users where sys_sch_users.nik=new.pin and acc_transaction_3b.pin=sys_sch_users.nik and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time and sys_sch_users.tanggal=acc_transaction_3b.date order by sys_sch_users.masuk desc limit 1) THEN
+			IF new.event_time > (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN
 				UPDATE acc_transaction_3b 
-				SET flag_sap = 1, last_scan = new.event_time
+				SET flag_sap = 1, late_duration = (SELECT AGE(new.event_time,(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)))
 				WHERE pin = new.pin and masuk = (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1);
-			ELSE
-				INSERT INTO acc_transaction_3b(area_name,dept_name,name,pin,shift,date,masuk,pulang,first_scan,flag_sap,out_allowed,shift_code)
-				values (
-					new.area_name,
-					new.dept_name,
-					new.name,
-					new.pin,
-					(SELECT shift from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
-					(SELECT tanggal from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
-					(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
-					(SELECT pulang from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by pulang desc limit 1),
-					new.event_time,
-					1,
-					(SELECT out_allowed from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1),
-					(SELECT shift_code from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)
-				);
-				IF new.event_time > (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1) THEN
-					UPDATE acc_transaction_3b 
-					SET flag_sap = 1, late_duration = (SELECT AGE(new.event_time,(SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1)))
-					WHERE pin = new.pin and masuk = (SELECT masuk from sys_sch_users where sys_sch_users.nik = new.pin and new.event_time<=sys_sch_users.sub_pulang and sys_sch_users.sub_masuk<=new.event_time order by masuk desc limit 1);
-				END IF;
 			END IF;
 		END IF;
 	END IF;

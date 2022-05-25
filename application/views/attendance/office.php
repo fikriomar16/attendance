@@ -46,7 +46,7 @@
 											<div class="row justify-content-between mx-1 my-3">
 												<div class="col-auto">
 													<div class="form-group form-label-group">
-														<div class="input-group">
+														<div class="input-group input-group-sm">
 															<div class="input-group-prepend">
 																<div class="input-group-text border-0 shadow-sm bg-white text-material-green"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Pilih Bulan & Tahun &nbsp;</div>
 															</div>
@@ -54,7 +54,7 @@
 														</div>
 													</div>
 												</div>
-												<div class="col">
+												<div class="col-auto">
 													<span class="text-primary font-weight-bold px-3">Rekap Kehadiran Sebulan</span>
 												</div>
 												<div class="col-auto">
@@ -62,7 +62,7 @@
 												</div>
 											</div>
 											<div class="table-responsive px-1">
-												<table class="table table-striped table-hover align-middle shadow-sm" id="sumTable" data-source="<?= base_url('attendance/att_sum_off') ?>">
+												<table class="table table-sm table-striped table-hover align-middle shadow-sm" id="sumTable" data-source="<?= base_url('attendance/att_sum_off') ?>">
 													<thead class="thead-light">
 														<tr>
 															<th>Date</th>
@@ -120,8 +120,8 @@
 																	<th>Scan Time</th>
 																	<th>Gate</th>
 																	<th>Shift</th>
-																	<th width="10%">In / Out</th>
-																	<th width="10%">Photo</th>
+																	<th>In / Out</th>
+																	<th>Photo</th>
 																</tr>
 															</thead>
 															<tbody id="tblHistory"></tbody>
@@ -132,7 +132,7 @@
 										</div>
 										<div class="col-lg-4 p-2 my-auto">
 											<div class="row justify-content-center">
-												<div class="col-lg-8">
+												<div class="col-md-8 col-6">
 													<img src="<?= base_url('assets/img/undraw_profile_2.svg') ?>" alt="Office" class="img-fluid off-photo rounded" id="off-photo">
 												</div>
 											</div>
@@ -144,7 +144,7 @@
 					</div>
 				</div>
 				<div class="card-footer">
-					<button type="button" class="btn btn-danger btn-rounded shadow-sm col-lg-2 col-md-3 col-6" ng-click="closeShow()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
+					<button type="button" class="btn btn-danger btn-rounded shadow-sm col-md-4 col-6" ng-click="closeShow()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
 				</div>
 			</div>
 		</div>
@@ -152,7 +152,7 @@
 	<div class="row justify-content-between mt-1 mb-3">
 		<div class="col-lg-auto">
 			<div class="form-group form-label-group">
-				<div class="input-group">
+				<div class="input-group input-group-sm">
 					<div class="input-group-prepend">
 						<div class="input-group-text border-0 shadow-sm bg-white text-material-blue"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Search </div>
 					</div>
@@ -178,10 +178,10 @@
 			<div class="card border-0 border-bottom-primary shadow mb-4 rounded card-attendance" data-source="<?= base_url('attresume_off/') ?>">
 				<div class="card-header">
 					<div class="row justify-content-between">
-						<div class="col-lg-auto">
+						<div class="col-auto">
 							<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
 						</div>
-						<div class="col-lg-auto">
+						<div class="col-auto">
 							<button class="btn btn-primary btn-rounded btn-sm mx-3" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
@@ -191,25 +191,33 @@
 				<div class="card-body p-3">
 					<div class="row justify-content-between my-1 px-1">
 						<div class="col-auto my-1">
-							<div class="btn-group" role="group">
+							<div class="btn-group btn-group-sm" role="group">
 								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceOff') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_off') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
 							</div>
 						</div>
-						<div class="col-xl-6 col-md-9 my-1">
+						<div class="col-xl-7 col-md-9 my-1">
 							<div class="input-group shadow-sm">
 								<div class="input-group-prepend">
 									<div class="input-group-text bg-primary border-0 shadow">
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold selectpicker" name="shift_filter" id="shift_filter" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
+								<?php if($this->session->userdata('user')->is_spv == 1): ?>
+									<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold selectpicker" name="deptList" id="deptList" ng-change="getDept()" ng-model="deptList" data-style="btn-light font-weight-bold" data-header="Pilih Department">
+										<option value="">All Office Dept</option>
+										<?php foreach ($deptlists as $list): ?>
+											<option value="<?= $list->id ?>"><?= $list->name ?></option>
+										<?php endforeach; ?>
+									</select>
+								<?php endif; ?>
+								<select class="form-control custom-select col-3 font-weight-bold selectpicker" name="shift_filter" id="shift_filter" ng-change="getShift()" ng-model="shiftList" data-style="font-weight-bold">
 									<option value="">All Shift</option>
 									<option value="PG">Shift PG</option>
 									<option value="SG">Shift SG</option>
 									<option value="MM">Shift MM</option>
 								</select>
-								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data..." ng-keyup="search()" ng-model="searchInTable">
+								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data... (Nama,NIK,Shift)" ng-change="search()" ng-model="searchInTable">
 							</div>
 						</div>
 					</div>
@@ -224,7 +232,7 @@
 											<th>NIK</th>
 											<th>Shift</th>
 											<th>Departement</th>
-											<th width="10%">Action</th>
+											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody></tbody>

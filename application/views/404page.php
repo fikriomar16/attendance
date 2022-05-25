@@ -8,7 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/app.css') ?>">
 	<title>404 Page Not Found</title>
 </head>
-<body class="bg-gradient-light">
+<body class="bg-light">
 	<div class="container">
 		<div class="row justify-content-center min-vh-100">
 			<div class="col my-auto">

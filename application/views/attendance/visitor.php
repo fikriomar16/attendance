@@ -89,10 +89,10 @@
 			<div class="card border-0 border-bottom-info shadow mb-4 rounded card-visitor " data-source="<?= base_url('attresume_vis/') ?>">
 				<div class="card-header">
 					<div class="row justify-content-between">
-						<div class="col-lg-auto">
+						<div class="col-auto">
 							<span class="text-info font-weight-bold px-3"><?= $title ?> Data</span>
 						</div>
-						<div class="col-lg-auto">
+						<div class="col-auto">
 							<button class="btn btn-info btn-rounded btn-sm mx-3" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
@@ -102,7 +102,7 @@
 				<div class="card-body p-3">
 					<div class="row justify-content-between my-1">
 						<div class="col-auto my-1">
-							<div class="btn-group" role="group">
+							<div class="btn-group btn-group-sm" role="group">
 								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceVis') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
 								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_vis') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
 							</div>
@@ -114,7 +114,7 @@
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data..." ng-keyup="search()" ng-model="searchInTable">
+								<input type="text" class="form-control border-0 bg-light" id="searchInTable" placeholder="Cari Data..." ng-change="search()" ng-model="searchInTable">
 							</div>
 						</div>
 					</div>
@@ -129,7 +129,7 @@
 											<th>Personnel</th>
 											<th>First Scan</th>
 											<th>Last Scan</th>
-											<th width="10%">Action</th>
+											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody></tbody>

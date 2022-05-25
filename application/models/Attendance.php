@@ -33,6 +33,9 @@ class Attendance extends CI_Model {
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		}
 		$this->db->group_by('name,dept_name,pin,shift');
 		$i = 0;
 		foreach ($column_search as $item) // loop column
@@ -79,6 +82,9 @@ class Attendance extends CI_Model {
 	public function count_all_employee()
 	{
 		$table = 'acc_transaction_3a';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		}
 		return $this->db->select("name,dept_name,pin,shift")->from($table)->where([
 			'date' => $this->session->userdata('att_emp_date')
 		])->group_by('name,dept_name,pin,shift')->count_all_results();
@@ -492,6 +498,9 @@ class Attendance extends CI_Model {
 		if ($this->session->userdata('att_off_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_off_shift'));
 		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		}
 		$this->db->group_by('name,dept_name,pin,shift');
 		$i = 0;
 		foreach ($column_search as $item) // loop column
@@ -538,6 +547,9 @@ class Attendance extends CI_Model {
 	public function count_all_office()
 	{
 		$table = 'acc_transaction_3b';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		}
 		return $this->db->select("name,dept_name,pin,shift")->from($table)->where([
 			'date' => $this->session->userdata('att_off_date')
 		])->group_by('name,dept_name,pin,shift')->count_all_results();
@@ -726,6 +738,20 @@ class Attendance extends CI_Model {
 			'date' => $this->session->userdata('att_off_date_search'),
 			'pin' => $this->session->userdata('att_off_nik')
 		])->count_all_results();
+	}
+
+	public function prodEmpList()
+	{
+		return $this->db->select('id, code, name')->from('auth_department')->where([
+			'lower(left(name,4))' => 'prod'
+		])->get()->result();
+	}
+
+	public function nonProdEmpList()
+	{
+		return $this->db->select('id, code, name')->from('auth_department')->where([
+			'lower(left(name,4)) !=' => 'prod'
+		])->get()->result();
 	}
 
 }

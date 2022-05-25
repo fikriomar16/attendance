@@ -35,6 +35,9 @@
 	<?php if ($p=='late'): ?>
 		<script src="<?= base_url('assets/js/administrator/late.js') ?>"></script>
 	<?php endif ?>
+	<?php if ($p=='out'): ?>
+		<script src="<?= base_url('assets/js/administrator/out.js') ?>"></script>
+	<?php endif ?>
 	<?php if ($p=='schedule/employee'): ?>
 		<script src="<?= base_url('assets/js/schedule/employee.js') ?>"></script>
 	<?php endif ?>
@@ -64,6 +67,9 @@
 	<?php endif ?>
 	<?php if ($p=='import_sql'): ?>
 		<script src="<?= base_url('assets/js/query.js') ?>"></script>
+	<?php endif ?>
+	<?php if ($p=='auth/manage'): ?>
+		<script src="<?= base_url('assets/js/access/access.js') ?>"></script>
 	<?php endif ?>
 </body>
 </html>

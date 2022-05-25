@@ -24,6 +24,11 @@ class AttendanceController extends CI_Controller {
 		if (!$this->session->userdata('user')) {
 			redirect('login');
 		}
+		if (in_array($this->session->userdata('user')->dept_code, [2,3,4,12]) || $this->session->userdata('user')->is_spv == 1) {
+		} else {
+			$this->session->set_flashdata('error', 'Peringatan: Anda tidak memiliki akses untuk ini !!');
+			redirect('/');
+		}
 		$this->session->set_userdata([
 			'att_emp_date' => date("Y-m-d"),
 			'att_emp_date_search' => date("Y-m-d"),
@@ -35,6 +40,7 @@ class AttendanceController extends CI_Controller {
 		$path_port = '8098';
 		$data = [
 			'title' => 'Employee Attendance',
+			'deptlists' => $this->attendance->prodEmpList(),
 			'path_local' => "http://localhost:$path_port",
 			'path_url' => "http://10.126.25.150:$path_port"
 		];
@@ -295,7 +301,7 @@ class AttendanceController extends CI_Controller {
 		$path_port = '8098';
 		$local = 'localhost';
 		$url = '10.126.25.150';
-		$path = "http://$local:$path_port";
+		$path = "http://$url:$path_port";
 		$list = $this->attendance->dt_history_emp();
 		$data = [];
 		$no = $_POST['start'];
@@ -333,6 +339,11 @@ class AttendanceController extends CI_Controller {
 		if (!$this->session->userdata('user')) {
 			redirect('login');
 		}
+		if (!in_array($this->session->userdata('user')->dept_code, [2,3,4,12]) || $this->session->userdata('user')->is_spv == 1) {
+		} else {
+			$this->session->set_flashdata('error', 'Peringatan: Anda tidak memiliki akses untuk ini !!');
+			redirect('/');
+		}
 		$this->session->set_userdata([
 			'att_off_date' => date("Y-m-d"),
 			'att_off_date_search' => date("Y-m-d"),
@@ -343,7 +354,8 @@ class AttendanceController extends CI_Controller {
 		$this->session->unset_userdata('att_off_shift');
 		$path_port = '8098';
 		$data = [
-			'title' => 'Management Attendance',
+			'title' => 'Office Attendance',
+			'deptlists' => $this->attendance->nonProdEmpList(),
 			'path_local' => "http://localhost:$path_port",
 			'path_url' => "http://10.126.25.150:$path_port"
 		];
@@ -543,7 +555,7 @@ class AttendanceController extends CI_Controller {
 		$path_port = '8098';
 		$local = 'localhost';
 		$url = '10.126.25.150';
-		$path = "http://$local:$path_port";
+		$path = "http://$url:$path_port";
 		$list = $this->attendance->dt_history_off();
 		$data = [];
 		$no = $_POST['start'];
@@ -598,13 +610,13 @@ class AttendanceController extends CI_Controller {
 			$shift = '';
 		}
 		$data = [
-			"title" => "Laporan Kehadiran Karyawan",
+			"title" => "Laporan Kehadiran Employee",
 			"lists" => $this->attendance->dataReportAttEmp(),
 			"shift" => $this->session->userdata('att_emp_shift') ?? 'All',
 			"date" => $this->session->userdata('att_emp_date')
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Karyawan_'.$this->session->userdata('att_emp_date').$shift;
+		$file_pdf = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -643,14 +655,14 @@ class AttendanceController extends CI_Controller {
 		$nik = $this->session->userdata('att_emp_nik');
 		$name = $this->attendance->get_by_nik_employee($nik)->name;
 		$data = [
-			"title" => "Rekap Kehadiran Bulanan Karyawan",
+			"title" => "Rekap Kehadiran Bulanan Employee",
 			"lists" => $this->attendance->dataRecapSumEmp(),
 			"month" => $month,
 			"nik" => $nik,
 			"name" => $name
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Bulanan-Karyawan_'.$bulan."-".$nik."_".$name;
+		$file_pdf = 'Laporan-Kehadiran-Bulanan-Employee_'.$bulan."-".$nik."_".$name;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -690,7 +702,7 @@ class AttendanceController extends CI_Controller {
 		$date = $this->session->userdata('att_emp_date');
 		$shift = $lists[0]->shift;
 		$data = [
-			"title" => "Riwayat Scan Karyawan",
+			"title" => "Riwayat Scan Employee",
 			"lists" => $lists,
 			"nik" => $nik,
 			"name" => $name,
@@ -698,7 +710,7 @@ class AttendanceController extends CI_Controller {
 			"shift" => $shift
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Riwayat-Scan-Karyawan_'.$nik."-".$name."_".$date;
+		$file_pdf = 'Laporan-Riwayat-Scan-Employee_'.$nik."-".$name."_".$date;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -777,7 +789,7 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
-		$title = 'Laporan-Kehadiran-Karyawan_'.$this->session->userdata('att_emp_date').$shift;
+		$title = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift;
 		header("Content-type: application/csv");
 		header("Content-Disposition: attachment; filename=".$title.".csv");
 		header("Pragma: no-cache");

@@ -14,7 +14,10 @@
 						<img class="img-profile rounded-circle" src="<?= base_url('assets/img/undraw_profile.svg') ?>">
 					</a>
 					<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in">
-						<div class="dropdown-header pb-5 d-sm-inline d-md-none">
+						<div class="dropdown-header pb-1">
+							<i class="fas fa-fw fa-building text-primary"></i> &nbsp; <?= $this->session->userdata('user')->dept_name ?? '' ?>
+						</div>
+						<div class="dropdown-header pb-3 d-sm-inline d-md-none">
 							<i class="fas fa-fw fa-user-circle"></i> &nbsp; <?= $this->session->userdata('user')->nama ?? '' ?>
 						</div>
 						<a class="dropdown-item d-none" href="#">

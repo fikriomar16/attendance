@@ -13,7 +13,7 @@
 <body class="bg-gradient-light" ng-app="loginPage" ng-controller="loginController" data-home="<?= base_url() ?>">
 	<div class="container">
 		<div class="row justify-content-center min-vh-100">
-			<div class="col-lg-6 m-auto">
+			<div class="col-lg-6 col-md-10 m-auto">
 				<div class="card border-0 shadow rounded-lg">
 					<div class="card-header text-center h4 font-weight-bold text-uppercase p-3 border-0 shadow-sm">
 						<i class="fab fa-fw fa-envira"></i>&nbsp; Selamat Datang

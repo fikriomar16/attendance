@@ -13,9 +13,8 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 		<div class="sidebar-brand-text mx-3 my-auto"><img class="img-fluid rounded company-logo" src="<?= base_url('assets/img/indofoodcbp_mini.png') ?>"></div>
 	</a>
 	<?php $p = uri_string(); ?>
-	<hr class="sidebar-divider">
 	<!-- Administrator -->
-	<div class="sidebar-heading mr-3">
+	<div class="sidebar-heading mr-3 mt-3">
 		Dashboard
 	</div>
 	<li class="nav-item <?= ($p=='dashboard'||$p=='')?'active':'' ?>">
@@ -30,29 +29,41 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 			<span>Late Notice</span>
 		</a>
 	</li>
+	<li class="nav-item <?= ($p=='out')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('out') ?>">
+			<i class="fas fa-fw fa-shoe-prints"></i>
+			<span>Out Notice</span>
+		</a>
+	</li>
 	<hr class="sidebar-divider">
 	<!-- Attendance Data -->
 	<div class="sidebar-heading">
 		Attendance Data
 	</div>
+	<?php if (in_array($this->session->userdata('user')->dept_code, [2,3,4,12]) || $this->session->userdata('user')->is_spv == 1): ?>
 	<li class="nav-item <?= ($p=='attendance/employee')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('attendance/employee') ?>">
 			<i class="fas fa-fw fa-fingerprint"></i>
 			<span>Employee</span>
 		</a>
 	</li>
+	<?php endif; ?>
+	<?php if (!in_array($this->session->userdata('user')->dept_code, [2,3,4,12]) || $this->session->userdata('user')->is_spv == 1): ?>
 	<li class="nav-item <?= ($p=='attendance/office')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('attendance/office') ?>">
 			<i class="fas fa-fw fa-building"></i>
 			<span>Office</span>
 		</a>
 	</li>
+	<?php endif; ?>
+	<?php if ($this->session->userdata('user')->is_spv == 1): ?>
 	<li class="nav-item <?= ($p=='attendance/visitor')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('attendance/visitor') ?>">
 			<i class="far fa-fw fa-credit-card"></i>
 			<span>Visitor</span>
 		</a>
 	</li>
+	<?php endif; ?>
 	<hr class="sidebar-divider">
 	<!-- User Schedule -->
 	<div class="sidebar-heading">
@@ -64,6 +75,7 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 			<span>Employee</span>
 		</a>
 	</li>
+	<?php if ($this->session->userdata('user')->is_spv == 1): ?>
 	<hr class="d-none sidebar-divider">
 	<!-- Setup -->
 	<div class="d-none sidebar-heading">
@@ -98,6 +110,18 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 			<span>Scan Log</span>
 		</a>
 	</li>
+	<hr class="sidebar-divider">
+	<!-- Auth-->
+	<div class="sidebar-heading">
+		Access
+	</div>
+	<li class="nav-item <?= ($p=='auth/manage')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('auth/manage') ?>">
+			<i class="fas fa-fw fa-user-circle"></i>
+			<span>Authorization</span>
+		</a>
+	</li>
+	<?php endif; ?>
 	<!-- Divider -->
 	<hr class="sidebar-divider d-none d-md-block">
 	<!-- Sidebar Toggler (Sidebar) -->

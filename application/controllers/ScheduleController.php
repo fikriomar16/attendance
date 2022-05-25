@@ -15,7 +15,7 @@ class ScheduleController extends CI_Controller {
 
 	public function index()
 	{
-		redirect('/');
+		redirect('/schedule/employee');
 	}
 
 	public function get_yesterday_emp()
@@ -91,7 +91,8 @@ class ScheduleController extends CI_Controller {
 		]);
 		$data = [
 			'title' => 'Employee Schedule',
-			'nav_title' => 'Employee Schedule Manager'
+			'nav_title' => 'Employee Schedule Manager',
+			'deptlists' => $this->schedule->deptLists()
 		];
 		$this->load->view('components/header', $data);
 		$this->load->view('components/sidebar', $data);

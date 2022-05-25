@@ -25,4 +25,13 @@
 	<title><?= $title ?? '' ?></title>
 </head>
 <body id="page-top" data-home="<?= base_url() ?>">
+	<?php if ($this->session->flashdata('error')): ?>
+		<div class="py-2 px-4 bg-danger text-light font-weight-bold text-xs div-notice"><?= $this->session->flashdata('error') ?></div>
+	<?php endif; ?>
+	<?php if ($this->session->flashdata('warning')): ?>
+		<div class="py-2 px-4 bg-warning text-light font-weight-bold text-xs div-notice"><?= $this->session->flashdata('warning') ?></div>
+	<?php endif; ?>
+	<?php if ($this->session->flashdata('success')): ?>
+		<div class="py-2 px-4 bg-success text-light font-weight-bold text-xs div-notice"><?= $this->session->flashdata('success') ?></div>
+	<?php endif; ?>
 	<div id="wrapper">

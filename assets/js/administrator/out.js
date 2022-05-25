@@ -1,8 +1,8 @@
 const base = angular.element('body').data('home');
 const source = angular.element('#dataTable').data('source');
 const refreshPerMin = 0.3;
-const app = angular.module('lateApp', []);
-app.controller('lateController',($scope,$http) => {
+const app = angular.module('outApp', []);
+app.controller('outController',($scope,$http) => {
 	const table = angular.element('#dataTable').DataTable({
 		// "sDom" : 'tipr',
 		"pageLength": 50,

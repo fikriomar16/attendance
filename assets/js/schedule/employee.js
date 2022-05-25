@@ -55,6 +55,7 @@ app.controller('schEmp',($scope,$http) => {
 	fp3[0];
 	table.DataTable({
 		"sDom" : 'tipr',
+		"pageLength": 25,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,

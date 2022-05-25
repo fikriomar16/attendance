@@ -156,17 +156,25 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<button type="button" class="btn btn-primary" ng-click="newSchedule()"><i class="fas fa-fw fa-plus-circle"></i> New Schedule</button>
-								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import from Excel</button>
+								<button type="button" class="btn btn-success" ng-click="csvButton()"><i class="fas fa-fw fa-upload"></i> Import Excel</button>
 							</div>
 						</div>
-						<div class="col-xl-4 col-md-6 my-1">
+						<div class="col-xl-6 col-md-8 my-1">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<div class="input-group-text bg-primary border-0">
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
-								<input type="text" class="form-control" id="searchInTable" placeholder="Cari Data..." ng-keyup="search()" ng-model="searchInTable">
+								<?php if($this->session->userdata('user')->is_spv == 1): ?>
+									<select class="form-control custom-select col-4 bg-light btn-light font-weight-bold selectpicker" name="deptList" id="deptList" ng-change="getDept()" ng-model="deptList" data-style="btn-light font-weight-bold" data-header="Pilih Department">
+										<option value="">All Prod. Dept</option>
+										<?php foreach ($deptlists as $list): ?>
+											<option value="<?= $list->id ?>"><?= $list->name ?></option>
+										<?php endforeach; ?>
+									</select>
+								<?php endif; ?>
+								<input type="text" class="form-control" id="searchInTable" placeholder="Cari Data... (Nama / NIK)" ng-change="search()" ng-model="searchInTable">
 							</div>
 						</div>
 					</div>
@@ -180,7 +188,7 @@
 											<th>Name</th>
 											<th>NIK</th>
 											<th>Departement</th>
-											<th width="10%">Action</th>
+											<th>Action</th>
 										</tr>
 									</thead>
 									<tbody></tbody>

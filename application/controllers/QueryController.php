@@ -5,6 +5,13 @@ class QueryController extends CI_Controller {
 
 	public function index()
 	{
+		if (!$this->session->userdata('user')) {
+			redirect('login');
+		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->session->set_flashdata('error', 'Peringatan: Anda tidak memiliki akses untuk ini !!');
+			redirect('/');
+		}
 		$data = [
 			'title' => 'Import SQL File',
 			'nav_title' => 'IMPORT SQL FILE'

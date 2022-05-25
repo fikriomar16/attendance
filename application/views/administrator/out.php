@@ -1,11 +1,11 @@
-<div class="container-fluid" ng-app="lateApp" ng-controller="lateController">
+<div class="container-fluid" ng-app="outApp" ng-controller="outController">
 	<div class="row justify-content-center">
 		<div class="col-xl-12">
 			<div class="card border-0 border-bottom-warning shadow mb-4 rounded">
 				<div class="card-header border-0 shadow-sm h-100 px-4">
 					<div class="row justify-content-between">
 						<div class="col-auto my-auto">
-							<p class="text-primary font-weight-bold h6">Late Notice</p>
+							<p class="text-primary font-weight-bold h6">Out Notice</p>
 						</div>
 						<div class="col-auto my-auto">
 							<button class="btn btn-primary btn-rounded btn-sm" type="button" ng-click="reloadTable()">
@@ -18,7 +18,7 @@
 					<div class="row justify-content-center my-2">
 						<div class="col my-1">
 							<div class="table-responsive mx-1">
-								<table class="table table-sm table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('dt_late') ?>">
+								<table class="table table-sm table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('dt_out') ?>">
 									<thead class="thead-light">
 										<tr>
 											<th class="text-center">NIK</th>

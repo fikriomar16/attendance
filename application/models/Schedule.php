@@ -12,6 +12,9 @@ class Schedule extends CI_Model {
 		$column_order = [null,$table.'.nama',$table.'.nik',$join2.'.name'];
 		$column_search = [$table.'.nama',$table.'.nik',$join2.'.name'];
 		$this->db->select("$table.nama,$table.nik,$join2.name as dept_name")->from($table)->join($join3,"$table.nik = $join3.pin","left")->join($join2,"$join3.auth_dept_id = $join2.id")->group_by("nama,nik,dept_name");
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("$join2.name", $this->session->userdata('user')->dept_name);
+		}
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -59,6 +62,9 @@ class Schedule extends CI_Model {
 		$table = 'sys_sch_users';
 		$join2 = 'auth_department';
 		$join3 = 'pers_person';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("$join2.name", $this->session->userdata('user')->dept_name);
+		}
 		return $this->db->select("$table.nama,$table.nik,$join2.name as dept_name")->from($table)->join($join3,"$table.nik = $join3.pin","left")->join($join2,"$join3.auth_dept_id = $join2.id")->group_by("nama,nik,dept_name")->count_all_results();
 	}
 	public function get_by_id_employee($id)
@@ -155,6 +161,9 @@ class Schedule extends CI_Model {
 	{
 		$table = 'pers_person';
 		$table2 = 'auth_department';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("$table.name", $this->session->userdata('user')->dept_name);
+		}
 		return $this->db->select("$table.*,$table2.code,$table2.name as dept_name")->from($table)->join($table2,$table.'.auth_dept_id = '.$table2.'.id', 'left')->order_by('code','asc')->get()->result();
 	}
 	public function checkShift()
@@ -200,6 +209,10 @@ class Schedule extends CI_Model {
 	public function insertFromImport($data)
 	{
 		return $this->db->insert_batch('sys_sch_users', $data);
+	}
+	public function deptLists()
+	{
+		return $this->db->select('id, code, name')->from('auth_department')->get()->result();
 	}
 
 }

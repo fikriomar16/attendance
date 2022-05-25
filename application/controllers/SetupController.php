@@ -22,6 +22,10 @@ class SetupController extends CI_Controller {
 		if (!$this->session->userdata('user')) {
 			redirect('login');
 		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->session->set_flashdata('error', 'Peringatan: Anda tidak memiliki akses untuk ini !!');
+			redirect('/');
+		}
 		$data = [
 			'title' => 'Duration Setup',
 			'nav_title' => 'Duration Manager'
@@ -152,6 +156,10 @@ class SetupController extends CI_Controller {
 	{
 		if (!$this->session->userdata('user')) {
 			redirect('login');
+		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->session->set_flashdata('error', 'Peringatan: Anda tidak memiliki akses untuk ini !!');
+			redirect('/');
 		}
 		$data = [
 			'title' => 'Shift Setup',

@@ -63,6 +63,12 @@ $route = [
 
 	'login' => 'AuthController',
 	'auth' => 'AuthController/check_auth',
+	'auth/dt_auth' => 'AuthController/dt_auth',
+	'auth/manage' => 'AuthController/manage',
+	'saveAccount' => 'AuthController/saveAccount',
+	'deleteAccount/(:any)' => 'AuthController/deleteAccount/$1',
+	'checkUsername/(:any)' => 'AuthController/checkUsername/$1',
+	'get_by_id_acc/(:any)' => 'AuthController/get_by_id_acc/$1',
 	'logout' => 'AuthController/logout',
 
 	'sideToggle/(:any)' => 'AdminController/sideToggle/$1',
@@ -74,6 +80,8 @@ $route = [
 	'countEmpVis' => 'AdminController/countEmpVis',
 	'late' => 'AdminController/late_page',
 	'dt_late' => 'AdminController/dt_late',
+	'out' => 'AdminController/out_page',
+	'dt_out' => 'AdminController/dt_out',
 
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',
