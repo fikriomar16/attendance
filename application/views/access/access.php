@@ -108,14 +108,14 @@
 							<div class="col-auto">
 								<div class="custom-control custom-switch">
 									<input type="checkbox" class="custom-control-input" id="is_spv" name="is_spv" ng-model="is_spv" ng-change="checkSpv()">
-									<label class="custom-control-label" for="is_spv">Tipe Akun: {{spvStatus}}</label>
+									<label class="custom-control-label" for="is_spv">Level: {{spvStatus}}</label>
 								</div>
 							</div>
 						</div>
 					</form>
 				</div>
 				<div class="modal-footer border-0">
-					<button type="button" class="btn btn-sm btn-rounded btn-primary shadow-sm m-2" ng-click="saveAcc()"><i class="fas fa-fw fa-save"></i> Simpan Data</button>
+					<button type="button" class="btn btn-sm btn-rounded btn-primary shadow-sm m-2" id="btn-save-acc" ng-click="saveAcc()"><i class="fas fa-fw fa-save"></i> Simpan Data</button>
 					<button type="button" class="btn btn-sm btn-rounded btn-secondary shadow-sm m-2" data-dismiss="modal"><i class="fas fa-fw fa-times-circle"></i> Batal</button>
 				</div>
 			</div>

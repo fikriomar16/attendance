@@ -119,7 +119,10 @@ class AuthController extends CI_Controller {
 	{
 		$error = [];
 		$form = json_decode(file_get_contents("php://input"));
-		if (empty($form->username) || empty($form->password)) {
+		if (empty($form->username) || empty($form->password) || empty($form->auth_dept_id)) {
+			if (empty($form->auth_dept_id)) {
+				$error[] = "Departement Wajib Dipilih";
+			}
 			if (empty($form->username)) {
 				$error[] = "Username Wajib Diisi";
 			}

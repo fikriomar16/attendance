@@ -166,14 +166,14 @@ app.controller('schEmp',($scope,$http) => {
 			if (res.data.error) {
 				var list = '';
 				var loop = 0;
+				list+='<ul class="text-left">';
 				while (loop < res.data.error.length) {
-					list+='<ul class="text-left">';
 					list+='<li>';
 					list+=res.data.error[loop];
 					list+='</li>';
-					list+='</ul>';
 					loop++;
 				}
+				list+='</ul>';
 				listErrorNotif(list);
 			} else if (res.data.success) {
 				table_sch.DataTable().ajax.reload();

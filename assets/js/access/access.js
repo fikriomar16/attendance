@@ -64,7 +64,9 @@ app.controller('accessPage',($scope,$http) => {
 			$http.get(base+'checkUsername/'+username).then((result) => {
 				if (result.data.error) {
 					errorNotif(result.data.error);
-					$scope.username = '';
+					angular.element('#btn-save-acc').addClass('d-none')
+				} else {
+					angular.element('#btn-save-acc').removeClass('d-none');
 				}
 			});
 		}
@@ -95,14 +97,14 @@ app.controller('accessPage',($scope,$http) => {
 			if (res.data.error) {
 				var list = '';
 				var loop = 0;
+				list+='<ul class="text-left">';
 				while (loop < res.data.error.length) {
-					list+='<ul class="text-left">';
 					list+='<li>';
 					list+=res.data.error[loop];
 					list+='</li>';
-					list+='</ul>';
 					loop++;
 				}
+				list+='</ul>';
 				listErrorNotif(list);
 			} else if (res.data.success) {
 				$scope.reloadTable();

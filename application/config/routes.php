@@ -80,8 +80,12 @@ $route = [
 	'countEmpVis' => 'AdminController/countEmpVis',
 	'late' => 'AdminController/late_page',
 	'dt_late' => 'AdminController/dt_late',
+	'get_late' => 'AdminController/get_late',
 	'out' => 'AdminController/out_page',
 	'dt_out' => 'AdminController/dt_out',
+	'get_out' => 'AdminController/get_out',
+	'late/reportLate' => 'AdminController/reportLate',
+	'out/reportOut' => 'AdminController/reportOut',
 
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',

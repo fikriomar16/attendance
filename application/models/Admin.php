@@ -264,12 +264,14 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		$order = ["late_duration" => 'desc'];
 		$column_order = ["$table.pin","$table.name",'shift',"dept_name","late_duration"];
-		$column_search = ["$table.pin","$table.name",'shift',"dept_name"];
+		$column_search = ["$table.pin","$table.name",'shift',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('late_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('late_dept'));
 		}
 		$this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('late_date') ?? date('Y-m-d'),
+			"date" => $this->session->userdata('late_search_date') ?? date('Y-m-d'),
 			"late_duration !=" => null
 		])->where("$table3.code IN (2,3,4,12)");
 		$i = 0;
@@ -321,9 +323,11 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('late_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('late_dept'));
 		}
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('late_date') ?? date('Y-m-d'),
+			"date" => $this->session->userdata('late_search_date') ?? date('Y-m-d'),
 			"late_duration !=" => null
 		])->where("$table3.code IN (2,3,4,12)")->count_all_results();
 	}
@@ -335,12 +339,14 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		$order = ["late_duration" => 'desc'];
 		$column_order = ["$table.pin","$table.name",'shift',"dept_name","late_duration"];
-		$column_search = ["$table.pin","$table.name",'shift',"dept_name"];
+		$column_search = ["$table.pin","$table.name",'shift',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('late_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('late_dept'));
 		}
 		$this->db->select("$table.*,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('late_date') ?? date('Y-m-d'),
+			"date" => $this->session->userdata('late_search_date') ?? date('Y-m-d'),
 			"late_duration !=" => null
 		]);
 		$i = 0;
@@ -392,9 +398,11 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('late_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('late_dept'));
 		}
 		return $this->db->select("$table.*,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('late_date') ?? date('Y-m-d'),
+			"date" => $this->session->userdata('late_search_date') ?? date('Y-m-d'),
 			"late_duration !=" => null
 		])->count_all_results();
 	}
@@ -411,7 +419,7 @@ class Admin extends CI_Model {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		}
 		$this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('out_date') ?? date('Y-m-d')
+			"date" => $this->session->userdata('out_search_date') ?? date('Y-m-d')
 		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
@@ -464,8 +472,69 @@ class Admin extends CI_Model {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		}
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
-			"date" => $this->session->userdata('out_date') ?? date('Y-m-d')
+			"date" => $this->session->userdata('out_search_date') ?? date('Y-m-d')
 		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)")->count_all_results();
+	}
+
+	public function deptLists()
+	{
+		return $this->db->select('id, code, name')->from('auth_department')->get()->result();
+	}
+
+	public function lateReportQuery()
+	{
+		$date = $this->session->userdata('late_search_date') ?? date('Y-m-d');
+		$andwhere = '';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$andwhere = "AND dept_name = '".$this->session->userdata('user')->dept_name."'";
+		} else {
+			if (!empty($this->session->userdata('late_dept'))) {
+				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
+			}
+		}
+		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND auth_department.code IN (2,3,4,12) AND date = '$date' $andwhere
+		UNION
+		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM acc_transaction_3b WHERE late_duration IS NOT NULL AND date = '$date' $andwhere
+		ORDER BY late_duration DESC";
+		return $this->db->query($query);
+	}
+	public function getDataLateReport()
+	{
+		return $this->lateReportQuery()->result();
+	}
+	public function getCountLateReport()
+	{
+		return $this->lateReportQuery()->num_rows();
+	}
+
+	public function _outReportQuery()
+	{
+		$table = 'acc_transaction_3a';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		}
+		return $this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
+			"date" => $this->session->userdata('out_search_date') ?? date('Y-m-d')
+		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)");
+	}
+	public function getDataOutReport()
+	{
+		return $this->_outReportQuery()->get()->result();
+	}
+	public function getCountOutReport()
+	{
+		return $this->_outReportQuery()->count_all_results();
+	}
+
+	public function getOutDiff($duration,$allowed)
+	{
+		$query = "SELECT AGE(
+			(SELECT CONCAT('2012-12-12',' ','$duration')::timestamp),
+			(SELECT CONCAT('2012-12-12',' ','$allowed')::timestamp)
+		) as out_diff";
+		return $this->db->query($query)->row();
 	}
 
 }

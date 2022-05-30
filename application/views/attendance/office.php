@@ -150,20 +150,20 @@
 		</div>
 	</div>
 	<div class="row justify-content-between mt-1 mb-3">
-		<div class="col-lg-auto">
+		<div class="col-auto">
 			<div class="form-group form-label-group">
 				<div class="input-group input-group-sm">
 					<div class="input-group-prepend">
 						<div class="input-group-text border-0 shadow-sm bg-white text-material-blue"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Search </div>
 					</div>
-					<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center bg-material-blue text-white selectDate border-0 shadow-sm col-5">
+					<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center selectDate border-0 shadow-sm col-5" placeholder="Insert here">
 				</div>
 			</div>
 		</div>
-		<div class="col-lg-3 py-3">
+		<div class="col-auto py-1">
 			<span class="font-weight-bold h6 get-date d-none">{{getAttDate}}</span>
 		</div>
-		<div class="col-lg-auto">
+		<div class="col-auto">
 			<button class="btn btn-sm btn-primary shadow-sm" ng-click="getToday()">
 				<span class="font-weight-bold px-2">Today</span>
 			</button>
@@ -182,7 +182,7 @@
 							<span class="text-primary font-weight-bold px-3"><?= $title ?> Data</span>
 						</div>
 						<div class="col-auto">
-							<button class="btn btn-primary btn-rounded btn-sm mx-3" type="button" ng-click="reloadTable()">
+							<button class="btn btn-primary btn-rounded btn-sm mx-3 text-xs" type="button" ng-click="reloadTable()">
 								<i class="fas fa-fw fa-sync"></i> Reload
 							</button>
 						</div>
@@ -224,7 +224,7 @@
 					<div class="row justify-content-center my-2">
 						<div class="col">
 							<div class="table-responsive px-1">
-								<table class="table table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('attendance/dt_office') ?>">
+								<table class="table table-sm table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('attendance/dt_office') ?>">
 									<thead class="thead-light">
 										<tr>
 											<th width="5%">No</th>

@@ -10,7 +10,9 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 		<div class="sidebar-brand-icon text-primary">
 			<i class="fas fa-building"></i>
 		</div>
-		<div class="sidebar-brand-text mx-3 my-auto"><img class="img-fluid rounded company-logo" src="<?= base_url('assets/img/indofoodcbp_mini.png') ?>"></div>
+		<div class="sidebar-brand-text mx-3 my-auto">
+			<img class="img-fluid rounded company-logo" src="<?= base_url('assets/img/indofoodcbp_mini.png') ?>">
+		</div>
 	</a>
 	<?php $p = uri_string(); ?>
 	<!-- Administrator -->

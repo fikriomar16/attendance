@@ -92,7 +92,7 @@
 					<div class="row justify-content-between my-2 px-1">
 						<div class="col-auto">
 							<div class="form-group form-label-group">
-								<div class="input-group">
+								<div class="input-group input-group-sm">
 									<div class="input-group-prepend">
 										<div class="input-group-text border-0 shadow-sm bg-white text-material-orange"><i class="fas fa-fw fa-calendar-alt"> </i>&nbsp; Search </div>
 									</div>
@@ -160,21 +160,21 @@
 							</div>
 						</div>
 						<div class="col-xl-6 col-md-8 my-1">
-							<div class="input-group">
+							<div class="input-group shadow-sm">
 								<div class="input-group-prepend">
 									<div class="input-group-text bg-primary border-0">
 										<i class="fas fa-search text-white"></i>
 									</div>
 								</div>
 								<?php if($this->session->userdata('user')->is_spv == 1): ?>
-									<select class="form-control custom-select col-4 bg-light btn-light font-weight-bold selectpicker" name="deptList" id="deptList" ng-change="getDept()" ng-model="deptList" data-style="btn-light font-weight-bold" data-header="Pilih Department">
-										<option value="">All Prod. Dept</option>
+									<select class="form-control custom-select col-4 bg-light btn-light font-weight-bold selectpicker" name="deptList" id="deptList" ng-change="getDept()" ng-model="deptList" data-style="btn-light font-weight-bold border-bottom" data-header="Pilih Department">
+										<option value="">All Dept.</option>
 										<?php foreach ($deptlists as $list): ?>
 											<option value="<?= $list->id ?>"><?= $list->name ?></option>
 										<?php endforeach; ?>
 									</select>
 								<?php endif; ?>
-								<input type="text" class="form-control" id="searchInTable" placeholder="Cari Data... (Nama / NIK)" ng-change="search()" ng-model="searchInTable">
+								<input type="text" class="form-control border-left-0 border-right-0 border-top-0 shadow-none" id="searchInTable" placeholder="Cari Data... (Nama / NIK)" ng-change="search()" ng-model="searchInTable">
 							</div>
 						</div>
 					</div>

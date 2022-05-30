@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class AdminController extends CI_Controller {
 
 	public function __construct()
@@ -138,7 +139,8 @@ class AdminController extends CI_Controller {
 			'late_dept' => "Prod. Minyak"
 		]);
 		$data = [
-			'title' => 'Late Notice'
+			'title' => 'Late Notice',
+			'deptlists' => $this->admin->deptLists()
 		];
 		$this->load->view('components/header', $data);
 		$this->load->view('components/sidebar', $data);
@@ -162,8 +164,9 @@ class AdminController extends CI_Controller {
 			$row = [];
 			$row[] = $list->pin;
 			$row[] = $list->name;
+			$row[] = $list->shift;
 			$row[] = $list->dept_name;
-			$row[] = '<h5><span class="badge badge-warning text-dark shadow p-1">Keterlambatan : '.$list->late_duration.'</span></h5>';
+			$row[] = '<h6 class="text-center"><span class="badge badge-warning text-dark shadow p-1">Keterlambatan : '.$list->late_duration.'</span></h6>';
 
 			$data[] = $row;
 		}
@@ -174,6 +177,39 @@ class AdminController extends CI_Controller {
 			'data' => $data,
 		];
 		echo json_encode($output,JSON_PRETTY_PRINT);
+	}
+	public function get_late()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		$error = [];
+		if (empty($form->date)) {
+			$error[] = "Tanggal Wajib Diisi";
+		}
+		if ($error) {
+			echo json_encode([
+				'error' => $error
+			],JSON_PRETTY_PRINT);
+		} else {
+			$this->session->set_userdata('late_search_date',$form->date);
+			if ($this->session->userdata('user')->is_spv != 1) {
+				$session = $this->session->userdata('user')->dept_name;
+			} else {
+				if (!empty($form->dept)) {
+					$this->session->set_userdata('late_dept',$form->dept);
+					$session = $this->session->userdata('late_dept');
+				} else {
+					$this->session->set_userdata('late_dept','');
+					$session = 'All Departments';
+				}
+			}
+			echo json_encode([
+				'success' => 'Menampilkan Data....',
+				'option' => $form->option,
+				'dept' => $session,
+				'date' => date('j F, Y',strtotime($this->session->userdata('late_search_date'))),
+				'url' => base_url('late/reportLate')
+			],JSON_PRETTY_PRINT);
+		}
 	}
 
 	public function out_page()
@@ -187,7 +223,8 @@ class AdminController extends CI_Controller {
 			'out_dept' => "Prod. Minyak"
 		]);
 		$data = [
-			'title' => 'Out Notice'
+			'title' => 'Out Notice',
+			'deptlists' => $this->admin->deptLists()
 		];
 		$this->load->view('components/header', $data);
 		$this->load->view('components/sidebar', $data);
@@ -217,7 +254,7 @@ class AdminController extends CI_Controller {
 			$row[] = $list->name;
 			$row[] = $list->shift;
 			$row[] = $list->dept_name;
-			$row[] = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$status.' </span></h5>';
+			$row[] = '<h6 class="text-center"><span class="badge badge-danger shadow p-2">Keluar Lewat '.$status.' </span></h6>';
 
 			$data[] = $row;
 		}
@@ -229,81 +266,126 @@ class AdminController extends CI_Controller {
 		];
 		echo json_encode($output);
 	}
-
-	public function showMenuFor()
+	public function get_out()
 	{
-		$user = $this->session->userdata('user');
-		echo json_encode($user);
-	}
-
-	public function dumpOutLate()
-	{
-		$list2 = $this->admin->getOut3a();
-		$outDur = $list2->out_duration;
-		$list1 = $this->admin->getLate3a();
-		$list3 = $this->admin->getLate3b();
-		$lists = array_merge_recursive($list2,$list1,$list3);
-		$first = array_column($lists, 'first_scan');
-		if (count($lists) > 0) {
-			$data = [];
-			$tbody = '';
-			$i = 0;
-			$limit = 50;
-			foreach ($lists as $list) {
-				if ($i < $limit) {
-					$outAllow = $list->out_allowed;
-					$outDur = $list->out_duration;
-					if ($list->late_duration == null && $outDur > $outAllow) {
-						$dur = date_create($outDur);
-						$allowed = date_create($outAllow);
-						$difference = date_diff($dur,$allowed);
-						$raw_status = $difference->days * 24 * 60 + $difference->h * 60 + $difference->i;
-						if ($raw_status != 0) {
-							$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.$raw_status.' Menit</span></h5>';
-						} else {
-							$status = '<h5><span class="badge badge-danger shadow p-2">Keluar Lewat '.($raw_status * 60 + $difference->s).' Detik</span></h5>';
-						}
-					} else if ($list->late_duration !== null)  {
-						$raw_status = $list->late_duration;
-						$status = '<h5><span class="badge badge-warning text-dark shadow p-2">Terlambat : '.$raw_status.'</span></h5>';
-					}
-					$row = [];
-					$row[] = $list->name;
-					$row[] = $list->pin;
-					$row[] = $list->dept_name;
-					$row[] = $raw_status;
-					$data[] = $row;
-
-					$tbody.='<tr>';
-					$tbody.='<td class="text-primary font-weight-bold">'.$list->name.'</td>';
-					$tbody.='<td class="text-danger font-weight-bold">'.$list->pin.'</td>';
-					$tbody.='<td class="font-weight-bold">'.$list->dept_name.'</td>';
-					$tbody.='<td class="text-center">'.$status.'</td>';
-					$tbody.='</tr>';
-					$i++;
+		$form = json_decode(file_get_contents("php://input"));
+		$error = [];
+		if (empty($form->date)) {
+			$error[] = "Tanggal Wajib Diisi";
+		}
+		if ($error) {
+			echo json_encode([
+				'error' => $error
+			],JSON_PRETTY_PRINT);
+		} else {
+			$this->session->set_userdata('out_search_date',$form->date);
+			if ($this->session->userdata('user')->is_spv != 1) {
+				$session = $this->session->userdata('user')->dept_name;
+			} else {
+				if (!empty($form->dept)) {
+					$this->session->set_userdata('out_dept',$form->dept);
+					$session = $this->session->userdata('out_dept');
+				} else {
+					$this->session->set_userdata('out_dept','');
+					$session = 'All Departments';
 				}
 			}
 			echo json_encode([
-				'success' => 'Data Ditemukan',
-				'raw' => $data,
-				'data' => $tbody,
-				'list1' => $list1,
-				'list2' => $list2,
-				'list3' => $list3
-			],JSON_PRETTY_PRINT);
-		} else {
-			$row = '';
-			$msg = 'Data Tidak Ditemukan';
-			$row.='<tr>';
-			$row.='<td colspan=4 class="text-danger font-weight-bold text-center">';
-			$row.=$msg;
-			$row.='</td>';
-			$row.='</tr>';
-			echo json_encode([
-				'error' => $msg,
-				'data' => $row
+				'success' => 'Menampilkan Data....',
+				'option' => $form->option,
+				'dept' => $session,
+				'date' => date('j F, Y',strtotime($this->session->userdata('out_search_date'))),
+				'url' => base_url('out/reportOut')
 			],JSON_PRETTY_PRINT);
 		}
+	}
+
+	public function reportLate()
+	{
+		$tanggal = $this->session->userdata('late_search_date') ?? date('Y-m-d');
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('late_dept'))) {
+				$dept = $this->session->userdata('late_dept');
+			} else {
+				$dept = 'All Departments';
+			}
+		}
+		$lists = $this->admin->getDataLateReport();
+		$lateTotal = $this->admin->getCountLateReport();
+		$filename = "Report_Late_".$dept."_$tanggal";
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet(); 
+		$sheet->setCellValue('A1','Department : ');
+		$sheet->setCellValue('B1',$dept);
+		$sheet->setCellValue('A2','Date : ');
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal)));
+		$sheet->setCellValue('A3','Late Total : ');
+		$sheet->setCellValue('B3',$lateTotal);
+		$sheet->setCellValue('A5','Pers Number');
+		$sheet->setCellValue('B5','Employee Name');
+		$sheet->setCellValue('C5','Shift');
+		$sheet->setCellValue('D5','Department');
+		$sheet->setCellValue('E5','Late Duration');
+		$counter = 6;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$list->pin);
+			$sheet->setCellValue("B$counter",$list->name);
+			$sheet->setCellValue("C$counter",$list->shift);
+			$sheet->setCellValue("D$counter",$list->dept_name);
+			$sheet->setCellValue("E$counter",$list->late_duration);
+			$counter++;
+		}
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
+	}
+
+	public function reportOut()
+	{
+		$tanggal = $this->session->userdata('out_search_date') ?? date('Y-m-d');
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('out_dept'))) {
+				$dept = $this->session->userdata('out_dept');
+			} else {
+				$dept = 'All Departments';
+			}
+		}
+		$lists = $this->admin->getDataOutReport();
+		$lateTotal = $this->admin->getCountOutReport();
+		$filename = "Report_Out_".$dept."_$tanggal";
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet(); 
+		$sheet->setCellValue('A1','Department : ');
+		$sheet->setCellValue('B1',$dept);
+		$sheet->setCellValue('A2','Date : ');
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal)));
+		$sheet->setCellValue('A3',"Difference Duration Total : ");
+		$sheet->setCellValue('B3',$lateTotal);
+		$sheet->setCellValue('A5','Pers Number');
+		$sheet->setCellValue('B5','Employee Name');
+		$sheet->setCellValue('C5','Shift');
+		$sheet->setCellValue('D5','Department');
+		$sheet->setCellValue('E5','Difference Duration');
+		$counter = 6;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$list->pin);
+			$sheet->setCellValue("B$counter",$list->name);
+			$sheet->setCellValue("C$counter",$list->shift);
+			$sheet->setCellValue("D$counter",$list->dept_name);
+			$sheet->setCellValue("E$counter",$this->admin->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
+			$counter++;
+		}
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 
 }
