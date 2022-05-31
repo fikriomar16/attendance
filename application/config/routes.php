@@ -115,9 +115,11 @@ $route = [
 	'attendance/att_tomorrow_off_detail' => 'AttendanceController/att_tomorrow_off_detail',
 	'att_getDate_off/(:any)' => 'AttendanceController/att_getDate_off/$1',
 	'recapSumOff/(:any)' => 'AttendanceController/recapSumOff/$1',
-
+	// set session
 	'attendance/set_shift/(:any)' => 'AttendanceController/set_shift/$1',
+	'attendance/set_dept/(:any)' => 'AttendanceController/set_dept/$1',
 	'attendance/set_shift_off/(:any)' => 'AttendanceController/set_shift_off/$1',
+	'attendance/set_dept_off/(:any)' => 'AttendanceController/set_dept_off/$1',
 	'attresume_emp/(:any)' => 'AttendanceController/attresume_emp/$1',
 	'attresume_off/(:any)' => 'AttendanceController/attresume_off/$1',
 	'attresume_vis/(:any)' => 'AttendanceController/attresume_vis/$1',

@@ -17,7 +17,7 @@
 	<div class="container-fluid p-0 m-0">
 		<div class="row justify-content-center">
 			<div class="col">
-				<h4 class="text-dark font-weight-bold text-center">Laporan Kehadiran Karyawan</h3>
+				<h4 class="text-dark font-weight-bold text-center">Laporan Kehadiran Employee</h3>
 			</div>
 		</div>
 		<div class="row justify-content-center">
@@ -28,6 +28,11 @@
 					</div>
 					<div class="col-auto">
 						<p><span class="font-weight-bold text-dark">Shift : </span><?= $shift ?></p>
+					</div>
+				</div>
+				<div class="row justify-content-between">
+					<div class="col-auto">
+						<p><span class="font-weight-bold text-dark">Department : </span><?= $dept ?></p>
 					</div>
 				</div>
 			</div>

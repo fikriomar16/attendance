@@ -109,6 +109,16 @@ app.controller('attOffice',($scope,$http) => {
 			table.DataTable().ajax.reload();
 		});
 	}
+	$scope.getDept = () => {
+		var dept = $scope.deptList;
+		if ($scope.deptList == '') {
+			dept = 0;
+		}
+		console.log(dept);
+		$http.get(base+'attendance/set_dept_off/'+dept).then((res) => {
+			table.DataTable().ajax.reload();
+		});
+	}
 	$scope.getShiftList = () => {
 		$http.get(base+'attendance/getShiftList').then((res) => {
 			$scope.shiftLists = res.data.lists;

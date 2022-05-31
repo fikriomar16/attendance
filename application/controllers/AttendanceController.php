@@ -35,9 +35,10 @@ class AttendanceController extends CI_Controller {
 			'att_emp_date_search' => date("Y-m-d"),
 			'att_emp_nik' => $this->attendance->getRndmSch()->nik,
 			'recap_month' => date('m'),
-			'recap_year' => date('Y')
+			'recap_year' => date('Y'),
 		]);
 		$this->session->unset_userdata('att_emp_shift');
+		$this->session->unset_userdata(['att_emp_dept_id','att_emp_dept_code','att_emp_dept_name']);
 		$path_port = '8098';
 		$data = [
 			'title' => 'Employee Attendance',
@@ -85,6 +86,23 @@ class AttendanceController extends CI_Controller {
 		echo json_encode([
 			'shift' => $shift,
 			'current_shift' => $this->session->userdata('att_emp_shift')
+		]);
+	}
+	public function set_dept($id)
+	{
+		$data = $this->attendance->get_by_id_dept($id);
+		if ($id == '0') {
+			$this->session->unset_userdata('att_emp_dept_id');
+		} else if ($data) {
+			$this->session->set_userdata([
+				'att_emp_dept_id' => $data->id,
+				'att_emp_dept_code' => $data->code,
+				'att_emp_dept_name' => $data->name,
+			]);
+		}
+		echo json_encode([
+			'dept' => $id,
+			'current_dept' => $this->session->userdata('att_emp_dept_id')
 		]);
 	}
 	public function getShiftList()
@@ -350,9 +368,10 @@ class AttendanceController extends CI_Controller {
 			'att_off_date_search' => date("Y-m-d"),
 			'att_off_nik' => $this->attendance->getRndmSch()->nik,
 			'recap_month_off' => date('m'),
-			'recap_year_off' => date('Y')
+			'recap_year_off' => date('Y'),
 		]);
 		$this->session->unset_userdata('att_off_shift');
+		$this->session->unset_userdata(['att_off_dept_id','att_off_dept_code','att_off_dept_name']);
 		$path_port = '8098';
 		$data = [
 			'title' => 'Office Attendance',
@@ -500,6 +519,23 @@ class AttendanceController extends CI_Controller {
 			'current_shift' => $this->session->userdata('att_off_shift')
 		]);
 	}
+	public function set_dept_off($id)
+	{
+		$data = $this->attendance->get_by_id_dept($id);
+		if ($id == '0') {
+			$this->session->unset_userdata('att_off_dept_id');
+		} else if ($data) {
+			$this->session->set_userdata([
+				'att_off_dept_id' => $data->id,
+				'att_off_dept_code' => $data->code,
+				'att_off_dept_name' => $data->name,
+			]);
+		}
+		echo json_encode([
+			'dept' => $id,
+			'current_dept' => $this->session->userdata('att_off_dept_id')
+		]);
+	}
 	public function att_sum_off()
 	{
 		$list = $this->attendance->dt_sum_off();
@@ -610,14 +646,25 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('att_emp_dept_id'))) {
+				$dept = $this->session->userdata('att_emp_dept_name');
+			} else {
+				$dept = 'All Dept.';
+			}
+		}
+		$dept_title = "_".$dept;
 		$data = [
 			"title" => "Laporan Kehadiran Employee",
 			"lists" => $this->attendance->dataReportAttEmp(),
 			"shift" => $this->session->userdata('att_emp_shift') ?? 'All',
-			"date" => $this->session->userdata('att_emp_date')
+			"date" => $this->session->userdata('att_emp_date'),
+			"dept" => $dept ?? 'All'
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift;
+		$file_pdf = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift.$dept_title;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -632,14 +679,25 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('att_off_dept_id'))) {
+				$dept = $this->session->userdata('att_off_dept_name');
+			} else {
+				$dept = 'All Dept.';
+			}
+		}
+		$dept_title = "_".$dept;
 		$data = [
 			"title" => "Laporan Kehadiran Office",
 			"lists" => $this->attendance->dataReportAttOff(),
 			"shift" => $this->session->userdata('att_off_shift') ?? 'All',
-			"date" => $this->session->userdata('att_off_date')
+			"date" => $this->session->userdata('att_off_date'),
+			"dept" => $dept ?? 'All'
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Office'.$this->session->userdata('att_off_date').$shift;
+		$file_pdf = 'Laporan-Kehadiran-Office'.$this->session->userdata('att_off_date').$shift.$dept_title;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -655,15 +713,17 @@ class AttendanceController extends CI_Controller {
 		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year');
 		$nik = $this->session->userdata('att_emp_nik');
 		$name = $this->attendance->get_by_nik_employee($nik)->name;
+		$lists = $this->attendance->dataRecapSumEmp();
+		$filename = 'Laporan-Kehadiran-Bulanan-Employee_'.$bulan."-".$nik."_".$name;
 		$data = [
 			"title" => "Rekap Kehadiran Bulanan Employee",
-			"lists" => $this->attendance->dataRecapSumEmp(),
+			"lists" => $lists,
 			"month" => $month,
 			"nik" => $nik,
 			"name" => $name
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Bulanan-Employee_'.$bulan."-".$nik."_".$name;
+		$file_pdf = $filename;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -678,15 +738,17 @@ class AttendanceController extends CI_Controller {
 		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year_off');
 		$nik = $this->session->userdata('att_off_nik');
 		$name = $this->attendance->get_by_nik_employee($nik)->name;
+		$lists = $this->attendance->dataRecapSumOff();
+		$filename = 'Laporan-Kehadiran-Bulanan-Office'.$bulan."-".$nik."_".$name;
 		$data = [
 			"title" => "Rekap Kehadiran Bulanan Office",
-			"lists" => $this->attendance->dataRecapSumOff(),
+			"lists" => $lists,
 			"month" => $month,
 			"nik" => $nik,
 			"name" => $name
 		];
 		$this->load->library('pdfgenerator');
-		$file_pdf = 'Laporan-Kehadiran-Bulanan-Office'.$bulan."-".$nik."_".$name;
+		$file_pdf = $filename;
 		// setting paper
 		$paper = 'A4';
 		//orientasi paper potrait / landscape
@@ -790,34 +852,89 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
-		$title = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift;
-		header("Content-type: application/csv");
-		header("Content-Disposition: attachment; filename=".$title.".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		$handle = fopen('php://output', 'w');
-		$header = ['No','NIK','Name','Department','Shift','In Schedule','Out Schedule','First Scan','Last Scan','Late Duration','Out Duration','In Duration'];
-		$lists = $this->attendance->dataReportAttEmp();
-		$no = 0;
-		fputcsv($handle, $header);
-		foreach ($lists as $list) {
-			$collect = [];
-			$collect[] = ++$no;
-			$collect[] = $list->pin;
-			$collect[] = $list->name;
-			$collect[] = $list->dept_name;
-			$collect[] = $list->shift;
-			$collect[] = $list->masuk;
-			$collect[] = $list->pulang;
-			$collect[] = $list->in_scan;
-			$collect[] = $list->out_scan;
-			$collect[] = $list->late_duration;
-			$collect[] = $list->out_duration;
-			$collect[] = $list->in_duration;
-			fputcsv($handle, $collect);
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('att_emp_dept_id'))) {
+				$dept = $this->session->userdata('att_emp_dept_name');
+			} else {
+				$dept = 'All Dept.';
+			}
 		}
-		fclose($handle);
-		exit;
+		$dept_title = "_".$dept;
+		$title = 'Laporan-Kehadiran-Employee_'.$this->session->userdata('att_emp_date').$shift.$dept_title;
+		$lists = $this->attendance->dataReportAttEmp();
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('A')->setWidth(20);
+		$sheet->getColumnDimension('B')->setWidth(20);
+		$sheet->getColumnDimension('C')->setWidth(20);
+		$sheet->getColumnDimension('D')->setWidth(15);
+		$sheet->getColumnDimension('F')->setWidth(25);
+		$sheet->getColumnDimension('G')->setWidth(25);
+		$sheet->getColumnDimension('H')->setWidth(25);
+		$sheet->getColumnDimension('I')->setWidth(25);
+		$sheet->getColumnDimension('J')->setWidth(15);
+		$sheet->getColumnDimension('K')->setWidth(15);
+		$sheet->getColumnDimension('L')->setWidth(15);
+		$sheet->getColumnDimension('M')->setWidth(15);
+		$sheet->getColumnDimension('N')->setWidth(15);
+		$sheet->setCellValue('A1','Department : ');
+		$sheet->setCellValue('B1',$dept);
+		$sheet->setCellValue('A2','Date : ');
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($this->session->userdata('att_emp_date'))));
+		$sheet->setCellValue('A3','Shift : ');
+		$sheet->setCellValue('B3',$this->session->userdata('att_emp_shift') ?? 'All');
+		$sheet->setCellValue('A5','No');
+		$sheet->setCellValue('B5','Pers Number');
+		$sheet->setCellValue('C5','Employee Name');
+		$sheet->setCellValue('D5','Department');
+		$sheet->setCellValue('E5','Shift');
+		$sheet->setCellValue('F5','DWS IN');
+		$sheet->setCellValue('G5','DWS OUT');
+		$sheet->setCellValue('H5','First Scan');
+		$sheet->setCellValue('I5','Last Scan');
+		$sheet->setCellValue('J5','Late Duration');
+		$sheet->setCellValue('K5','Out Duration');
+		$sheet->setCellValue('L5','In Duration');
+		$sheet->setCellValue('M5','Out Allowed');
+		$sheet->setCellValue('N5',"Passing Out");
+		$counter = 6;
+		$idx = 1;
+		$lateTotal = $outPass = 0;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$idx);
+			$sheet->setCellValue("B$counter",$list->pin);
+			$sheet->setCellValue("C$counter",$list->name);
+			$sheet->setCellValue("D$counter",$list->dept_name);
+			$sheet->setCellValue("E$counter",$list->shift);
+			$sheet->setCellValue("F$counter",$list->masuk);
+			$sheet->setCellValue("G$counter",$list->pulang);
+			$sheet->setCellValue("H$counter",$list->in_scan);
+			$sheet->setCellValue("I$counter",$list->out_scan);
+			$sheet->setCellValue("J$counter",$list->late_duration);
+			$sheet->setCellValue("K$counter",$list->out_duration);
+			$sheet->setCellValue("L$counter",$list->in_duration);
+			$sheet->setCellValue("M$counter",$list->out_allowed);
+			if ($list->out_duration > $list->out_allowed) {
+				$sheet->setCellValue("N$counter",$this->attendance->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
+				$outPass++;
+			}
+			if (!empty($list->late_duration)) {
+				$lateTotal++;
+			}
+			$counter++;
+			$idx++;
+		}
+		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
+		$sheet->setCellValue("B".($counter+2),$lateTotal);
+		$sheet->setCellValue("A".($counter+3),"Total Out Passing: ");
+		$sheet->setCellValue("B".($counter+3),$outPass);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$title.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 	public function exportCSV_off()
 	{
@@ -826,55 +943,100 @@ class AttendanceController extends CI_Controller {
 		} else {
 			$shift = '';
 		}
-		$title = 'Laporan-Kehadiran-Office_'.$this->session->userdata('att_off_date').$shift;
-		header("Content-type: application/csv");
-		header("Content-Disposition: attachment; filename=".$title.".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		$handle = fopen('php://output', 'w');
-		$header = ['No','NIK','Name','Department','Shift','In Schedule','Out Schedule','First Scan','Last Scan','Late Duration'];
-		$lists = $this->attendance->dataReportAttOff();
-		$no = 0;
-		fputcsv($handle, $header);
-		foreach ($lists as $list) {
-			$collect = [];
-			$collect[] = ++$no;
-			$collect[] = $list->pin;
-			$collect[] = $list->name;
-			$collect[] = $list->dept_name;
-			$collect[] = $list->shift;
-			$collect[] = $list->masuk;
-			$collect[] = $list->pulang;
-			$collect[] = $list->first_scan;
-			$collect[] = $list->last_scan;
-			$collect[] = $list->late_duration;
-			fputcsv($handle, $collect);
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$dept = $this->session->userdata('user')->dept_name;
+		} else {
+			if (!empty($this->session->userdata('att_off_dept_id'))) {
+				$dept = $this->session->userdata('att_off_dept_name');
+			} else {
+				$dept = 'All Dept.';
+			}
 		}
-		fclose($handle);
-		exit;
+		$dept_title = "_".$dept;
+		$lists = $this->attendance->dataReportAttOff();
+		$filename = 'Laporan-Kehadiran-Office_'.$this->session->userdata('att_off_date').$shift.$dept_title;
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('A')->setWidth(20);
+		$sheet->getColumnDimension('B')->setWidth(20);
+		$sheet->getColumnDimension('C')->setWidth(20);
+		$sheet->getColumnDimension('D')->setWidth(15);
+		$sheet->getColumnDimension('F')->setWidth(25);
+		$sheet->getColumnDimension('G')->setWidth(25);
+		$sheet->getColumnDimension('H')->setWidth(25);
+		$sheet->getColumnDimension('I')->setWidth(25);
+		$sheet->getColumnDimension('J')->setWidth(15);
+		$sheet->setCellValue('A1','Department : ');
+		$sheet->setCellValue('B1',$dept);
+		$sheet->setCellValue('A2','Date : ');
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($this->session->userdata('att_off_date'))));
+		$sheet->setCellValue('A3','Shift : ');
+		$sheet->setCellValue('B3',$this->session->userdata('att_off_shift') ?? 'All');
+		$sheet->setCellValue('A5','No');
+		$sheet->setCellValue('B5','Pers Number');
+		$sheet->setCellValue('C5','Employee Name');
+		$sheet->setCellValue('D5','Department');
+		$sheet->setCellValue('E5','Shift');
+		$sheet->setCellValue('F5','DWS IN');
+		$sheet->setCellValue('G5','DWS OUT');
+		$sheet->setCellValue('H5','First Scan');
+		$sheet->setCellValue('I5','Last Scan');
+		$sheet->setCellValue('J5','Late Duration');
+		$counter = 6;
+		$idx = 1;
+		$lateTotal = $outPass = 0;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$idx);
+			$sheet->setCellValue("B$counter",$list->pin);
+			$sheet->setCellValue("C$counter",$list->name);
+			$sheet->setCellValue("D$counter",$list->dept_name);
+			$sheet->setCellValue("E$counter",$list->shift);
+			$sheet->setCellValue("F$counter",$list->masuk);
+			$sheet->setCellValue("G$counter",$list->pulang);
+			$sheet->setCellValue("H$counter",$list->first_scan);
+			$sheet->setCellValue("I$counter",$list->last_scan);
+			$sheet->setCellValue("J$counter",$list->late_duration);
+			$counter++;
+			$idx++;
+			if (!empty($list->late_duration)) {
+				$lateTotal++;
+			}
+		}
+		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
+		$sheet->setCellValue("B".($counter+2),$lateTotal);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 	public function exportCSV_vis()
 	{
-		$title = 'Laporan-Kedatangan-Pengunjung_'.$this->session->userdata('att_vis_date');
-		header("Content-type: application/csv");
-		header("Content-Disposition: attachment; filename=".$title.".csv");
-		header("Pragma: no-cache");
-		header("Expires: 0");
-		$handle = fopen('php://output', 'w');
+		$filename = 'Laporan-Kedatangan-Visitor_'.$this->session->userdata('att_vis_date');
 		$lists = $this->attendance->dataReportAttVis();
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('B')->setWidth(15);
+		$sheet->getColumnDimension('C')->setWidth(18);
+		$sheet->getColumnDimension('D')->setWidth(18);
+		$sheet->setCellValue('A1','No');
+		$sheet->setCellValue('B1','Name');
+		$sheet->setCellValue('C1','First Scan');
+		$sheet->setCellValue('D1','Last Scan');
 		$no = 0;
-		$header = ['No','Name','First Scan', 'Last Scan'];
-		fputcsv($handle, $header);
+		$counter = 2;
 		foreach ($lists as $list) {
-			$collect = [];
-			$collect[] = ++$no;
-			$collect[] = $list->name;
-			$collect[] = $list->first_scan;
-			$collect[] = $list->last_scan;
-			fputcsv($handle, $collect);
+			$sheet->setCellValue("A$counter",++$no);
+			$sheet->setCellValue("B$counter",$list->name);
+			$sheet->setCellValue("C$counter",$list->first_scan);
+			$sheet->setCellValue("D$counter",$list->last_scan);
+			$counter++;
 		}
-		fclose($handle);
-		exit;
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 
 	public function visitor()

@@ -198,7 +198,7 @@ class AdminController extends CI_Controller {
 					$this->session->set_userdata('late_dept',$form->dept);
 					$session = $this->session->userdata('late_dept');
 				} else {
-					$this->session->set_userdata('late_dept','');
+					$this->session->unset_userdata('late_dept');
 					$session = 'All Departments';
 				}
 			}
@@ -220,7 +220,7 @@ class AdminController extends CI_Controller {
 		$this->session->set_userdata([
 			'out_date' => date("Y-m-d"),
 			'out_search_date' => date("Y-m-d"),
-			'out_dept' => "Prod. Minyak"
+			'out_dept' => "Accounting"
 		]);
 		$data = [
 			'title' => 'Out Notice',
@@ -286,7 +286,7 @@ class AdminController extends CI_Controller {
 					$this->session->set_userdata('out_dept',$form->dept);
 					$session = $this->session->userdata('out_dept');
 				} else {
-					$this->session->set_userdata('out_dept','');
+					$this->session->unset_userdata('out_dept');
 					$session = 'All Departments';
 				}
 			}
@@ -316,7 +316,11 @@ class AdminController extends CI_Controller {
 		$lateTotal = $this->admin->getCountLateReport();
 		$filename = "Report_Late_".$dept."_$tanggal";
 		$spreadsheet = new Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet(); 
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('A')->setWidth(20);
+		$sheet->getColumnDimension('B')->setWidth(20);
+		$sheet->getColumnDimension('D')->setWidth(20);
+		$sheet->getColumnDimension('E')->setWidth(20);
 		$sheet->setCellValue('A1','Department : ');
 		$sheet->setCellValue('B1',$dept);
 		$sheet->setCellValue('A2','Date : ');
@@ -361,17 +365,25 @@ class AdminController extends CI_Controller {
 		$filename = "Report_Out_".$dept."_$tanggal";
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet(); 
+		$sheet->getColumnDimension('A')->setWidth(30);
+		$sheet->getColumnDimension('B')->setWidth(20);
+		$sheet->getColumnDimension('D')->setWidth(20);
+		$sheet->getColumnDimension('E')->setWidth(25);
+		$sheet->getColumnDimension('F')->setWidth(20);
+		$sheet->getColumnDimension('G')->setWidth(20);
 		$sheet->setCellValue('A1','Department : ');
 		$sheet->setCellValue('B1',$dept);
 		$sheet->setCellValue('A2','Date : ');
 		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal)));
-		$sheet->setCellValue('A3',"Difference Duration Total : ");
+		$sheet->setCellValue('A3',"Passing Out Total : ");
 		$sheet->setCellValue('B3',$lateTotal);
 		$sheet->setCellValue('A5','Pers Number');
 		$sheet->setCellValue('B5','Employee Name');
 		$sheet->setCellValue('C5','Shift');
 		$sheet->setCellValue('D5','Department');
-		$sheet->setCellValue('E5','Difference Duration');
+		$sheet->setCellValue('E5','Passing Out');
+		$sheet->setCellValue('F5','Out Duration');
+		$sheet->setCellValue('G5','Out Allowed');
 		$counter = 6;
 		foreach ($lists as $list) {
 			$sheet->setCellValue("A$counter",$list->pin);
@@ -379,6 +391,8 @@ class AdminController extends CI_Controller {
 			$sheet->setCellValue("C$counter",$list->shift);
 			$sheet->setCellValue("D$counter",$list->dept_name);
 			$sheet->setCellValue("E$counter",$this->admin->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
+			$sheet->setCellValue("F$counter",$list->out_duration);
+			$sheet->setCellValue("G$counter",$list->out_allowed);
 			$counter++;
 		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

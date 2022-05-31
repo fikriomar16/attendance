@@ -104,7 +104,7 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceVis') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
-								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_vis') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
+								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_vis') ?>"><i class="fas fa-fw fa-file-excel"></i> Export Excel</a>
 							</div>
 						</div>
 						<div class="col-4 my-1">

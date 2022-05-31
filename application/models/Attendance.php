@@ -20,23 +20,35 @@ class Attendance extends CI_Model {
 		$table = 'sys_sch_users';
 		return $this->db->select('shift')->from($table)->group_by('shift')->order_by('shift','asc')->get()->result();
 	}
+	public function get_by_id_dept($id)
+	{
+		return $this->db->get_where("auth_department",[
+			"id" => $id
+		])->row();
+	}
 
 	public function _get_datatable_employee()
 	{
 		$table = 'acc_transaction_3a';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
 		$order = ['pin' => 'asc'];
-		$column_order = [null,'name','pin','shift','dept_name'];
-		$column_search = ['name','pin','shift','dept_name'];
-		$this->db->select("name,dept_name,pin,shift")->from($table)->where([
+		$column_order = [null,"$table.name","$table.pin",'shift',"$table3.name"];
+		$column_search = ["$table.name","$table.pin",'shift',"$table3.name"];
+		$this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("$table3.code IN (2,3,4,12)")->where([
 			'date' => $this->session->userdata('att_emp_date')
 		]);
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
 		if ($this->session->userdata('user')->is_spv != 1) {
-			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_emp_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_emp_dept_id'));
+			}
 		}
-		$this->db->group_by('name,dept_name,pin,shift');
+		$this->db->group_by("$table.name,$table3.name,$table.pin,shift");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -82,12 +94,18 @@ class Attendance extends CI_Model {
 	public function count_all_employee()
 	{
 		$table = 'acc_transaction_3a';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
-			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_emp_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_emp_dept_id'));
+			}
 		}
-		return $this->db->select("name,dept_name,pin,shift")->from($table)->where([
+		return $this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("$table3.code IN (2,3,4,12)")->where([
 			'date' => $this->session->userdata('att_emp_date')
-		])->group_by('name,dept_name,pin,shift')->count_all_results();
+		])->group_by("$table.name,$table3.name,$table.pin,shift")->count_all_results();
 	}
 
 	public function _get_dt_sum_emp()
@@ -275,21 +293,53 @@ class Attendance extends CI_Model {
 		])->count_all_results();
 	}
 
+	public function rndmDept($isprod)
+	{
+		($isprod == TRUE) ? $qs = "" : $qs = "NOT";
+		return $this->db->select("id,code,name")->from('auth_department')->where("code $qs IN (2,3,4,12)")->order_by("name","asc")->limit(1)->get()->row();
+	}
+	public function getOutDiff($duration,$allowed)
+	{
+		$query = "SELECT AGE(
+			(SELECT CONCAT('2012-12-12',' ','$duration')::timestamp),
+			(SELECT CONCAT('2012-12-12',' ','$allowed')::timestamp)
+		) as out_diff";
+		return $this->db->query($query)->row();
+	}
+
 	public function dataReportAttEmp()
 	{
 		$table = 'acc_transaction_3a';
-		$this->db->select('*')->from($table)->where('date',$this->session->userdata('att_emp_date'));
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
+		$this->db->select("$table.*")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("$table3.code IN (2,3,4,12)")->where('date',$this->session->userdata('att_emp_date'));
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
+		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_emp_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_emp_dept_id'));
+			}
 		}
 		return $this->db->get()->result();
 	}
 	public function dataReportAttOff()
 	{
 		$table = 'acc_transaction_3b';
-		$this->db->select('*')->from($table)->where('date',$this->session->userdata('att_off_date'));
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
+		$this->db->select("$table.*")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where('date',$this->session->userdata('att_off_date'));
 		if ($this->session->userdata('att_off_shift')) {
 			$this->db->where('left(shift,2)',$this->session->userdata('att_off_shift'));
+		}
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_off_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_off_dept_id'));
+			}
 		}
 		return $this->db->get()->result();
 	}
@@ -489,19 +539,25 @@ class Attendance extends CI_Model {
 	public function _get_datatable_office()
 	{
 		$table = 'acc_transaction_3b';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
 		$order = ['pin' => 'asc'];
 		$column_order = [null,'name','pin','shift','dept_name'];
 		$column_search = ['name','pin','shift','dept_name'];
-		$this->db->select("name,dept_name,pin,shift")->from($table)->where([
+		$this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id","left")->where([
 			'date' => $this->session->userdata('att_off_date')
 		]);
 		if ($this->session->userdata('att_off_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_off_shift'));
 		}
 		if ($this->session->userdata('user')->is_spv != 1) {
-			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_off_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_off_dept_id'));
+			}
 		}
-		$this->db->group_by('name,dept_name,pin,shift');
+		$this->db->group_by("$table.name,$table3.name,$table.pin,shift");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -547,12 +603,18 @@ class Attendance extends CI_Model {
 	public function count_all_office()
 	{
 		$table = 'acc_transaction_3b';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
-			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+			$this->db->where("$table3.name", $this->session->userdata('user')->dept_name);
+		} else {
+			if (!empty($this->session->userdata('att_off_dept_id'))) {
+				$this->db->where("$table2.auth_dept_id", $this->session->userdata('att_off_dept_id'));
+			}
 		}
-		return $this->db->select("name,dept_name,pin,shift")->from($table)->where([
+		return $this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id","left")->where([
 			'date' => $this->session->userdata('att_off_date')
-		])->group_by('name,dept_name,pin,shift')->count_all_results();
+		])->group_by("$table.name,$table3.name,$table.pin,shift")->count_all_results();
 	}
 
 	public function _get_dt_sum_off()

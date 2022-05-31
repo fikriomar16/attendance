@@ -162,7 +162,7 @@ class Schedule extends CI_Model {
 		$table = 'pers_person';
 		$table2 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
-			$this->db->where("$table.name", $this->session->userdata('user')->dept_name);
+			$this->db->where("$table2.name", $this->session->userdata('user')->dept_name);
 		}
 		return $this->db->select("$table.*,$table2.code,$table2.name as dept_name")->from($table)->join($table2,$table.'.auth_dept_id = '.$table2.'.id', 'left')->order_by('code','asc')->get()->result();
 	}

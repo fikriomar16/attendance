@@ -58,7 +58,7 @@
 													<span class="text-primary font-weight-bold px-3">Rekap Kehadiran Sebulan</span>
 												</div>
 												<div class="col-auto">
-													<a type="button" class="btn btn-sm btn-primary d-inline" href="<?= base_url('rekapBulananKaryawan') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
+													<a type="button" class="btn btn-sm btn-success d-inline btn-rounded" href="<?= base_url('rekapBulananKaryawan') ?>" target="_blank"><i class="fas fa-fw fa-file-excel"></i> Excel</a>
 												</div>
 											</div>
 											<div class="table-responsive px-1">
@@ -197,10 +197,10 @@
 						<div class="col-auto my-1">
 							<div class="btn-group btn-group-sm" role="group">
 								<a type="button" class="btn btn-primary d-inline" href="<?= base_url('printAttendanceEmp') ?>" target="_blank"><i class="fas fa-fw fa-print"></i> Print</a>
-								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_emp') ?>"><i class="fas fa-fw fa-file-csv"></i> Export CSV</a>
+								<a type="button" class="btn btn-success d-inline" href="<?= base_url('exportCSV_emp') ?>"><i class="fas fa-fw fa-file-excel"></i> Export Excel</a>
 							</div>
 						</div>
-						<div class="col-xl-7 col-md-9 my-1">
+						<div class="col-xl-7 my-1">
 							<div class="input-group shadow-sm">
 								<div class="input-group-prepend">
 									<div class="input-group-text bg-primary border-0 shadow">
@@ -215,7 +215,7 @@
 										<?php endforeach; ?>
 									</select>
 								<?php endif; ?>
-								<select class="form-control custom-select border-0 col-3 bg-light btn-light font-weight-bold selectpicker" name="shiftList" id="shiftList" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
+								<select class="form-control custom-select border-0 col-2 bg-light btn-light font-weight-bold selectpicker" name="shiftList" id="shiftList" ng-change="getShift()" ng-model="shiftList" data-style="btn-light font-weight-bold">
 									<option value="">All Shift</option>
 									<option value="PG">Shift PG</option>
 									<option value="SG">Shift SG</option>
