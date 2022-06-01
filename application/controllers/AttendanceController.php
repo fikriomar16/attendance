@@ -709,52 +709,143 @@ class AttendanceController extends CI_Controller {
 	public function rekapBulananKaryawan()
 	{
 		$m = date('F', mktime(0, 0, 0, $this->session->userdata('recap_month'),1,$this->session->userdata('recap_year')));
-		$bulan = strftime('%B', strtotime($m))."-".$this->session->userdata('recap_year');
-		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year');
+		$bulan = $m."-".$this->session->userdata('recap_year');
+		$month = $m.", ".$this->session->userdata('recap_year');
 		$nik = $this->session->userdata('att_emp_nik');
 		$name = $this->attendance->get_by_nik_employee($nik)->name;
 		$lists = $this->attendance->dataRecapSumEmp();
 		$filename = 'Laporan-Kehadiran-Bulanan-Employee_'.$bulan."-".$nik."_".$name;
-		$data = [
-			"title" => "Rekap Kehadiran Bulanan Employee",
-			"lists" => $lists,
-			"month" => $month,
-			"nik" => $nik,
-			"name" => $name
-		];
-		$this->load->library('pdfgenerator');
-		$file_pdf = $filename;
-		// setting paper
-		$paper = 'A4';
-		//orientasi paper potrait / landscape
-		$orientation = "potrait";
-		$page = $this->load->view('report/rekapBulananKaryawan', $data,true);
-		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('A')->setWidth(16);
+		$sheet->getColumnDimension('B')->setWidth(15);
+		$sheet->getColumnDimension('C')->setWidth(10);
+		$sheet->getColumnDimension('D')->setWidth(18);
+		$sheet->getColumnDimension('E')->setWidth(18);
+		$sheet->getColumnDimension('F')->setWidth(18);
+		$sheet->getColumnDimension('G')->setWidth(18);
+		$sheet->getColumnDimension('H')->setWidth(13);
+		$sheet->getColumnDimension('I')->setWidth(13);
+		$sheet->getColumnDimension('J')->setWidth(13);
+		$sheet->getColumnDimension('K')->setWidth(13);
+		$sheet->getColumnDimension('L')->setWidth(13);
+		$sheet->setCellValue('A1','Bulan : ');
+		$sheet->setCellValue('B1',$month);
+		$sheet->setCellValue('A2','NIK : ');
+		$sheet->setCellValue('B2',$nik);
+		$sheet->setCellValue('A3','Nama : ');
+		$sheet->setCellValue('B3',$name);
+		$sheet->setCellValue('A5','No');
+		$sheet->setCellValue('B5','Date');
+		$sheet->setCellValue('C5','Shift');
+		$sheet->setCellValue('D5','DWS IN');
+		$sheet->setCellValue('E5','DWS OUT');
+		$sheet->setCellValue('F5','First Scan');
+		$sheet->setCellValue('G5','Last Scan');
+		$sheet->setCellValue('H5','Late Duration');
+		$sheet->setCellValue('I5','In Duration');
+		$sheet->setCellValue('J5','Out Duration');
+		$sheet->setCellValue('K5','Out Allowed');
+		$sheet->setCellValue('L5',"Passing Out");
+		$counter = 6;
+		$idx = 1;
+		$lateTotal = $outPass = 0;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$idx);
+			$sheet->setCellValue("B$counter",$list->date);
+			$sheet->setCellValue("C$counter",$list->shift);
+			$sheet->setCellValue("D$counter",$list->masuk);
+			$sheet->setCellValue("E$counter",$list->pulang);
+			$sheet->setCellValue("F$counter",$list->in_scan);
+			$sheet->setCellValue("G$counter",$list->out_scan);
+			$sheet->setCellValue("H$counter",$list->late_duration);
+			$sheet->setCellValue("I$counter",$list->in_duration);
+			$sheet->setCellValue("J$counter",$list->out_duration);
+			$sheet->setCellValue("K$counter",$list->out_allowed);
+			if ($list->out_duration > $list->out_allowed) {
+				$sheet->setCellValue("L$counter",$this->attendance->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
+				$outPass++;
+			}
+			if (!empty($list->late_duration)) {
+				$lateTotal++;
+			}
+			$counter++;
+			$idx++;
+		}
+		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
+		$sheet->setCellValue("B".($counter+2),$lateTotal);
+		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
+		$sheet->setCellValue("B".($counter+3),$outPass);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 	public function rekapBulananOffice()
 	{
 		$m = date('F', mktime(0, 0, 0, $this->session->userdata('recap_month_off'),1,$this->session->userdata('recap_year_off')));
-		$bulan = strftime('%B', strtotime($m))."-".$this->session->userdata('recap_year_off');
-		$month = strftime('%B', strtotime($m)).", ".$this->session->userdata('recap_year_off');
+		$bulan = $m."-".$this->session->userdata('recap_year_off');
+		$month = $m.", ".$this->session->userdata('recap_year_off');
 		$nik = $this->session->userdata('att_off_nik');
 		$name = $this->attendance->get_by_nik_employee($nik)->name;
 		$lists = $this->attendance->dataRecapSumOff();
-		$filename = 'Laporan-Kehadiran-Bulanan-Office'.$bulan."-".$nik."_".$name;
-		$data = [
-			"title" => "Rekap Kehadiran Bulanan Office",
-			"lists" => $lists,
-			"month" => $month,
-			"nik" => $nik,
-			"name" => $name
-		];
-		$this->load->library('pdfgenerator');
-		$file_pdf = $filename;
-		// setting paper
-		$paper = 'A4';
-		//orientasi paper potrait / landscape
-		$orientation = "potrait";
-		$page = $this->load->view('report/rekapBulananOffice', $data,true);
-		$this->pdfgenerator->generate($page,$file_pdf,$paper,$orientation);
+		$filename = 'Laporan-Kehadiran-Bulanan-Office_'.$bulan."-".$nik."_".$name;
+		$spreadsheet = new Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		$sheet->getColumnDimension('A')->setWidth(16);
+		$sheet->getColumnDimension('B')->setWidth(15);
+		$sheet->getColumnDimension('C')->setWidth(10);
+		$sheet->getColumnDimension('D')->setWidth(18);
+		$sheet->getColumnDimension('E')->setWidth(18);
+		$sheet->getColumnDimension('F')->setWidth(18);
+		$sheet->getColumnDimension('G')->setWidth(18);
+		$sheet->getColumnDimension('H')->setWidth(13);
+		$sheet->getColumnDimension('I')->setWidth(13);
+		$sheet->getColumnDimension('J')->setWidth(13);
+		$sheet->getColumnDimension('K')->setWidth(13);
+		$sheet->getColumnDimension('L')->setWidth(13);
+		$sheet->setCellValue('A1','Bulan : ');
+		$sheet->setCellValue('B1',$month);
+		$sheet->setCellValue('A2','NIK : ');
+		$sheet->setCellValue('B2',$nik);
+		$sheet->setCellValue('A3','Nama : ');
+		$sheet->setCellValue('B3',$name);
+		$sheet->setCellValue('A5','No');
+		$sheet->setCellValue('B5','Date');
+		$sheet->setCellValue('C5','Shift');
+		$sheet->setCellValue('D5','DWS IN');
+		$sheet->setCellValue('E5','DWS OUT');
+		$sheet->setCellValue('F5','First Scan');
+		$sheet->setCellValue('G5','Last Scan');
+		$sheet->setCellValue('H5','Late Duration');
+		$counter = 6;
+		$idx = 1;
+		$lateTotal = $outPass = 0;
+		foreach ($lists as $list) {
+			$sheet->setCellValue("A$counter",$idx);
+			$sheet->setCellValue("B$counter",$list->date);
+			$sheet->setCellValue("C$counter",$list->shift);
+			$sheet->setCellValue("D$counter",$list->masuk);
+			$sheet->setCellValue("E$counter",$list->pulang);
+			$sheet->setCellValue("F$counter",$list->first_scan);
+			$sheet->setCellValue("G$counter",$list->last_scan);
+			$sheet->setCellValue("H$counter",$list->late_duration);
+			if (!empty($list->late_duration)) {
+				$lateTotal++;
+			}
+			$counter++;
+			$idx++;
+		}
+		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
+		$sheet->setCellValue("B".($counter+2),$lateTotal);
+		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
+		$sheet->setCellValue("B".($counter+3),$outPass);
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
+		header('Cache-Control: max-age=0');
+		$writer = new Xlsx($spreadsheet);
+		$writer->save('php://output');
 	}
 
 	public function historyScanKaryawan()
@@ -928,7 +1019,7 @@ class AttendanceController extends CI_Controller {
 		}
 		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
 		$sheet->setCellValue("B".($counter+2),$lateTotal);
-		$sheet->setCellValue("A".($counter+3),"Total Out Passing: ");
+		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
 		$sheet->setCellValue("B".($counter+3),$outPass);
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="'.$title.'.xlsx"');

@@ -34,7 +34,7 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 	<li class="nav-item <?= ($p=='out')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('out') ?>">
 			<i class="fas fa-fw fa-shoe-prints"></i>
-			<span>Out Notice</span>
+			<span>Passing Out Notice</span>
 		</a>
 	</li>
 	<hr class="sidebar-divider">

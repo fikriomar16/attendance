@@ -37,7 +37,8 @@ app.controller('noticePage',($scope,$http) => {
 			method:"POST",
 			url:url,
 			data:{
-				'date':$scope.selectDate,
+				'date_start':$scope.selectDate,
+				'date_end':$scope.selectDate2,
 				'dept':$scope.deptList,
 				'option':option
 			}
@@ -56,7 +57,8 @@ app.controller('noticePage',($scope,$http) => {
 				listErrorNotif(list);
 			} else if (res.data.success) {
 				$scope.reloadTable();
-				$scope.resDate = res.data.date;
+				$scope.resDateStart = res.data.date_start;
+				$scope.resDateEnd = res.data.date_end;
 				$scope.resDept = res.data.dept;
 				if (res.data.option == 'reload') {
 					successPopUp(res.data.success);

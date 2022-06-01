@@ -23,14 +23,14 @@
 						</div>
 					</div>
 					<div class="row justify-content-lg-end my-2">
-						<?php ($this->session->userdata('user')->is_spv == 1) ? $col='col-xl-8' : $col='col-lg-5' ?>
-						<div class="<?= $col ?> my-1">
+						<div class="col my-1">
 							<form method="POST" enctype="multipart/form-data" action="<?= base_url('get_out') ?>" id="primeForm">
 								<div class="input-group input-group-sm">
 									<div class="input-group-prepend">
-										<span class="input-group-text"><i class="fas fa-calendar-day fa-fw"></i>&nbsp; Search </span>
+										<span class="input-group-text"><i class="fas fa-calendar-day fa-fw"></i>&nbsp;</span>
 									</div>
-									<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" ng-change="select_date()" class="form-control text-center selectDate bg-white" placeholder="Masukkan Tanggal">
+									<input type="text" name="selectDate" id="selectDate" ng-model="selectDate" class="form-control text-center selectDate bg-white" placeholder="Tanggal Awal">
+									<input type="text" name="selectDate2" id="selectDate2" ng-model="selectDate2" class="form-control text-center selectDate bg-white" placeholder="Tanggal Akhir">
 									<?php if($this->session->userdata('user')->is_spv == 1): ?>
 										<select class="form-control form-control-sm custom-select bg-light border-0 font-weight-bold selectpicker" name="deptList" id="deptList" ng-change="getDept()" ng-model="deptList" data-style="btn-light border font-weight-bold" data-header="Pilih Department">
 											<option value="" selected>All Dept.</option>
@@ -50,9 +50,9 @@
 						</div>
 					</div>
 					<div class="row justify-content-center my-2 div-resume d-none">
-						<div class="col-xl-6 col-auto">
+						<div class="col-auto">
 							<ul class="list-group list-group-horizontal">
-								<li class="list-group-item">Tanggal: <br>{{resDate}}</li>
+								<li class="list-group-item">Tanggal: <br>{{resDateStart}} - {{resDateEnd}}</li>
 								<li class="list-group-item">Departemen: <br>{{resDept}}</li>
 								<li class="list-group-item" id="resTotal">Total Out Melebihi: {{resTotal}}</li>
 							</ul>
@@ -60,13 +60,14 @@
 					</div>
 					<div class="row justify-content-center my-2">
 						<div class="col my-1">
-							<div class="table-responsive mx-1">
+							<div class="table-responsive mx-1 small">
 								<table class="table table-sm table-striped table-hover align-middle shadow-sm" id="dataTable" data-source="<?= base_url('dt_out') ?>">
 									<thead class="thead-light">
 										<tr>
 											<th class="text-center">NIK</th>
 											<th class="text-center">Name</th>
 											<th class="text-center">Shift</th>
+											<th class="text-center">Date</th>
 											<th class="text-center">Department</th>
 											<th class="text-center">Status</th>
 										</tr>

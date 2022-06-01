@@ -43,7 +43,7 @@
 								<div class="tab-pane fade show active" id="att_summary" role="tabpanel" aria-labelledby="pills-home-tab">
 									<div class="row justify-content-center card-summary">
 										<div class="col-xl-12">
-											<div class="row justify-content-between mx-1 my-3">
+											<div class="row justify-content-lg-around justify-content-between mx-1 my-3">
 												<div class="col-auto">
 													<div class="form-group form-label-group">
 														<div class="input-group input-group-sm">

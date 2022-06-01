@@ -134,10 +134,10 @@ class AdminController extends CI_Controller {
 			redirect('login');
 		}
 		$this->session->set_userdata([
-			'late_date' => date("Y-m-d"),
-			'late_search_date' => date("Y-m-d"),
-			'late_dept' => "Prod. Minyak"
+			'late_date_start' => date("Y-m-d"),
+			'late_date_end' => date("Y-m-d")
 		]);
+		$this->session->unset_userdata('late_dept');
 		$data = [
 			'title' => 'Late Notice',
 			'deptlists' => $this->admin->deptLists()
@@ -151,12 +151,26 @@ class AdminController extends CI_Controller {
 
 	public function dt_late()
 	{
+		$recordsTotal = $recordsFiltered = 0;
 		$list1 = $this->admin->datatable_late_emp();
 		$list2 = $this->admin->datatable_late_off();
-		$lists = array_merge($list1,$list2);
-
-		$event = array_column($lists, 'first_scan');
-		array_multisort($event, SORT_DESC, $lists);
+		if (empty($this->session->userdata('late_dept'))) {
+			$lists = array_merge($list1,$list2);
+			$event = array_column($lists, 'date');
+			array_multisort($event, SORT_DESC, $lists);
+			$recordsTotal = $this->admin->count_all_late_emp() + $this->admin->count_all_late_off();
+			$recordsFiltered = $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off();
+		} else {
+			if (substr($this->session->userdata('late_dept'),0,4) == "Prod") {
+				$lists = $list1;
+				$recordsTotal = $this->admin->count_all_late_emp();
+				$recordsFiltered = $this->admin->count_filtered_late_emp();
+			} else {
+				$lists = $list2;
+				$recordsTotal = $this->admin->count_all_late_off();
+				$recordsFiltered = $this->admin->count_filtered_late_off();
+			}
+		}
 		$data = [];
 		$no = $_POST['start'];
 
@@ -165,6 +179,7 @@ class AdminController extends CI_Controller {
 			$row[] = $list->pin;
 			$row[] = $list->name;
 			$row[] = $list->shift;
+			$row[] = $list->date;
 			$row[] = $list->dept_name;
 			$row[] = '<h6 class="text-center"><span class="badge badge-warning text-dark shadow p-1">Keterlambatan : '.$list->late_duration.'</span></h6>';
 
@@ -172,8 +187,8 @@ class AdminController extends CI_Controller {
 		}
 		$output = [
 			'draw' => $_POST['draw'],
-			'recordsTotal' => $this->admin->count_all_late_emp() + $this->admin->count_all_late_off(),
-			'recordsFiltered' => $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off(),
+			'recordsTotal' => $recordsTotal,
+			'recordsFiltered' => $recordsFiltered,
 			'data' => $data,
 		];
 		echo json_encode($output,JSON_PRETTY_PRINT);
@@ -182,15 +197,19 @@ class AdminController extends CI_Controller {
 	{
 		$form = json_decode(file_get_contents("php://input"));
 		$error = [];
-		if (empty($form->date)) {
-			$error[] = "Tanggal Wajib Diisi";
-		}
-		if ($error) {
+		if (empty($form->date_start) || empty($form->date_end)) {
+			if (empty($form->date_start)) {
+				$error[] = "Tanggal Awal Wajib Diisi";
+			}
+			if (empty($form->date_end)) {
+				$error[] = "Tanggal Akhir Wajib Diisi";
+			}
 			echo json_encode([
 				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
-			$this->session->set_userdata('late_search_date',$form->date);
+			$this->session->set_userdata('late_date_start',$form->date_start);
+			$this->session->set_userdata('late_date_end',$form->date_end);
 			if ($this->session->userdata('user')->is_spv != 1) {
 				$session = $this->session->userdata('user')->dept_name;
 			} else {
@@ -206,7 +225,8 @@ class AdminController extends CI_Controller {
 				'success' => 'Menampilkan Data....',
 				'option' => $form->option,
 				'dept' => $session,
-				'date' => date('j F, Y',strtotime($this->session->userdata('late_search_date'))),
+				'date_start' => date('j F, Y',strtotime($this->session->userdata('late_date_start'))),
+				'date_end' => date('j F, Y',strtotime($this->session->userdata('late_date_end'))),
 				'url' => base_url('late/reportLate')
 			],JSON_PRETTY_PRINT);
 		}
@@ -218,12 +238,12 @@ class AdminController extends CI_Controller {
 			redirect('login');
 		}
 		$this->session->set_userdata([
-			'out_date' => date("Y-m-d"),
-			'out_search_date' => date("Y-m-d"),
-			'out_dept' => "Accounting"
+			'out_date_start' => date("Y-m-d"),
+			'out_date_end' => date("Y-m-d")
 		]);
+		$this->session->unset_userdata('out_dept');
 		$data = [
-			'title' => 'Out Notice',
+			'title' => 'Passing Out Notice',
 			'deptlists' => $this->admin->deptLists()
 		];
 		$this->load->view('components/header', $data);
@@ -253,8 +273,9 @@ class AdminController extends CI_Controller {
 			$row[] = $list->pin;
 			$row[] = $list->name;
 			$row[] = $list->shift;
+			$row[] = $list->date;
 			$row[] = $list->dept_name;
-			$row[] = '<h6 class="text-center"><span class="badge badge-danger shadow p-2">Keluar Lewat '.$status.' </span></h6>';
+			$row[] = '<h6 class="text-center"><span class="badge badge-danger shadow p-1">Keluar Lewat '.$status.' </span></h6>';
 
 			$data[] = $row;
 		}
@@ -270,15 +291,19 @@ class AdminController extends CI_Controller {
 	{
 		$form = json_decode(file_get_contents("php://input"));
 		$error = [];
-		if (empty($form->date)) {
-			$error[] = "Tanggal Wajib Diisi";
-		}
-		if ($error) {
+		if (empty($form->date_start) || empty($form->date_end)) {
+			if (empty($form->date_start)) {
+				$error[] = "Tanggal Awal Wajib Diisi";
+			}
+			if (empty($form->date_end)) {
+				$error[] = "Tanggal Akhir Wajib Diisi";
+			}
 			echo json_encode([
 				'error' => $error
 			],JSON_PRETTY_PRINT);
 		} else {
-			$this->session->set_userdata('out_search_date',$form->date);
+			$this->session->set_userdata('out_date_start',$form->date_start);
+			$this->session->set_userdata('out_date_end',$form->date_end);
 			if ($this->session->userdata('user')->is_spv != 1) {
 				$session = $this->session->userdata('user')->dept_name;
 			} else {
@@ -294,7 +319,8 @@ class AdminController extends CI_Controller {
 				'success' => 'Menampilkan Data....',
 				'option' => $form->option,
 				'dept' => $session,
-				'date' => date('j F, Y',strtotime($this->session->userdata('out_search_date'))),
+				'date_start' => date('j F, Y',strtotime($this->session->userdata('out_date_start'))),
+				'date_end' => date('j F, Y',strtotime($this->session->userdata('out_date_end'))),
 				'url' => base_url('out/reportOut')
 			],JSON_PRETTY_PRINT);
 		}
@@ -302,7 +328,8 @@ class AdminController extends CI_Controller {
 
 	public function reportLate()
 	{
-		$tanggal = $this->session->userdata('late_search_date') ?? date('Y-m-d');
+		$tanggal_awal = $this->session->userdata('late_date_start') ?? date('Y-m-d');
+		$tanggal_akhir = $this->session->userdata('late_date_end') ?? date('Y-m-d');
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$dept = $this->session->userdata('user')->dept_name;
 		} else {
@@ -314,31 +341,34 @@ class AdminController extends CI_Controller {
 		}
 		$lists = $this->admin->getDataLateReport();
 		$lateTotal = $this->admin->getCountLateReport();
-		$filename = "Report_Late_".$dept."_$tanggal";
+		$filename = "Report_Late_".$dept."_$tanggal_awal"."_$tanggal_akhir";
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet();
 		$sheet->getColumnDimension('A')->setWidth(20);
-		$sheet->getColumnDimension('B')->setWidth(20);
-		$sheet->getColumnDimension('D')->setWidth(20);
-		$sheet->getColumnDimension('E')->setWidth(20);
+		$sheet->getColumnDimension('B')->setWidth(28);
+		$sheet->getColumnDimension('D')->setWidth(15);
+		$sheet->getColumnDimension('E')->setWidth(18);
+		$sheet->getColumnDimension('F')->setWidth(15);
 		$sheet->setCellValue('A1','Department : ');
 		$sheet->setCellValue('B1',$dept);
 		$sheet->setCellValue('A2','Date : ');
-		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal)));
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal_awal))." - ".date('F j, Y',strtotime($tanggal_akhir)));
 		$sheet->setCellValue('A3','Late Total : ');
 		$sheet->setCellValue('B3',$lateTotal);
 		$sheet->setCellValue('A5','Pers Number');
 		$sheet->setCellValue('B5','Employee Name');
 		$sheet->setCellValue('C5','Shift');
-		$sheet->setCellValue('D5','Department');
-		$sheet->setCellValue('E5','Late Duration');
+		$sheet->setCellValue('D5','Date');
+		$sheet->setCellValue('E5','Department');
+		$sheet->setCellValue('F5','Late Duration');
 		$counter = 6;
 		foreach ($lists as $list) {
 			$sheet->setCellValue("A$counter",$list->pin);
 			$sheet->setCellValue("B$counter",$list->name);
 			$sheet->setCellValue("C$counter",$list->shift);
-			$sheet->setCellValue("D$counter",$list->dept_name);
-			$sheet->setCellValue("E$counter",$list->late_duration);
+			$sheet->setCellValue("D$counter",$list->date);
+			$sheet->setCellValue("E$counter",$list->dept_name);
+			$sheet->setCellValue("F$counter",$list->late_duration);
 			$counter++;
 		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -350,7 +380,8 @@ class AdminController extends CI_Controller {
 
 	public function reportOut()
 	{
-		$tanggal = $this->session->userdata('out_search_date') ?? date('Y-m-d');
+		$tanggal_awal = $this->session->userdata('out_date_start') ?? date('Y-m-d');
+		$tanggal_akhir = $this->session->userdata('out_date_end') ?? date('Y-m-d');
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$dept = $this->session->userdata('user')->dept_name;
 		} else {
@@ -362,37 +393,40 @@ class AdminController extends CI_Controller {
 		}
 		$lists = $this->admin->getDataOutReport();
 		$lateTotal = $this->admin->getCountOutReport();
-		$filename = "Report_Out_".$dept."_$tanggal";
+		$filename = "Report_Out_".$dept."_$tanggal_awal"."_$tanggal_akhir";
 		$spreadsheet = new Spreadsheet();
 		$sheet = $spreadsheet->getActiveSheet(); 
 		$sheet->getColumnDimension('A')->setWidth(30);
-		$sheet->getColumnDimension('B')->setWidth(20);
-		$sheet->getColumnDimension('D')->setWidth(20);
-		$sheet->getColumnDimension('E')->setWidth(25);
-		$sheet->getColumnDimension('F')->setWidth(20);
-		$sheet->getColumnDimension('G')->setWidth(20);
+		$sheet->getColumnDimension('B')->setWidth(28);
+		$sheet->getColumnDimension('D')->setWidth(15);
+		$sheet->getColumnDimension('E')->setWidth(20);
+		$sheet->getColumnDimension('F')->setWidth(15);
+		$sheet->getColumnDimension('G')->setWidth(15);
+		$sheet->getColumnDimension('H')->setWidth(15);
 		$sheet->setCellValue('A1','Department : ');
 		$sheet->setCellValue('B1',$dept);
 		$sheet->setCellValue('A2','Date : ');
-		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal)));
+		$sheet->setCellValue('B2',date('F j, Y',strtotime($tanggal_awal))." - ".date('F j, Y',strtotime($tanggal_akhir)));
 		$sheet->setCellValue('A3',"Passing Out Total : ");
 		$sheet->setCellValue('B3',$lateTotal);
 		$sheet->setCellValue('A5','Pers Number');
 		$sheet->setCellValue('B5','Employee Name');
 		$sheet->setCellValue('C5','Shift');
-		$sheet->setCellValue('D5','Department');
-		$sheet->setCellValue('E5','Passing Out');
-		$sheet->setCellValue('F5','Out Duration');
-		$sheet->setCellValue('G5','Out Allowed');
+		$sheet->setCellValue('D5','Date');
+		$sheet->setCellValue('E5','Department');
+		$sheet->setCellValue('F5','Passing Out');
+		$sheet->setCellValue('G5','Out Duration');
+		$sheet->setCellValue('H5','Out Allowed');
 		$counter = 6;
 		foreach ($lists as $list) {
 			$sheet->setCellValue("A$counter",$list->pin);
 			$sheet->setCellValue("B$counter",$list->name);
 			$sheet->setCellValue("C$counter",$list->shift);
-			$sheet->setCellValue("D$counter",$list->dept_name);
-			$sheet->setCellValue("E$counter",$this->admin->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
-			$sheet->setCellValue("F$counter",$list->out_duration);
-			$sheet->setCellValue("G$counter",$list->out_allowed);
+			$sheet->setCellValue("D$counter",$list->date);
+			$sheet->setCellValue("E$counter",$list->dept_name);
+			$sheet->setCellValue("F$counter",$this->admin->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
+			$sheet->setCellValue("G$counter",$list->out_duration);
+			$sheet->setCellValue("H$counter",$list->out_allowed);
 			$counter++;
 		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
