@@ -31,7 +31,7 @@ class AttendanceController extends CI_Controller {
 			redirect('/');
 		}
 		$this->session->set_userdata([
-			'att_emp_date' => date("Y-m-d"),
+			'att_emp_date' => $this->session->userdata('search_date') ?? date("Y-m-d"),
 			'att_emp_date_search' => date("Y-m-d"),
 			'att_emp_nik' => $this->attendance->getRndmSch()->nik,
 			'recap_month' => date('m'),
@@ -364,7 +364,7 @@ class AttendanceController extends CI_Controller {
 			redirect('/');
 		}
 		$this->session->set_userdata([
-			'att_off_date' => date("Y-m-d"),
+			'att_off_date' => $this->session->userdata('search_date') ?? date("Y-m-d"),
 			'att_off_date_search' => date("Y-m-d"),
 			'att_off_nik' => $this->attendance->getRndmSch()->nik,
 			'recap_month_off' => date('m'),

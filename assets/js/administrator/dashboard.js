@@ -36,8 +36,8 @@ app.controller('dashboardController',($scope,$http) => {
 			$scope.countCurrentDept = res.data.countCurrentDept;
 			$scope.countCurrentDeptTotal = res.data.countCurrentDeptTotal;
 			$scope.calcPercent = (100 * $scope.countCurrentDept) / $scope.countCurrentDeptTotal;
-			if ($scope.countCurrentDept == 0 && $scope.countCurrentDeptTotal == 0) {
-				$scope.calcPercent = 100;
+			if ($scope.countCurrentDept == 0 || $scope.countCurrentDeptTotal == 0) {
+				$scope.calcPercent = 0;
 			}
 			document.getElementById('progress-dws').style.width = `${$scope.calcPercent}%`;
 			$scope.countEmployee = res.data.countEmployee;

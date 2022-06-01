@@ -252,3 +252,16 @@
 		</div>
 	</div>
 </div>
+<?php if ($this->session->userdata('search_nik')): ?>
+	<script type="text/javascript">
+		document.getElementById('selectDate').value = String('<?= $this->session->userdata('search_date') ?>');
+		setTimeout(() => {
+			document.getElementById('selectDate').value = String('<?= $this->session->userdata('search_date') ?>');
+			document.getElementById('searchInTable').value = '<?= $this->session->userdata('search_nik') ?>';
+			const element = document.querySelector('#searchInTable');  
+			element.addEventListener('change', () => console.log('Searching <?= $this->session->userdata('search_nik') ?>...')) ; 
+			const event = new Event('change');  
+			element.dispatchEvent(event);
+		},3000);
+	</script>
+<?php endif; ?>

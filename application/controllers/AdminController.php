@@ -178,7 +178,7 @@ class AdminController extends CI_Controller {
 
 		foreach ($lists as $list) {
 			$row = [];
-			$row[] = $list->pin;
+			$row[] = '<h6 class="text-center" onclick="angular.element(this).scope().searchAtt(\''.$list->pin.'\',\''.$list->date.'\',\''.strtolower($list->dept_name).'\')"><span class="badge badge-primary badge-click shadow">'.$list->pin.'</span></h6>';
 			$row[] = $list->name;
 			$row[] = $list->shift;
 			$row[] = $list->date;
@@ -272,7 +272,7 @@ class AdminController extends CI_Controller {
 			}
 			$no++;
 			$row = [];
-			$row[] = $list->pin;
+			$row[] = '<h6 class="text-center" onclick="angular.element(this).scope().searchAtt(\''.$list->pin.'\',\''.$list->date.'\',\''.strtolower($list->dept_name).'\')"><span class="badge badge-primary badge-click shadow">'.$list->pin.'</span></h6>';
 			$row[] = $list->name;
 			$row[] = $list->shift;
 			$row[] = $list->date;
@@ -436,6 +436,31 @@ class AdminController extends CI_Controller {
 		header('Cache-Control: max-age=0');
 		$writer = new Xlsx($spreadsheet);
 		$writer->save('php://output');
+	}
+
+	public function searchAttendance()
+	{
+		$form = json_decode(file_get_contents("php://input"));
+		if (empty($form->nik) || empty($form->date) || empty($form->dept)) {
+			echo json_encode([
+				"error" => "Data Tidak Lengkap"
+			],JSON_PRETTY_PRINT);
+		} else {
+			if ($form->dept == 'prod') {
+				$path = 'employee';
+			} else {
+				$path = 'office';
+			}
+			$this->session->set_flashdata([
+				"search_date" => $form->date,
+				"search_nik" => $form->nik
+			]);
+			echo json_encode([
+				"success" => "Mencari Data $form->nik",
+				"url" => base_url('attendance/'.$path)
+			],JSON_PRETTY_PRINT);
+		}
+		
 	}
 
 }

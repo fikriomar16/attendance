@@ -98,3 +98,7 @@ img, .sidebar, .sidebar * {
 .progress * {
 	transition: 4s ease;
 }
+
+.badge-click {
+	cursor: pointer;
+}

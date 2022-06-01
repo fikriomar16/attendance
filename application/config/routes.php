@@ -86,6 +86,7 @@ $route = [
 	'get_out' => 'AdminController/get_out',
 	'late/reportLate' => 'AdminController/reportLate',
 	'out/reportOut' => 'AdminController/reportOut',
+	'searchAttendance' => 'AdminController/searchAttendance',
 
 	'attendance' => 'AttendanceController',
 	'attendance/employee' => 'AttendanceController/employee',

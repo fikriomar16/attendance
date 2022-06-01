@@ -76,6 +76,38 @@ app.controller('noticePage',($scope,$http) => {
 			console.error(err);
 		};
 	}
+	$scope.searchAtt = (nik,date,dept) => {
+		$http({
+			method:"POST",
+			url:base+'searchAttendance',
+			data:{
+				'nik':nik,
+				'date':date,
+				'dept':dept.substring(0,4)
+			}
+		}).then((res) => {
+			if (res.data.error) {
+				var list = '';
+				var loop = 0;
+				list+='<ul class="text-left">';
+				while (loop < res.data.error.length) {
+					list+='<li>';
+					list+=res.data.error[loop];
+					list+='</li>';
+					loop++;
+				}
+				list+='</ul>';
+				listErrorNotif(list);
+			} else if (res.data.success) {
+				window.location.href = res.data.url;
+			} else {
+				console.log(res);
+			}
+		}),(err) => {
+			errorNotif('Terjadi Sebuah Kesalahan');
+			console.error(err);
+		};
+	}
 	setInterval(() => {
 		$scope.reloadTable();
 	}, refreshPerMin * 60000);
