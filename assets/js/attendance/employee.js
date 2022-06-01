@@ -32,6 +32,7 @@ app.controller('attEmployee',($scope,$http) => {
 	});
 	table.DataTable({
 		"sDom" : 'tipr',
+		"pageLength": 25,
 		"processing": true,
 		"serverSide": true,
 		"responsive": true,
@@ -132,7 +133,8 @@ app.controller('attEmployee',($scope,$http) => {
 		table.DataTable().ajax.reload();
 	}
 	$scope.closeShow = () => {
-		angular.element('.card-show').addClass('d-none');
+		angular.element('.div-detail').addClass('d-none');
+		angular.element('.div-att').removeClass('d-none');
 	}
 	$scope.refreshDetail = () => {
 		// reload tab
@@ -147,7 +149,8 @@ app.controller('attEmployee',($scope,$http) => {
 			angular.element('.scroll-to-top').click();
 			$scope.getName = res.data.getName;
 			$scope.getSearchDate = res.data.getSearchDate;
-			angular.element('.card-show').removeClass('d-none');
+			angular.element('.div-detail').removeClass('d-none');
+			angular.element('.div-att').addClass('d-none');
 			$scope.refreshDetail();
 		});
 	}

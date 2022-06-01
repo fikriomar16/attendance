@@ -94,3 +94,7 @@ img, .sidebar, .sidebar * {
 .sidebar.toggled .sidebar-heading {
 	padding-bottom: 0.7rem;
 }
+
+.progress * {
+	transition: 4s ease;
+}

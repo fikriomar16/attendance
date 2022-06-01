@@ -53,6 +53,8 @@ class AdminController extends CI_Controller {
 		// 10: Warehouse
 		// 11: Purchasing
 		echo json_encode([
+			"countCurrentDept" => $this->admin->countDWSDept($this->session->userdata('user')->dept_code) ?? 0,
+			"countCurrentDeptTotal" => $this->admin->countDWSDeptTotal($this->session->userdata('user')->dept_code) ?? 0,
 			"countEmployee" => $this->admin->countEmpToday() ?? 0,
 			"countEmployeeTotal" => $this->admin->countEmpTotal() ?? 0,
 			"countOffice" => $this->admin->countOffToday() ?? 0,

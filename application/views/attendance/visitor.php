@@ -1,7 +1,14 @@
 <div class="container-fluid" ng-app="visTrace" ng-controller="visTrace">
-	<div class="row justify-content-between">
+	<div class="row justify-content-start div-detail d-none my-4">
 		<div class="col">
-			<div class="card border-0 shadow rounded mt-1 mb-5 card-show d-none">
+			<button type="button" class="btn btn-secondary btn-rounded shadow-sm" ng-click="closeShow()">
+				<i class="fas fa-fw fa-chevron-circle-left"></i> Kembali ke Menu Attendance
+			</button>
+		</div>
+	</div>
+	<div class="row justify-content-between div-detail d-none">
+		<div class="col">
+			<div class="card border-0 shadow rounded mt-1 mb-5 card-show">
 				<div class="card-header">
 					<div class="row justify-content-between">
 						<div class="col-auto">
@@ -55,12 +62,12 @@
 					</div>
 				</div>
 				<div class="card-footer">
-					<button type="button" class="btn btn-danger btn-rounded shadow-sm col-lg-2 col-md-3 col-6" ng-click="closeShow()"><i class="fas fa-fw fa-times-circle"></i> Close</button>
+					<button type="button" class="btn btn-secondary btn-rounded shadow-sm col-md-4" ng-click="closeShow()"><i class="fas fa-fw fa-chevron-circle-left"></i> Kembali</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<div class="row justify-content-between mt-1 mb-3">
+	<div class="row justify-content-between div-att mt-1 mb-3">
 		<div class="col-auto">
 			<div class="form-group form-label-group">
 				<div class="input-group input-group-sm">
@@ -84,7 +91,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row justify-content-center my-1">
+	<div class="row justify-content-center div-att my-1">
 		<div class="col">
 			<div class="card border-0 border-bottom-info shadow mb-4 rounded card-visitor " data-source="<?= base_url('attresume_vis/') ?>">
 				<div class="card-header">

@@ -33,6 +33,13 @@ app.controller('dashboardController',($scope,$http) => {
 		angular.element('.icon-load').addClass('fa-clock');
 		angular.element('.icon-load').removeClass('fa-sync');
 		$http.get(base+'countEmpVis').then((res) => {
+			$scope.countCurrentDept = res.data.countCurrentDept;
+			$scope.countCurrentDeptTotal = res.data.countCurrentDeptTotal;
+			$scope.calcPercent = (100 * $scope.countCurrentDept) / $scope.countCurrentDeptTotal;
+			if ($scope.countCurrentDept == 0 && $scope.countCurrentDeptTotal == 0) {
+				$scope.calcPercent = 100;
+			}
+			document.getElementById('progress-dws').style.width = `${$scope.calcPercent}%`;
 			$scope.countEmployee = res.data.countEmployee;
 			$scope.countEmployeeTotal = res.data.countEmployeeTotal;
 			$scope.countVisitor = res.data.countVisitor;

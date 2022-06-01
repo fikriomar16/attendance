@@ -1,4 +1,6 @@
 <div class="container-fluid" ng-app="dashboardApp" ng-controller="dashboardController">
+	<?php ($this->session->userdata('user')->is_spv == 1) ? $hide="" : $hide="d-none"; ?>
+	<?php ($this->session->userdata('user')->is_spv == 1) ? $show="d-none" : $show=""; ?>
 	<div class="row justify-content-end mb-2 mt-0">
 		<div class="col-auto">
 			<button class="btn btn-primary btn-rounded btn-sm text-xs btn-load shadow-sm" type="button" ng-click="getCount()">
@@ -6,7 +8,44 @@
 			</button>
 		</div>
 	</div>
-	<div class="row justify-content-center">
+	<?php
+	if (substr($this->session->userdata('user')->dept_name,0,4) == "Prod") {
+		$color = 'success';
+		$icon = 'fingerprint';
+	} else {
+		$color = 'primary';
+		$icon = 'building';
+	}
+	?>
+	<div class="row justify-content-center my-3 <?= $show ?>">
+		<div class="col-md-6">
+			<div class="card border-left-<?= $color ?> shadow h-100 py-2">
+				<div class="card-body">
+					<div class="row no-gutters align-items-center">
+						<div class="col mr-2">
+							<div class="text-xs font-weight-bold text-<?= $color ?> text-uppercase mb-1">
+								Kehadiran <?= $this->session->userdata('user')->dept_name ?> Hari Ini 
+							</div>
+							<div class="row no-gutters align-items-center p-3">
+								<div class="col-auto">
+									<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800 show-count d-none">{{countCurrentDept}} / {{countCurrentDeptTotal}}</div>
+								</div>
+								<div class="col">
+									<div class="progress progress-bar-animated progress-bar-striped mr-2">
+										<div class="progress-bar bg-<?= $color ?>" id="progress-dws" role="progressbar" style="width: 0%"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-auto">
+							<i class="fas fa-<?= $icon ?> fa-2x text-<?= $color ?>"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center <?= $hide ?>">
 		<div class="col-md-4 mb-4">
 			<div class="card border-left-success shadow h-100 py-2">
 				<div class="card-body">
@@ -61,7 +100,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="row justify-content-center">
+	<div class="row justify-content-center <?= $hide ?>">
 		<div class="col-lg-4 col-md-6 container mb-2">
 			<ul class="list-group shadow" id="attProd">
 				<li class="list-group-item">
@@ -248,7 +287,7 @@
 		</div>
 		<div class="col-md-4"></div>
 	</div>
-	<div class="row justify-content-center my-4">
+	<div class="row justify-content-center my-4 <?= $hide ?>">
 		<div class="col-auto">
 			<button class="btn btn-primary btn-rounded btn-sm text-xs btn-scan shadow-sm" type="button" ng-click="dataScan('show')">
 				<i class="fas fa-fw fa-list-alt"></i> <span class=""> Tampilkan Data Scan</span>
