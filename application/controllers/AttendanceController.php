@@ -15,8 +15,9 @@ class AttendanceController extends CI_Controller {
 
 	public function index()
 	{
+		$date = $this->session->userdata('search_date') ?? date("Y-m-d");
 		echo json_encode([
-			'date' => strftime('%A, %d %B %Y', strtotime(date("Y-m-d")))
+			'date' => strftime('%A, %d %B %Y', strtotime($date))
 		]);
 	}
 
@@ -33,7 +34,7 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_emp_date' => $this->session->userdata('search_date') ?? date("Y-m-d"),
 			'att_emp_date_search' => date("Y-m-d"),
-			'att_emp_nik' => $this->attendance->getRndmSch()->nik,
+			'att_emp_nik' => $this->session->userdata('search_nik') ?? $this->attendance->getRndmSch()->nik,
 			'recap_month' => date('m'),
 			'recap_year' => date('Y'),
 		]);
@@ -366,7 +367,7 @@ class AttendanceController extends CI_Controller {
 		$this->session->set_userdata([
 			'att_off_date' => $this->session->userdata('search_date') ?? date("Y-m-d"),
 			'att_off_date_search' => date("Y-m-d"),
-			'att_off_nik' => $this->attendance->getRndmSch()->nik,
+			'att_off_nik' => $this->session->userdata('search_nik') ?? $this->attendance->getRndmSch()->nik,
 			'recap_month_off' => date('m'),
 			'recap_year_off' => date('Y'),
 		]);
@@ -839,8 +840,6 @@ class AttendanceController extends CI_Controller {
 		}
 		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
 		$sheet->setCellValue("B".($counter+2),$lateTotal);
-		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
-		$sheet->setCellValue("B".($counter+3),$outPass);
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
 		header('Cache-Control: max-age=0');

@@ -99,6 +99,10 @@ img, .sidebar, .sidebar * {
 	transition: 4s ease;
 }
 
+.nav * {
+	transition: 1s ease-in-out;
+}
+
 .badge-click {
 	cursor: pointer;
 }

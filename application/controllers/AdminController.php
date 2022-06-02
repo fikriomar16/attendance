@@ -139,7 +139,11 @@ class AdminController extends CI_Controller {
 			'late_date_start' => date("Y-m-d"),
 			'late_date_end' => date("Y-m-d")
 		]);
-		$this->session->unset_userdata('late_dept');
+		if ($this->session->userdata('user')->is_spv == 1) {
+			$this->session->unset_userdata('late_dept');
+		} else {
+			$this->session->set_userdata('late_dept',$this->session->userdata('user')->dept_name);
+		}
 		$data = [
 			'title' => 'Late Notice',
 			'deptlists' => $this->admin->deptLists()
@@ -159,7 +163,7 @@ class AdminController extends CI_Controller {
 		if (empty($this->session->userdata('late_dept'))) {
 			$lists = array_merge($list1,$list2);
 			$event = array_column($lists, 'date');
-			array_multisort($event, SORT_DESC, $lists);
+			array_multisort($event, SORT_ASC, $lists);
 			$recordsTotal = $this->admin->count_all_late_emp() + $this->admin->count_all_late_off();
 			$recordsFiltered = $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off();
 		} else {
@@ -243,7 +247,11 @@ class AdminController extends CI_Controller {
 			'out_date_start' => date("Y-m-d"),
 			'out_date_end' => date("Y-m-d")
 		]);
-		$this->session->unset_userdata('out_dept');
+		if ($this->session->userdata('user')->is_spv == 1) {
+			$this->session->unset_userdata('out_dept');
+		} else {
+			$this->session->set_userdata('out_dept',$this->session->userdata('user')->dept_name);
+		}
 		$data = [
 			'title' => 'Passing Out Notice',
 			'deptlists' => $this->admin->deptLists()

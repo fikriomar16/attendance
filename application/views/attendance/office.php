@@ -38,7 +38,7 @@
 					</div>
 					<div class="row justify-content-center">
 						<div class="col">
-							<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+							<ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
 								<li class="nav-item" role="presentation">
 									<a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#att_summary" role="tab" aria-controls="pills-home" aria-selected="true"><i class="fas fa-fw fa-clock"></i> Summary</a>
 								</li>

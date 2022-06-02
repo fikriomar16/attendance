@@ -262,7 +262,7 @@ class Admin extends CI_Model {
 		$table = 'acc_transaction_3a';
 		$table2 = 'pers_person';
 		$table3 = 'auth_department';
-		$order = ["date" => 'desc'];
+		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","late_duration"];
 		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
@@ -339,7 +339,7 @@ class Admin extends CI_Model {
 		$table = 'acc_transaction_3b';
 		$table2 = 'pers_person';
 		$table3 = 'auth_department';
-		$order = ["date" => 'desc'];
+		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","late_duration"];
 		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
@@ -416,7 +416,7 @@ class Admin extends CI_Model {
 		$table = 'acc_transaction_3a';
 		$table2 = 'pers_person';
 		$table3 = 'auth_department';
-		$order = ["date" => 'desc'];
+		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","out_duration"];
 		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name"];
 		if ($this->session->userdata('user')->is_spv != 1) {
@@ -502,7 +502,7 @@ class Admin extends CI_Model {
 		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND auth_department.code IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		UNION
 		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM acc_transaction_3b WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere
-		ORDER BY date DESC";
+		ORDER BY date ASC";
 		return $this->db->query($query);
 	}
 	public function getDataLateReport()

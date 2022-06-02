@@ -18,7 +18,7 @@
 	}
 	?>
 	<div class="row justify-content-center my-3 <?= $show ?>">
-		<div class="col-md-6">
+		<div class="col-lg-6">
 			<div class="card border-left-<?= $color ?> shadow h-100 py-2">
 				<div class="card-body">
 					<div class="row no-gutters align-items-center">

@@ -38,9 +38,6 @@ class Attendance extends CI_Model {
 		$this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("$table3.code IN (2,3,4,12)")->where([
 			'date' => $this->session->userdata('att_emp_date')
 		]);
-		if ($this->session->userdata('search_nik')) {
-			$this->db->where("$table.pin",$this->session->userdata('search_nik'));
-		}
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
@@ -550,9 +547,6 @@ class Attendance extends CI_Model {
 		$this->db->select("$table.name,$table3.name as dept_name,$table.pin,shift")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id","left")->where([
 			'date' => $this->session->userdata('att_off_date')
 		]);
-		if ($this->session->userdata('search_nik')) {
-			$this->db->where("$table.pin",$this->session->userdata('search_nik'));
-		}
 		if ($this->session->userdata('att_off_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_off_shift'));
 		}
