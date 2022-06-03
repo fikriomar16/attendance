@@ -90,18 +90,31 @@ class Admin extends CI_Model {
 		])->group_by('id')->get()->row();
 	}
 	// Per Dept.
-	public function countDWSDept($deptcode)
+	public function countDWSAccA($deptcode)
 	{
 		return $this->db->select('*')->from('acc_transaction_3a')->join('pers_person','acc_transaction_3a.pin=pers_person.pin','left')->join('auth_department','pers_person.auth_dept_id=auth_department.id','left')->where([
 			"acc_transaction_3a.date" => date('Y-m-d'),
-			"auth_department.code" => $deptcode
+			"CAST(auth_department.code as integer) = " => $deptcode
 		])->count_all_results();
+	}
+	public function countDWSAccB($deptcode)
+	{
+		return $this->db->select('*')->from('acc_transaction_3b')->join('pers_person','acc_transaction_3b.pin=pers_person.pin','left')->join('auth_department','pers_person.auth_dept_id=auth_department.id','left')->where([
+			"acc_transaction_3b.date" => date('Y-m-d'),
+			"CAST(auth_department.code as integer) = " => $deptcode
+		])->count_all_results();
+	}
+	public function countDWSDept($deptcode)
+	{
+		$dwsA = $this->countDWSAccA($deptcode) ?? 0;
+		$dwsB = $this->countDWSAccB($deptcode) ?? 0;
+		return $dwsA + $dwsB;
 	}
 	public function countDWSDeptTotal($deptcode)
 	{
 		return $this->db->select('*')->from('sys_sch_users')->join('pers_person','sys_sch_users.nik=pers_person.pin','left')->join('auth_department','pers_person.auth_dept_id=auth_department.id','left')->where([
 			"sys_sch_users.tanggal" => date('Y-m-d'),
-			"auth_department.code" => $deptcode
+			"CAST(auth_department.code as integer) = " => $deptcode
 		])->count_all_results();
 	}
 
@@ -274,7 +287,7 @@ class Admin extends CI_Model {
 			"date >=" => $this->session->userdata('late_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('late_date_end') ?? date('Y-m-d'),
 			"late_duration !=" => null
-		])->where("$table3.code IN (2,3,4,12)");
+		])->where("CAST($table3.code as integer) IN (2,3,4,12)");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -331,7 +344,7 @@ class Admin extends CI_Model {
 			"date >=" => $this->session->userdata('late_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('late_date_end') ?? date('Y-m-d'),
 			"late_duration !=" => null
-		])->where("$table3.code IN (2,3,4,12)")->count_all_results();
+		])->where("CAST($table3.code as integer) IN (2,3,4,12)")->count_all_results();
 	}
 
 	public function _get_dt_late_off()
@@ -425,7 +438,7 @@ class Admin extends CI_Model {
 		$this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('out_date_end') ?? date('Y-m-d')
-		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)");
+		])->where("out_duration > out_allowed")->where("CAST($table3.code as integer) IN (2,3,4,12)");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -479,7 +492,7 @@ class Admin extends CI_Model {
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('out_date_end') ?? date('Y-m-d')
-		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)")->count_all_results();
+		])->where("out_duration > out_allowed")->where("CAST($table3.code as integer) IN (2,3,4,12)")->count_all_results();
 	}
 
 	public function deptLists()
@@ -499,7 +512,7 @@ class Admin extends CI_Model {
 				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
 			}
 		}
-		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND auth_department.code IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
+		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code IN as integer) (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		UNION
 		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM acc_transaction_3b WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		ORDER BY date ASC";
@@ -525,7 +538,7 @@ class Admin extends CI_Model {
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table.out_scan as last_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('out_date_end') ?? date('Y-m-d')
-		])->where("out_duration > out_allowed")->where("$table3.code IN (2,3,4,12)");
+		])->where("out_duration > out_allowed")->where("CAST($table3.code as integer) IN (2,3,4,12)");
 	}
 	public function getDataOutReport()
 	{
