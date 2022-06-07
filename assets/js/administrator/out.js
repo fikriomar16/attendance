@@ -108,7 +108,4 @@ app.controller('noticePage',($scope,$http) => {
 			console.error(err);
 		};
 	}
-	setInterval(() => {
-		$scope.reloadTable();
-	}, refreshPerMin * 60000);
 });

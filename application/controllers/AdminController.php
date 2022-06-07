@@ -163,7 +163,7 @@ class AdminController extends CI_Controller {
 		if (empty($this->session->userdata('late_dept'))) {
 			$lists = array_merge($list1,$list2);
 			$event = array_column($lists, 'date');
-			array_multisort($event, SORT_ASC, $lists);
+			// array_multisort($event, SORT_ASC, $lists);
 			$recordsTotal = $this->admin->count_all_late_emp() + $this->admin->count_all_late_off();
 			$recordsFiltered = $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off();
 		} else {

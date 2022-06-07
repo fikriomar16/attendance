@@ -512,7 +512,7 @@ class Admin extends CI_Model {
 				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
 			}
 		}
-		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code IN as integer) (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
+		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		UNION
 		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM acc_transaction_3b WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		ORDER BY date ASC";
