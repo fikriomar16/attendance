@@ -161,11 +161,14 @@ class AdminController extends CI_Controller {
 		$list1 = $this->admin->datatable_late_emp();
 		$list2 = $this->admin->datatable_late_off();
 		if (empty($this->session->userdata('late_dept'))) {
-			$lists = array_merge($list1,$list2);
-			$event = array_column($lists, 'date');
-			// array_multisort($event, SORT_ASC, $lists);
-			$recordsTotal = $this->admin->count_all_late_emp() + $this->admin->count_all_late_off();
-			$recordsFiltered = $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off();
+			// $lists = array_merge($list1,$list2);
+			// $event = array_column($lists, 'date');
+			// // array_multisort($event, SORT_ASC, $lists);
+			// $recordsTotal = $this->admin->count_all_late_emp() + $this->admin->count_all_late_off();
+			// $recordsFiltered = $this->admin->count_filtered_late_emp() + $this->admin->count_filtered_late_off();
+			$lists = $this->admin->datatable_late_merge();
+			$recordsTotal = $this->admin->count_all_late_merge();
+			$recordsFiltered = $this->admin->count_filtered_late_merge();
 		} else {
 			if (substr($this->session->userdata('late_dept'),0,4) == "Prod") {
 				$lists = $list1;

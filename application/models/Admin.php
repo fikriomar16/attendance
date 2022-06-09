@@ -270,6 +270,105 @@ class Admin extends CI_Model {
 		return $this->db->from('auth_department')->where("code IN (SELECT code from auth_department where code = $dept_code and code in (2,3,4,12))")->get()->result();
 	}
 
+	public function queryLateMerge()
+	{
+		$table = 'acc_transaction_3a';
+		$table1 = 'acc_transaction_3b';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
+		$date_start = $this->session->userdata('late_date_start') ?? date('Y-m-d');
+		$date_end = $this->session->userdata('late_date_end') ?? date('Y-m-d');
+		$andwhere = '';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$andwhere = "AND dept_name = '".$this->session->userdata('user')->dept_name."'";
+		} else {
+			if (!empty($this->session->userdata('late_dept'))) {
+				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
+			}
+		}
+		$query = "SELECT dept_name,$table.name,$table.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM $table LEFT JOIN pers_person ON $table.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
+		UNION
+		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM $table1 WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere";
+		return $query;
+	}
+	public function _get_dt_late_merge()
+	{	
+		$table = 'acc_transaction_3a';
+		$table1 = 'acc_transaction_3b';
+		$table2 = 'pers_person';
+		$table3 = 'auth_department';
+		$date_start = $this->session->userdata('late_date_start') ?? date('Y-m-d');
+		$date_end = $this->session->userdata('late_date_end') ?? date('Y-m-d');
+		$andwhere = '';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$andwhere = "AND dept_name = '".$this->session->userdata('user')->dept_name."'";
+		} else {
+			if (!empty($this->session->userdata('late_dept'))) {
+				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
+			}
+		}
+		$query1 = "SELECT dept_name,$table.name,$table.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM $table LEFT JOIN pers_person ON $table.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE ( ";
+		$query2 = "SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM $table1 WHERE ( ";
+		$order = ["date" => 'asc'];
+		$column_order = ["pin","name",'shift','date',"dept_name","late_duration"];
+		$column_search = ["pin","name",'shift','date',"dept_name","late_duration"];
+		$i = 0;
+		foreach ($column_search as $item) {
+			if($_POST['search']['value']) {
+				if($i===0) {
+					// $this->db->group_start();
+					if ($item == 'date' || $item == 'late_duration') {
+						$query1.= " (LOWER(CAST($table.$item as varchar)) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+						$query2.= " (LOWER(CAST($table1.$item as varchar)) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+					} else {
+						$query1.= " (LOWER($table.$item) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+						$query2.= " (LOWER($table1.$item) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+					}
+				} else {
+					if ($item == 'date' || $item == 'late_duration') {
+						$query1.= " OR LOWER(CAST($table.$item as varchar)) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+						$query2.= " OR LOWER(CAST($table1.$item as varchar)) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+					} else {
+						$query1.= " OR LOWER($table.$item) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+						$query2.= " OR LOWER($table1.$item) LIKE '%".strtolower($_POST['search']['value'])."%' ";
+					}
+				}
+				if(count($column_search) - 1 == $i) {
+					// $this->db->group_end();	
+					$query1.=" ) AND ";
+					$query2.=" ) AND ";
+				}
+			}
+			$i++;
+		}
+		$query1.=" (CAST(auth_department.code as integer) IN (2,3,4,12) AND late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere))";
+		$query2.=" (late_duration IS NOT NULL AND date >= '$date_start' AND date <='$date_end' $andwhere))";
+		$query = $query1." UNION ".$query2;
+		if(isset($_POST['order'])) {
+			$query.= " ORDER BY ".$column_order[$_POST['order']['0']['column']]." ".$_POST['order']['0']['dir']." ";
+		} else if(isset($order)) {
+			$query.= " ORDER BY ".key($order)." ".$order[key($order)]." ";
+		}
+		return $query;
+	}
+	public function datatable_late_merge()
+	{
+		if ($_POST['length'] != -1) {
+			$qLimit=" LIMIT ".$_POST['length']." OFFSET ".$_POST['start']." ";
+		} else {
+			$qLimit="";
+		}
+		return $this->db->query($this->_get_dt_late_merge().$qLimit)->result();
+	}
+	public function count_filtered_late_merge()
+	{
+		return $this->db->query($this->_get_dt_late_merge())->num_rows();
+	}
+	public function count_all_late_merge()
+	{
+		return $this->db->query($this->queryLateMerge())->num_rows();
+	}
+
 	public function _get_dt_late_emp()
 	{
 		$table = 'acc_transaction_3a';
@@ -277,7 +376,7 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","late_duration"];
-		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name","CAST(late_duration as varchar)"];
+		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		} else if (!empty($this->session->userdata('late_dept'))) {
@@ -321,8 +420,13 @@ class Admin extends CI_Model {
 	public function datatable_late_emp()
 	{
 		$this->_get_dt_late_emp();
-		if($_POST['length'] != -1)
-			$this->db->limit($_POST['length'], $_POST['start']);
+		if ($_POST['length'] != -1) {
+			if (empty($this->session->userdata('late_dept'))) {
+				$this->db->limit($_POST['length']/2, $_POST['start']/2);
+			} else {
+				$this->db->limit($_POST['length'], $_POST['start']);
+			}
+		}
 		return $this->db->get()->result();
 	}
 	public function count_filtered_late_emp()
@@ -354,7 +458,7 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","late_duration"];
-		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name","CAST(late_duration as varchar)"];
+		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name","CAST(late_duration as varchar)"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		} else if (!empty($this->session->userdata('late_dept'))) {
@@ -398,8 +502,13 @@ class Admin extends CI_Model {
 	public function datatable_late_off()
 	{
 		$this->_get_dt_late_off();
-		if($_POST['length'] != -1)
-			$this->db->limit($_POST['length'], $_POST['start']);
+		if ($_POST['length'] != -1) {
+			if (empty($this->session->userdata('late_dept'))) {
+				$this->db->limit($_POST['length']/2, $_POST['start']/2);
+			} else {
+				$this->db->limit($_POST['length'], $_POST['start']);
+			}
+		}
 		return $this->db->get()->result();
 	}
 	public function count_filtered_late_off()
@@ -431,7 +540,7 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		$order = ["date" => 'asc'];
 		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","out_duration"];
-		$column_search = ["$table.pin","$table.name",'shift','date',"dept_name"];
+		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		}
