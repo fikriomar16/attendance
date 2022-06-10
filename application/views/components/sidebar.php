@@ -28,14 +28,14 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 	<li class="nav-item <?= ($p=='late')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('late') ?>">
 			<i class="fas fa-fw fa-exclamation-triangle"></i>
-			<span>Late Notice</span>
+			<span>Keterlambatan</span>
 		</a>
 	</li>
 	<?php if (in_array($this->session->userdata('user')->dept_code, [2,3,4,12]) || $this->session->userdata('user')->is_spv == 1): ?>
 	<li class="nav-item <?= ($p=='out')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('out') ?>">
 			<i class="fas fa-fw fa-shoe-prints"></i>
-			<span>Passing Out Notice</span>
+			<span>Kedisiplinan</span>
 		</a>
 	</li>
 	<?php endif; ?>

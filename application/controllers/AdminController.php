@@ -145,7 +145,7 @@ class AdminController extends CI_Controller {
 			$this->session->set_userdata('late_dept',$this->session->userdata('user')->dept_name);
 		}
 		$data = [
-			'title' => 'Late Notice',
+			'title' => 'Keterlambatan',
 			'deptlists' => $this->admin->deptLists()
 		];
 		$this->load->view('components/header', $data);
@@ -256,7 +256,7 @@ class AdminController extends CI_Controller {
 			$this->session->set_userdata('out_dept',$this->session->userdata('user')->dept_name);
 		}
 		$data = [
-			'title' => 'Passing Out Notice',
+			'title' => 'Kedisiplinan',
 			'deptlists' => $this->admin->deptLists()
 		];
 		$this->load->view('components/header', $data);

@@ -543,6 +543,8 @@ class Admin extends CI_Model {
 		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name"];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('out_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('out_dept'));
 		}
 		$this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
@@ -597,6 +599,8 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('out_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('out_dept'));
 		}
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
@@ -643,6 +647,8 @@ class Admin extends CI_Model {
 		$table3 = 'auth_department';
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
+		} else if (!empty($this->session->userdata('out_dept'))) {
+			$this->db->where('dept_name', $this->session->userdata('out_dept'));
 		}
 		return $this->db->select("$table.*,$table.in_scan as first_scan,$table.out_scan as last_scan,$table2.auth_dept_id,$table3.code as dept_code")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where([
 			"date >=" => $this->session->userdata('out_date_start') ?? date('Y-m-d'),
