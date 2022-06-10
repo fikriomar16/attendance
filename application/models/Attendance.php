@@ -394,6 +394,21 @@ class Attendance extends CI_Model {
 			"pin" => $this->session->userdata('att_off_nik')
 		])->order_by('first_scan','desc')->get()->result();
 	}
+	public function countTotalDuration($data)
+	{
+		$tmpQuery = "";
+		$no = 0;
+		foreach ($data as $dt) {
+			if ($no == 0) {
+				$tmpQuery .= "sum('$dt'::time)";
+			} else {
+				$tmpQuery .= "+sum('$dt'::time)";
+			}
+			$no++;
+		}
+		$execQuery = "SELECT $tmpQuery AS total";
+		return $this->db->query($execQuery)->row();
+	}
 
 	public function get_by_pin_visitor($pin)
 	{

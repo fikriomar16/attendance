@@ -751,6 +751,7 @@ class AttendanceController extends CI_Controller {
 		$counter = 6;
 		$idx = 1;
 		$lateTotal = $outPass = 0;
+		$lateDur = $passDur = [];
 		foreach ($lists as $list) {
 			$sheet->setCellValue("A$counter",$idx);
 			$sheet->setCellValue("B$counter",$list->date);
@@ -766,9 +767,11 @@ class AttendanceController extends CI_Controller {
 			if ($list->out_duration > $list->out_allowed) {
 				$sheet->setCellValue("L$counter",$this->attendance->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
 				$outPass++;
+				array_push($passDur, $this->attendance->getOutDiff($list->out_duration,$list->out_allowed)->out_diff);
 			}
 			if (!empty($list->late_duration)) {
 				$lateTotal++;
+				array_push($lateDur, $list->late_duration);
 			}
 			$counter++;
 			$idx++;
@@ -777,6 +780,14 @@ class AttendanceController extends CI_Controller {
 		$sheet->setCellValue("B".($counter+2),$lateTotal);
 		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
 		$sheet->setCellValue("B".($counter+3),$outPass);
+		if (!empty($lateDur)) {
+			$sheet->setCellValue("A".($counter+4),"Total Durasi Terlambat: ");
+			$sheet->setCellValue("B".($counter+4),$this->attendance->countTotalDuration($lateDur)->total);
+		}
+		if (!empty($passDur)) {
+			$sheet->setCellValue("A".($counter+5),"Total Durasi Passing Out: ");
+			$sheet->setCellValue("B".($counter+5),$this->attendance->countTotalDuration($passDur)->total);
+		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
 		header('Cache-Control: max-age=0');
@@ -822,7 +833,8 @@ class AttendanceController extends CI_Controller {
 		$sheet->setCellValue('H5','Late Duration');
 		$counter = 6;
 		$idx = 1;
-		$lateTotal = $outPass = 0;
+		$lateTotal = 0;
+		$lateDur = [];
 		foreach ($lists as $list) {
 			$sheet->setCellValue("A$counter",$idx);
 			$sheet->setCellValue("B$counter",$list->date);
@@ -834,12 +846,17 @@ class AttendanceController extends CI_Controller {
 			$sheet->setCellValue("H$counter",$list->late_duration);
 			if (!empty($list->late_duration)) {
 				$lateTotal++;
+				array_push($lateDur, $list->late_duration);
 			}
 			$counter++;
 			$idx++;
 		}
 		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
 		$sheet->setCellValue("B".($counter+2),$lateTotal);
+		if (!empty($lateDur)) {
+			$sheet->setCellValue("A".($counter+4),"Total Durasi Terlambat: ");
+			$sheet->setCellValue("B".($counter+4),$this->attendance->countTotalDuration($lateDur)->total);
+		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 		header('Content-Disposition: attachment; filename="'.$filename.'.xlsx"');
 		header('Cache-Control: max-age=0');
