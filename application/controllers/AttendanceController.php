@@ -747,7 +747,7 @@ class AttendanceController extends CI_Controller {
 		$sheet->setCellValue('I5','In Duration');
 		$sheet->setCellValue('J5','Out Duration');
 		$sheet->setCellValue('K5','Out Allowed');
-		$sheet->setCellValue('L5',"Passing Out");
+		$sheet->setCellValue('L5',"Kedisiplinan");
 		$counter = 6;
 		$idx = 1;
 		$lateTotal = $outPass = 0;
@@ -778,14 +778,14 @@ class AttendanceController extends CI_Controller {
 		}
 		$sheet->setCellValue("A".($counter+2),"Total Terlambat: ");
 		$sheet->setCellValue("B".($counter+2),$lateTotal);
-		$sheet->setCellValue("A".($counter+3),"Total Passing Out: ");
+		$sheet->setCellValue("A".($counter+3),"Total Kedisiplinan: ");
 		$sheet->setCellValue("B".($counter+3),$outPass);
 		if (!empty($lateDur)) {
 			$sheet->setCellValue("A".($counter+4),"Total Durasi Terlambat: ");
 			$sheet->setCellValue("B".($counter+4),$this->attendance->countTotalDuration($lateDur)->total);
 		}
 		if (!empty($passDur)) {
-			$sheet->setCellValue("A".($counter+5),"Total Durasi Passing Out: ");
+			$sheet->setCellValue("A".($counter+5),"Total Durasi Kedisiplinan: ");
 			$sheet->setCellValue("B".($counter+5),$this->attendance->countTotalDuration($passDur)->total);
 		}
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
