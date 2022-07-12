@@ -112,9 +112,10 @@ class Attendance extends CI_Model {
 	{
 		$table = 'acc_transaction_3a';
 		$order = ['pin' => 'desc'];
-		$column_order = ['date','shift','in_scan','out_scan','late_duration','out_duration','in_duration'];
-		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)','CAST(out_duration as varchar)','CAST(in_duration as varchar)'];
-		$this->db->from($table)->where([
+		$column_order = ['date','shift','in_scan','out_scan','late_duration','out_duration','out_allowed','in_duration'];
+		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)','CAST(out_duration as varchar)','CAST(out_allowed as varchar)','CAST(in_duration as varchar)'];
+		$this->db->select("$table.date,$table.shift,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,$table.out_allowed,AGE($table.out_scan,$table.masuk) as in_duration
+			")->from($table)->where([
 			"date_part('month',date)" => $this->session->userdata('recap_month') ?? ltrim(date('m'),'0'),
 			"date_part('year',date)" => $this->session->userdata('recap_year') ?? ltrim(date('Y'),'0'),
 			"pin" => $this->session->userdata('att_emp_nik')
@@ -164,7 +165,8 @@ class Attendance extends CI_Model {
 	public function count_all_sum_emp()
 	{
 		$table = 'acc_transaction_3a';
-		return $this->db->from($table)->where([
+		return $this->db->select("$table.date,$table.shift,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,$table.out_allowed,AGE($table.out_scan,$table.masuk) as in_duration
+			")->from($table)->where([
 			"date_part('month',date)" => $this->session->userdata('recap_month') ?? ltrim(date('m'),'0'),
 			"date_part('year',date)" => $this->session->userdata('recap_year') ?? ltrim(date('Y'),'0'),
 			"pin" => $this->session->userdata('att_emp_nik')
@@ -175,9 +177,11 @@ class Attendance extends CI_Model {
 	{
 		$table = 'acc_transaction_3a';
 		$order = ['pin' => 'desc'];
-		$column_order = ['date','shift','masuk','pulang','in_scan','out_scan','late_duration','out_duration','in_duration'];
-		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)','CAST(out_duration as varchar)','CAST(in_duration as varchar)'];
-		$this->db->from($table)->where([
+		$column_order = ['date','shift','masuk','pulang','in_scan','out_scan','late_duration','out_duration','out_allowed','in_duration'];
+		$column_search = ['CAST(date as varchar)','CAST(shift as varchar)','CAST(masuk as varchar)','CAST(pulang as varchar)','CAST(in_scan as varchar)','CAST(out_scan as varchar)','CAST(late_duration as varchar)','CAST(out_duration as varchar)','CAST(out_allowed as varchar)','CAST(in_duration as varchar)'];
+		$this->db->select("
+			$table.pin,$table.name,$table.dept_name,$table.shift,$table.date,$table.masuk,$table.pulang,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,AGE($table.out_scan,$table.masuk) as in_duration,$table.out_allowed
+			")->from($table)->where([
 			'date' => $this->session->userdata('att_emp_date_search'),
 			'pin' => $this->session->userdata('att_emp_nik')
 		]);
@@ -226,7 +230,9 @@ class Attendance extends CI_Model {
 	public function count_all_detail_emp()
 	{
 		$table = 'acc_transaction_3a';
-		return $this->db->from($table)->where([
+		return $this->db->select("
+			$table.pin,$table.name,$table.dept_name,$table.shift,$table.date,$table.masuk,$table.pulang,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,AGE($table.out_scan,$table.masuk) as in_duration,$table.out_allowed
+			")->from($table)->where([
 			'date' => $this->session->userdata('att_emp_date_search'),
 			'pin' => $this->session->userdata('att_emp_nik')
 		])->count_all_results();
@@ -312,7 +318,9 @@ class Attendance extends CI_Model {
 		$table = 'acc_transaction_3a';
 		$table2 = 'pers_person';
 		$table3 = 'auth_department';
-		$this->db->select("$table.*")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("CAST($table3.code as integer) IN (2,3,4,12)")->where('date',$this->session->userdata('att_emp_date'));
+		$this->db->select("
+			$table.pin,$table.name,$table.dept_name,$table.shift,$table.masuk,$table.pulang,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,AGE($table.out_scan,$table.masuk) as in_duration,$table.out_allowed
+			")->from($table)->join($table2,"$table.pin=$table2.pin","left")->join($table3,"$table2.auth_dept_id=$table3.id")->where("CAST($table3.code as integer) IN (2,3,4,12)")->where('date',$this->session->userdata('att_emp_date'));
 		if ($this->session->userdata('att_emp_shift')) {
 			$this->db->where('left(shift,2)', $this->session->userdata('att_emp_shift'));
 		}
@@ -379,7 +387,9 @@ class Attendance extends CI_Model {
 	public function dataRecapSumEmp()
 	{
 		$table = 'acc_transaction_3a';
-		return $this->db->from($table)->where([
+		return $this->db->select("
+			$table.pin,$table.name,$table.dept_name,$table.shift,$table.date,$table.masuk,$table.pulang,$table.in_scan,$table.out_scan,$table.late_duration,$table.out_duration,AGE($table.out_scan,$table.masuk) as in_duration,$table.out_allowed
+			")->from($table)->where([
 			"date_part('month',date)" => $this->session->userdata('recap_month') ?? ltrim(date('m'),'0'),
 			"date_part('year',date)" => $this->session->userdata('recap_year') ?? ltrim(date('Y'),'0'),
 			"pin" => $this->session->userdata('att_emp_nik')

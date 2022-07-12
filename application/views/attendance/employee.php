@@ -78,6 +78,7 @@
 															<th>Last Scan</th>
 															<th>Late Duration</th>
 															<th>Out Duration</th>
+															<th>Out Allowed</th>
 															<th>In Duration</th>
 														</tr>
 													</thead>
@@ -103,6 +104,7 @@
 															<th>Last Scan</th>
 															<th>Late Duration</th>
 															<th>Out Duration</th>
+															<th>Out Allowed</th>
 															<th>In Duration</th>
 														</tr>
 													</thead>

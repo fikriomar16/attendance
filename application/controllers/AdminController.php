@@ -288,6 +288,8 @@ class AdminController extends CI_Controller {
 			$row[] = $list->shift;
 			$row[] = $list->date;
 			$row[] = $list->dept_name;
+			$row[] = $list->out_allowed;
+			$row[] = $list->out_duration;
 			$row[] = '<h6 class="text-center"><span class="badge badge-danger shadow p-1">Keluar Lewat '.$status.' </span></h6>';
 
 			$data[] = $row;

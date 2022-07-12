@@ -69,6 +69,8 @@
 											<th class="text-center">Shift</th>
 											<th class="text-center">Date</th>
 											<th class="text-center">Department</th>
+											<th class="text-center">Out Allowed</th>
+											<th class="text-center">Out Duration</th>
 											<th class="text-center">Status</th>
 										</tr>
 									</thead>

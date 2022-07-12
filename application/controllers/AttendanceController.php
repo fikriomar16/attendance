@@ -275,6 +275,7 @@ class AttendanceController extends CI_Controller {
 			$row[] = $emp->out_scan;
 			$row[] = $emp->late_duration;
 			$row[] = $emp->out_duration;
+			$row[] = $emp->out_allowed;
 			$row[] = $emp->in_duration;
 
 			$data[] = $row;
@@ -304,6 +305,7 @@ class AttendanceController extends CI_Controller {
 			$row[] = $emp->out_scan;
 			$row[] = $emp->late_duration;
 			$row[] = $emp->out_duration;
+			$row[] = $emp->out_allowed;
 			$row[] = $emp->in_duration;
 
 			$data[] = $row;

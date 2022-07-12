@@ -10,6 +10,9 @@ class Scanlog extends CI_Model {
 		$column_order = ['dept_name','dev_alias','event_time','name','pin','verify_mode_name'];
 		$column_search = ['dept_name','dev_alias','CAST(event_time as varchar)','name','pin','verify_mode_name'];
 		$this->db->from($table);
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("dept_name", $this->session->userdata('user')->dept_name);
+		}
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -55,6 +58,9 @@ class Scanlog extends CI_Model {
 	public function count_all_scanlog()
 	{
 		$table = 'acc_transaction';
+		if ($this->session->userdata('user')->is_spv != 1) {
+			$this->db->where("dept_name", $this->session->userdata('user')->dept_name);
+		}
 		return $this->db->from($table)->count_all_results();
 	}
 

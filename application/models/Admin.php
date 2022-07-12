@@ -539,8 +539,8 @@ class Admin extends CI_Model {
 		$table2 = 'pers_person';
 		$table3 = 'auth_department';
 		$order = ["date" => 'asc'];
-		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","out_duration"];
-		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name"];
+		$column_order = ["$table.pin","$table.name",'shift','date',"dept_name","out_allowed","out_duration","out_duration"];
+		$column_search = ["$table.pin","$table.name",'shift','CAST(date as varchar)',"dept_name",'CAST(out_allowed as varchar)','CAST(out_duration as varchar)'];
 		if ($this->session->userdata('user')->is_spv != 1) {
 			$this->db->where('dept_name', $this->session->userdata('user')->dept_name);
 		} else if (!empty($this->session->userdata('out_dept'))) {

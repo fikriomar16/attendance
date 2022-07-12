@@ -97,21 +97,23 @@ if (!$this->session->userdata('sideToggle') || $this->session->userdata('sideTog
 			<span>Shift</span>
 		</a>
 	</li>
+	<?php endif; ?>
 	<hr class="sidebar-divider">
 	<!-- Log Data-->
 	<div class="sidebar-heading">
 		Log Data
 	</div>
-	<li class="nav-item <?= ($p=='scanlog/filter')?'active':'' ?>">
-		<a class="nav-link" href="<?= base_url('scanlog/filter') ?>">
-			<i class="fas fa-fw fa-filter"></i>
-			<span>Filter Data Kehadiran</span>
-		</a>
-	</li>
 	<li class="nav-item <?= ($p=='scanlog')?'active':'' ?>">
 		<a class="nav-link" href="<?= base_url('scanlog') ?>">
 			<i class="fas fa-fw fa-align-left"></i>
 			<span>Scan Log</span>
+		</a>
+	</li>
+	<?php if ($this->session->userdata('user')->is_spv == 1): ?>
+	<li class="nav-item <?= ($p=='scanlog/filter')?'active':'' ?>">
+		<a class="nav-link" href="<?= base_url('scanlog/filter') ?>">
+			<i class="fas fa-fw fa-filter"></i>
+			<span>Filter Data Kehadiran</span>
 		</a>
 	</li>
 	<hr class="sidebar-divider">
