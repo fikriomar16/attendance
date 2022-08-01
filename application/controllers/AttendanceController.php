@@ -282,8 +282,8 @@ class AttendanceController extends CI_Controller {
 		}
 		$output = [
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->attendance->count_all_detail_emp(),
-			"recordsFiltered" => $this->attendance->count_filtered_detail_emp(),
+			"recordsTotal" => $this->attendance->count_all_sum_emp(),
+			"recordsFiltered" => $this->attendance->count_filtered_sum_emp(),
 			"data" => $data,
 		];
 		echo json_encode($output);
@@ -557,8 +557,8 @@ class AttendanceController extends CI_Controller {
 		}
 		$output = [
 			"draw" => $_POST['draw'],
-			"recordsTotal" => $this->attendance->count_all_detail_off(),
-			"recordsFiltered" => $this->attendance->count_filtered_detail_off(),
+			"recordsTotal" => $this->attendance->count_all_sum_off(),
+			"recordsFiltered" => $this->attendance->count_filtered_sum_off(),
 			"data" => $data,
 		];
 		echo json_encode($output);
