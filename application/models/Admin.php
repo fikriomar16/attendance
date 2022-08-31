@@ -286,7 +286,7 @@ class Admin extends CI_Model {
 				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
 			}
 		}
-		$query = "SELECT dept_name,$table.name,$table.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM $table LEFT JOIN pers_person ON $table.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
+		$query = "SELECT dept_name,$table.name,$table.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM $table LEFT JOIN pers_person ON $table.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND $table.pin NOT IN (SELECT pin FROM acc_transaction_3b WHERE date >= '$date_start' AND date <= '$date_end') AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		UNION
 		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM $table1 WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere";
 		return $query;
@@ -341,7 +341,7 @@ class Admin extends CI_Model {
 			}
 			$i++;
 		}
-		$query1.=" (CAST(auth_department.code as integer) IN (2,3,4,12) AND late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere))";
+		$query1.=" (CAST(auth_department.code as integer) IN (2,3,4,12) AND $table.pin NOT IN (SELECT pin FROM acc_transaction_3b WHERE date >= '$date_start' AND date <= '$date_end') AND late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere))";
 		$query2.=" (late_duration IS NOT NULL AND date >= '$date_start' AND date <='$date_end' $andwhere))";
 		$query = $query1." UNION ".$query2;
 		if(isset($_POST['order'])) {
@@ -386,7 +386,7 @@ class Admin extends CI_Model {
 			"date >=" => $this->session->userdata('late_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('late_date_end') ?? date('Y-m-d'),
 			"late_duration !=" => null
-		])->where("CAST($table3.code as integer) IN (2,3,4,12)");
+		])->where("CAST($table3.code as integer) IN (2,3,4,12)")->where_not_in("$table.pin", "SELECT pin FROM acc_transaction_3b WHERE date >='".$this->session->userdata('late_date_start') ?? date('Y-m-d')."' and date <= '".$this->session->userdata('late_date_end') ?? date('Y-m-d')."'");
 		$i = 0;
 		foreach ($column_search as $item) // loop column
 		{
@@ -448,7 +448,7 @@ class Admin extends CI_Model {
 			"date >=" => $this->session->userdata('late_date_start') ?? date('Y-m-d'),
 			"date <=" => $this->session->userdata('late_date_end') ?? date('Y-m-d'),
 			"late_duration !=" => null
-		])->where("CAST($table3.code as integer) IN (2,3,4,12)")->count_all_results();
+		])->where("CAST($table3.code as integer) IN (2,3,4,12)")->where_not_in("$table.pin", "SELECT pin FROM acc_transaction_3b WHERE date >='".$this->session->userdata('late_date_start') ?? date('Y-m-d')."' and date <= '".$this->session->userdata('late_date_end') ?? date('Y-m-d')."'")->count_all_results();
 	}
 
 	public function _get_dt_late_off()
@@ -625,7 +625,7 @@ class Admin extends CI_Model {
 				$andwhere = "AND dept_name = '".$this->session->userdata('late_dept')."'";
 			}
 		}
-		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND date >= '$date_start' AND date <= '$date_end' $andwhere
+		$query = "SELECT dept_name,acc_transaction_3a.name,acc_transaction_3a.pin,shift,date,masuk,pulang,in_scan as first_scan,out_scan as last_scan,late_duration FROM acc_transaction_3a LEFT JOIN pers_person ON acc_transaction_3a.pin=pers_person.pin LEFT JOIN auth_department ON pers_person.auth_dept_id=auth_department.id WHERE late_duration IS NOT NULL AND CAST(auth_department.code as integer) IN (2,3,4,12) AND $table.pin NOT IN (SELECT pin FROM acc_transaction_3b WHERE date >= '$date_start' AND date <= '$date_end') AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		UNION
 		SELECT dept_name,name,pin,shift,date,masuk,pulang,first_scan,last_scan,late_duration FROM acc_transaction_3b WHERE late_duration IS NOT NULL AND date >= '$date_start' AND date <= '$date_end' $andwhere
 		ORDER BY date ASC";
